@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { MdEdit, MdDelete } from "react-icons/md";
-import { GridPage } from "@/src/components/layout/GridPage";
+import { GridPage } from "@/src/components/layout/GridPage/GridPage";
 import { GridColumn } from "@/src/types";
 import "@/src/styles/app/patients.css";
 
@@ -29,26 +29,10 @@ export default function PatientsPage() {
   );
 
   const patientColumns: GridColumn<Patient>[] = [
-    { 
-      header: "Name", 
-      accessor: "name", 
-      className: "patient-name" 
-    },
-    { 
-      header: "Birth date", 
-      accessor: "birthDate", 
-      className: "patient-date" 
-    },
-    { 
-      header: "Gender", 
-      accessor: "gender", 
-      className: "patient-gender" 
-    },
-    { 
-      header: "Room", 
-      accessor: "room", 
-      className: "patient-room" 
-    },
+    { header: "Name", accessor: "name", className: "patient-name" },
+    { header: "Birth date", accessor: "birthDate", className: "patient-date" },
+    { header: "Gender", accessor: "gender", className: "patient-gender" },
+    { header: "Room", accessor: "room", className: "patient-room" },
     { 
       header: "Status", 
       accessor: (patient) => {
