@@ -1,0 +1,41 @@
+.layout-header {
+  display: flex;
+  height: var(--header-height);
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--spacing-2);
+  border-bottom: 1px solid var(--color-border);
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  padding-inline: var(--spacing-4);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  .trigger-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.75rem;
+    width: 1.75rem;
+    border-radius: var(--radius-md);
+    color: var(--color-zinc-600);
+    transition: all 200ms;
+
+    &:hover {
+      background-color: var(--color-zinc-100);
+    }
+  }
+
+  .divider {
+    width: 1px;
+    height: 1.25rem;
+    background-color: var(--color-zinc-200);
+    margin-inline: var(--spacing-2);
+  }
+
+  .breadcrumb {
+    font-size: var(--font-size-sm);
+    color: var(--color-zinc-500);
+  }
+}
