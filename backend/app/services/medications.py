@@ -68,3 +68,9 @@ class MedicationService:
         db_session.commit()
         db_session.refresh(medication)
         return medication
+
+    @staticmethod
+    def delete(db_session: Session, medication_id: int):
+        medication = MedicationService.get_by_id(db_session, medication_id)
+        db_session.delete(medication)
+        db_session.commit()
