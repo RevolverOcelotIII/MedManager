@@ -1,5 +1,5 @@
 import { FaHeartbeat } from "react-icons/fa";
-import "@/styles/components/Sidebar/sidebar-header.css";
+import "@/src/styles/components/Sidebar/sidebar-header.css";
 
 export function SidebarHeader() {
   return (

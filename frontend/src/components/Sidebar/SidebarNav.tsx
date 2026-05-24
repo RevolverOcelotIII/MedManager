@@ -3,8 +3,8 @@
 import { usePathname } from "next/navigation";
 import { MdDashboard, MdPeople, MdTimeline } from "react-icons/md";
 import { FaStethoscope, FaPills } from "react-icons/fa";
-import { SidebarItem } from "./SidebarItem";
-import "@/styles/components/Sidebar/sidebar-nav.css";
+import { SidebarItem } from "@/src/components/Sidebar/SidebarItem";
+import "@/src/styles/components/Sidebar/sidebar-nav.css";
 
 const navigationItems = [
   { href: "/dashboard", label: "Dashboard", icon: MdDashboard },

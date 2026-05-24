@@ -1,6 +1,6 @@
 import { MdLogout } from "react-icons/md";
-import { UserProfile } from "@/types/components/Sidebar";
-import "@/styles/components/Sidebar/sidebar-footer.css";
+import { UserProfile } from "@/src/types/components/Sidebar";
+import "@/src/styles/components/Sidebar/sidebar-footer.css";
 
 const currentUser: UserProfile = {
   name: "Dr Elena",
