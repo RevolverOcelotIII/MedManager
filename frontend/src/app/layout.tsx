@@ -1,22 +1,26 @@
-import type { Metadata } from "next";
+"use client";
+
+import { usePathname } from "next/navigation";
 import "@/src/styles/globals.css";
 import { Sidebar } from "@/src/components/Sidebar/Sidebar";
-
-export const metadata: Metadata = {
-  title: "MedManager",
-  description: "Hospital Suite Management System",
-};
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+  const isLoginPage = pathname === "/login";
+
   return (
     <html lang="en">
       <body style={{ display: 'flex', minHeight: '100vh' }}>
-        <Sidebar />
-        <main style={{ flex: 1, marginLeft: 'var(--sidebar-width)' }}>
+        {!isLoginPage && <Sidebar />}
+        <main style={{ 
+          flex: 1, 
+          marginLeft: isLoginPage ? 0 : 'var(--sidebar-width)',
+          transition: 'margin-left 300ms ease-in-out'
+        }}>
           {children}
         </main>
       </body>

@@ -1,0 +1,211 @@
+.login-layout {
+  display: grid;
+  min-height: 100vh;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.login-sidebar {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--color-zinc-900);
+  color: #ffffff;
+  padding: var(--spacing-12);
+  position: relative;
+  overflow: hidden;
+
+  @media (min-width: 1024px) {
+    display: flex;
+  }
+
+  .blob-1 {
+    position: absolute;
+    top: -6rem;
+    right: -6rem;
+    height: 24rem;
+    width: 24rem;
+    border-radius: var(--radius-full);
+    background-color: rgba(37, 99, 235, 0.2);
+    filter: blur(64px);
+  }
+
+  .blob-2 {
+    position: absolute;
+    bottom: -8rem;
+    left: -5rem;
+    height: 24rem;
+    width: 24rem;
+    border-radius: var(--radius-full);
+    background-color: rgba(219, 234, 254, 0.2);
+    filter: blur(64px);
+  }
+
+  .header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-4);
+    gap: var(--spacing-2);
+
+    .header-icon {
+      display: flex;
+      height: 2.5rem;
+      width: 2.5rem;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-lg);
+      background-color: var(--color-blue-600);
+      color: #ffffff;
+    }
+
+    .header-name {
+      font-size: var(--font-size-lg);
+      font-weight: 600;
+    }
+  }
+
+  .content {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-4);
+    gap: var(--spacing-4);
+
+    .headline {
+      font-size: var(--font-size-3xl);
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .subtext {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+
+  .footer-text {
+    position: relative;
+    font-size: var(--font-size-xs);
+    color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+.login-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-6);
+
+  @media (min-width: 640px) {
+    padding: var(--spacing-12);
+  }
+
+  .login-card {
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+    width: 100%;
+    max-width: 28rem;
+    padding: var(--spacing-8);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+    .mobile-brand {
+      margin-bottom: var(--spacing-6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+
+      @media (min-width: 1024px) {
+        display: none;
+      }
+
+      .mobile-brand-icon {
+        margin-bottom: var(--spacing-3);
+        display: flex;
+        height: 2.5rem;
+        width: 2.5rem;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-lg);
+        background-color: var(--color-blue-600);
+        color: #ffffff;
+      }
+
+      .mobile-brand-name {
+        font-size: var(--font-size-2xl);
+        font-weight: 600;
+      }
+    }
+
+    .welcome-title {
+      font-size: var(--font-size-2xl);
+      font-weight: 600;
+      letter-spacing: -0.025em;
+    }
+
+    .welcome-subtitle {
+      margin-top: var(--spacing-1);
+      font-size: var(--font-size-sm);
+      color: var(--color-zinc-500);
+    }
+
+    .login-form {
+      margin-top: var(--spacing-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4);
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-2);
+
+        .form-label {
+          font-size: var(--font-size-sm);
+          font-weight: 500;
+        }
+
+        .form-input {
+          display: flex;
+          height: 2.25rem;
+          width: 100%;
+          border-radius: var(--radius-md);
+          border: 1px solid var(--color-border);
+          background-color: transparent;
+          padding: var(--spacing-1) var(--spacing-3);
+          font-size: var(--font-size-sm);
+          transition: border-color 200ms;
+
+          &:focus {
+            outline: none;
+            border-color: var(--color-zinc-400);
+          }
+        }
+      }
+
+      .submit-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--spacing-2);
+        border-radius: var(--radius-md);
+        background-color: var(--color-zinc-900);
+        color: #ffffff;
+        padding: var(--spacing-2) var(--spacing-4);
+        font-size: var(--font-size-sm);
+        font-weight: 500;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        transition: background-color 200ms;
+        margin-top: var(--spacing-2);
+
+        &:hover {
+          background-color: var(--color-zinc-800);
+        }
+      }
+    }
+  }
+}
