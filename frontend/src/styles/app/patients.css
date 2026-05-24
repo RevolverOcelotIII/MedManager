@@ -1,14 +1,3 @@
-.patient-name {
-  font-weight: 500;
-  color: var(--color-zinc-900);
-}
-
-.patient-date,
-.patient-gender,
-.patient-room {
-  color: var(--color-zinc-600);
-}
-
 .status-badge {
   display: inline-flex;
   align-items: center;

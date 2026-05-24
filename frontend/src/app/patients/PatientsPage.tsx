@@ -29,10 +29,10 @@ export default function PatientsPage() {
   );
 
   const patientColumns: GridColumn<Patient>[] = [
-    { header: "Name", accessor: "name", className: "patient-name" },
-    { header: "Birth date", accessor: "birthDate", className: "patient-date" },
-    { header: "Gender", accessor: "gender", className: "patient-gender" },
-    { header: "Room", accessor: "room", className: "patient-room" },
+    { header: "Name", accessor: "name"},
+    { header: "Birth date", accessor: "birthDate"},
+    { header: "Gender", accessor: "gender" },
+    { header: "Room", accessor: "room"},
     { 
       header: "Status", 
       accessor: (patient) => {
