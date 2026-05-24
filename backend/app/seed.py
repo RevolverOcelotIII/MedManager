@@ -1,9 +1,6 @@
 from app.core.database import SessionLocal
 from app.models.user import Role, User
-
-from passlib.context import CryptContext
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+from app.core.security import pwd_context
 
 def seed_data():
     db = SessionLocal()
