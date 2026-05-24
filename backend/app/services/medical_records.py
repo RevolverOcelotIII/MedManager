@@ -4,7 +4,7 @@ from app.models.medical_record import MedicalRecord, RecordType
 from app.models.patient import Patient
 from app.models.user import User
 from app.models.catalog import Medication, Procedure
-from app.schemas.records import MedicalRecordCreate, MedicalRecordUpdate
+from app.schemas.medical_records import MedicalRecordCreate, MedicalRecordUpdate
 from app.services.utils import get_object_or_404
 
 class MedicalRecordService:
@@ -72,3 +72,9 @@ class MedicalRecordService:
         db_session.commit()
         db_session.refresh(record)
         return record
+
+    @staticmethod
+    def delete(db_session: Session, record_id: int):
+        record = MedicalRecordService.get_by_id(db_session, record_id)
+        db_session.delete(record)
+        db_session.commit()
