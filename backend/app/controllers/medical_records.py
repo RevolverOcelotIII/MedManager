@@ -16,8 +16,8 @@ def get_medical_record(record_id: int, db_session: Session = Depends(get_db)):
     return MedicalRecordService.get_by_id(db_session, record_id)
 
 @router.post("/", response_model=MedicalRecordResponse, status_code=status.HTTP_201_CREATED)
-def create_medical_record(record_data: MedicalRecordCreate, user_id: int, db_session: Session = Depends(get_db)):
-    return MedicalRecordService.create(db_session, record_data, user_id)
+def create_medical_record(record_data: MedicalRecordCreate, employee_id: int, db_session: Session = Depends(get_db)):
+    return MedicalRecordService.create(db_session, record_data, employee_id)
 
 @router.put("/{record_id}", response_model=MedicalRecordResponse)
 def update_medical_record(record_id: int, record_data: MedicalRecordUpdate, db_session: Session = Depends(get_db)):

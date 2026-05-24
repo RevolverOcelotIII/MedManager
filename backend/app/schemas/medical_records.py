@@ -22,7 +22,7 @@ class MedicalRecordUpdate(BaseModel):
 
 class MedicalRecordResponse(MedicalRecordBase):
     id: int
-    user_id: int
+    employee_id: int
     created_at: datetime
     class Config:
         from_attributes = True

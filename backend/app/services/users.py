@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
-from app.models.user import User, Role
+from app.models.user import User
+from app.models.employee import Employee
 from app.schemas.users import UserCreate, UserUpdate
 from app.core.security import hash_password
 from app.services.utils import get_object_or_404, validate_unique
@@ -17,8 +18,18 @@ class UserService:
         )
 
     @staticmethod
-    def validate_role_exists(db_session: Session, role_id: int):
-        get_object_or_404(db_session, Role, role_id, error_message="Role not found")
+    def validate_employee_linkable(db_session: Session, employee_id: int, exclude_user_id: Optional[int] = None):
+        # Ensure employee exists
+        get_object_or_404(db_session, Employee, employee_id, error_message="Employee not found")
+        
+        # Ensure employee is not already linked to another user
+        validate_unique(
+            db_session,
+            User,
+            {"employee_id": employee_id},
+            exclude_id=exclude_user_id,
+            error_message="Employee is already linked to a user"
+        )
 
     @staticmethod
     def get_all(db_session: Session):
@@ -31,7 +42,7 @@ class UserService:
     @staticmethod
     def create(db_session: Session, user_data: UserCreate):
         UserService.validate_email_unique(db_session, user_data.email)
-        UserService.validate_role_exists(db_session, user_data.role_id)
+        UserService.validate_employee_linkable(db_session, user_data.employee_id)
         
         user_dict = user_data.model_dump()
         raw_password = user_dict.pop("password")
@@ -52,8 +63,8 @@ class UserService:
         if "email" in update_data:
             UserService.validate_email_unique(db_session, update_data["email"], exclude_user_id=user_id)
         
-        if "role_id" in update_data:
-            UserService.validate_role_exists(db_session, update_data["role_id"])
+        if "employee_id" in update_data:
+            UserService.validate_employee_linkable(db_session, update_data["employee_id"], exclude_user_id=user_id)
             
         if "password" in update_data:
             raw_password = update_data.pop("password")

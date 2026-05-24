@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from app.models.medical_record import MedicalRecord, RecordType
 from app.models.patient import Patient
-from app.models.user import User
+from app.models.employee import Employee
 from app.models.catalog import Medication, Procedure
 from app.schemas.medical_records import MedicalRecordCreate, MedicalRecordUpdate
 from app.services.utils import get_object_or_404
@@ -13,8 +13,8 @@ class MedicalRecordService:
         get_object_or_404(db_session, Patient, patient_id)
 
     @staticmethod
-    def validate_user_exists(db_session: Session, user_id: int):
-        get_object_or_404(db_session, User, user_id)
+    def validate_employee_exists(db_session: Session, employee_id: int):
+        get_object_or_404(db_session, Employee, employee_id, error_message="Employee not found")
 
     @staticmethod
     def validate_medication_exists(db_session: Session, medication_id: int):
@@ -46,14 +46,14 @@ class MedicalRecordService:
         return get_object_or_404(db_session, MedicalRecord, record_id, error_message="Medical record not found")
 
     @staticmethod
-    def create(db_session: Session, record_data: MedicalRecordCreate, current_user_id: int):
+    def create(db_session: Session, record_data: MedicalRecordCreate, current_employee_id: int):
         MedicalRecordService.validate_patient_exists(db_session, record_data.patient_id)
-        MedicalRecordService.validate_user_exists(db_session, current_user_id)
+        MedicalRecordService.validate_employee_exists(db_session, current_employee_id)
         MedicalRecordService.validate_record_consistency(db_session, record_data)
         
         new_record = MedicalRecord(
             **record_data.model_dump(),
-            user_id=current_user_id
+            employee_id=current_employee_id
         )
         db_session.add(new_record)
         db_session.commit()

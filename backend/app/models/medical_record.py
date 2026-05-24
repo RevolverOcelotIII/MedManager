@@ -13,7 +13,7 @@ class MedicalRecord(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     patient_id = Column(Integer, ForeignKey("patients.id"), nullable=False)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    employee_id = Column(Integer, ForeignKey("employees.id"), nullable=False)
 
     category = Column(Enum(RecordType), nullable=False)
 
@@ -26,6 +26,6 @@ class MedicalRecord(Base):
 
     # Relationships
     patient = relationship("Patient")
-    professional = relationship("User")
+    professional = relationship("Employee")
     medication = relationship("Medication")
     procedure = relationship("Procedure")
