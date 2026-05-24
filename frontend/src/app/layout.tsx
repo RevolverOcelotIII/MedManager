@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import "@/styles/globals.css";
-import { Sidebar } from "@/components/Sidebar";
+import "@/src/styles/globals.css";
+import { Sidebar } from "@/src/components/Sidebar";
 
 export const metadata: Metadata = {
   title: "MedManager",
