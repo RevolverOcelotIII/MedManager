@@ -17,14 +17,12 @@ class MedicalRecord(Base):
 
     category = Column(Enum(RecordType), nullable=False)
 
-    # Flexible Foreign Keys
     medication_id = Column(Integer, ForeignKey("medications.id"), nullable=True)
     procedure_id = Column(Integer, ForeignKey("procedures.id"), nullable=True)
     
     observation = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    # Relationships
     patient = relationship("Patient")
     professional = relationship("Employee")
     medication = relationship("Medication")

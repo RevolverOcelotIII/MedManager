@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends, status, Response
 from sqlalchemy.orm import Session
 from app.core.database import get_db
+from app.core.auth import get_current_user
 from app.schemas.procedures import ProcedureResponse, ProcedureCreate, ProcedureUpdate
 from app.services.procedures import ProcedureService
 from typing import List
 
-router = APIRouter(prefix="/procedures", tags=["Procedures"])
+router = APIRouter(prefix="/procedures", tags=["Procedures"], dependencies=[Depends(get_current_user)])
 
 @router.get("/", response_model=List[ProcedureResponse])
 def list_procedures(db_session: Session = Depends(get_db)):

@@ -19,10 +19,8 @@ class UserService:
 
     @staticmethod
     def validate_employee_linkable(db_session: Session, employee_id: int, exclude_user_id: Optional[int] = None):
-        # Ensure employee exists
         get_object_or_404(db_session, Employee, employee_id, error_message="Employee not found")
         
-        # Ensure employee is not already linked to another user
         validate_unique(
             db_session,
             User,

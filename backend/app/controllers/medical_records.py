@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends, status, Response
 from sqlalchemy.orm import Session
 from app.core.database import get_db
+from app.core.auth import get_current_user
 from app.schemas.medical_records import MedicalRecordResponse, MedicalRecordCreate, MedicalRecordUpdate
 from app.services.medical_records import MedicalRecordService
 from typing import List
 
-router = APIRouter(prefix="/medical-records", tags=["Medical Records"])
+router = APIRouter(prefix="/medical-records", tags=["Medical Records"], dependencies=[Depends(get_current_user)])
 
 @router.get("/", response_model=List[MedicalRecordResponse])
 def list_medical_records(db_session: Session = Depends(get_db)):
