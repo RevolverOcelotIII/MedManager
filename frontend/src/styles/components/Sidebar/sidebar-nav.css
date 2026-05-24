@@ -1,0 +1,24 @@
+.sidebar-nav-container {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  overflow: auto;
+  padding: var(--spacing-2);
+
+  .label {
+    padding-inline: var(--spacing-2);
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    color: var(--color-zinc-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--spacing-2);
+  }
+
+  .nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+}
