@@ -12,7 +12,7 @@ class PatientService:
             Patient, 
             {"cpf": cpf}, 
             exclude_id=exclude_patient_id, 
-            detail="CPF already registered"
+            error_message="CPF already registered"
         )
 
     @staticmethod

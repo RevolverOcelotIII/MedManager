@@ -7,7 +7,7 @@ def get_object_or_404(db_session: Session, model: Type[Any], object_id: int, err
     if not obj:
         if not error_message:
             error_message = f"{model.__name__} not found"
-        raise HTTPException(status_code=404, error_message=error_message)
+        raise HTTPException(status_code=404, detail=error_message)
     return obj
 
 def validate_unique(
@@ -25,4 +25,4 @@ def validate_unique(
     if existing:
         if not error_message:
             error_message = f"{model.__name__} with these details already registered"
-        raise HTTPException(status_code=400, error_message=error_message)
+        raise HTTPException(status_code=400, detail=error_message)
