@@ -1,22 +1,10 @@
 "use client";
 
 import { useState, useMemo, useRef, useEffect } from "react";
+import { MdClose } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
+import { SearchInputProps } from "@/src/types/components/layout/Form/Form";
 import "@/src/styles/components/layout/form.css";
-
-interface Option {
-  label: string;
-  value: string | number;
-}
-
-interface SearchInputProps {
-  options: Option[];
-  value?: string | number;
-  onChange?: (event: { target: { name: string; value: string | number } }) => void;
-  placeholder?: string;
-  name: string;
-  required?: boolean;
-}
 
 export function SearchInput({ 
   options, 
@@ -24,27 +12,34 @@ export function SearchInput({
   onChange, 
   placeholder, 
   name, 
-  required 
+  required,
+  width = "100",
+  isMulti = false
 }: SearchInputProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const selectedOption = useMemo(() => 
-    options.find((option) => option.value === value), 
-    [options, value]
+  const selectedValues = useMemo(() => {
+    if (isMulti) return Array.isArray(value) ? value : [];
+    return value !== undefined && value !== null ? [value] : [];
+  }, [value, isMulti]);
+
+  const selectedOptions = useMemo(() => 
+    options.filter((option) => selectedValues.includes(option.value)), 
+    [options, selectedValues]
   );
 
   const filteredOptions = useMemo(() => {
     const normalizedSearchTerm = searchTerm.toLowerCase();
-    if (!normalizedSearchTerm) return options;
     
     return options.filter((option) => 
-      option.label.toLowerCase().includes(normalizedSearchTerm)
+      option.label.toLowerCase().includes(normalizedSearchTerm) &&
+      (!isMulti || !selectedValues.includes(option.value))
     );
-  }, [options, searchTerm]);
+  }, [options, searchTerm, selectedValues, isMulti]);
 
-  const displayValue = isDropdownOpen ? searchTerm : (selectedOption?.label || "");
+  const displayValue = isDropdownOpen ? searchTerm : (isMulti ? "" : (selectedOptions[0]?.label || ""));
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -58,20 +53,49 @@ export function SearchInput({
   }, []);
 
   const handleSelectOption = (optionValue: string | number) => {
-    if (onChange) {
-      onChange({ target: { name, value: optionValue } });
+    if (isMulti) {
+      const newValue = [...selectedValues, optionValue];
+      onChange?.({ target: { name, value: newValue } });
+      setSearchTerm("");
+    } else {
+      onChange?.({ target: { name, value: optionValue } });
+      setSearchTerm("");
+      setIsDropdownOpen(false);
     }
-    setSearchTerm("");
-    setIsDropdownOpen(false);
+  };
+
+  const handleRemoveOption = (optionValue: string | number) => {
+    const newValue = selectedValues.filter(v => v !== optionValue);
+    onChange?.({ target: { name, value: newValue } });
   };
 
   return (
-    <div className="search-input-container" ref={containerRef}>
-      <div className="form-input-container">
+    <div className={`search-input-container width-${width}`} ref={containerRef}>
+      <div className={`form-input-container ${isMulti ? 'search-multi-container' : ''}`}>
+        {isMulti && (
+          <div className="search-multi-tags">
+            {selectedOptions.map(option => (
+              <span key={option.value} className="search-tag">
+                {option.label}
+                <button 
+                  type="button" 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRemoveOption(option.value);
+                  }}
+                  className="search-tag-remove"
+                >
+                  <MdClose size={14} />
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+        
         <input
           type="text"
-          className="form-input"
-          placeholder={placeholder}
+          className={`form-input ${isMulti ? 'search-multi-input' : ''}`}
+          placeholder={selectedOptions.length === 0 ? placeholder : ""}
           value={displayValue}
           onChange={(event) => {
             setSearchTerm(event.target.value);
@@ -80,7 +104,13 @@ export function SearchInput({
           onFocus={() => setIsDropdownOpen(true)}
           autoComplete="off"
         />
-        <input type="hidden" name={name} value={value || ""} />
+        
+        <input 
+          type="hidden" 
+          name={name} 
+          value={isMulti ? JSON.stringify(selectedValues) : (value as string | number || "")} 
+          required={required} 
+        />
         <FaSearch className="select-icon" size={14} />
       </div>
       
@@ -96,7 +126,9 @@ export function SearchInput({
             </li>
           ))}
           {filteredOptions.length === 0 && (
-            <li className="search-no-results">No results found</li>
+            <li className="search-no-results">
+              {searchTerm ? "No results found" : "Start typing to search..."}
+            </li>
           )}
         </ul>
       )}
