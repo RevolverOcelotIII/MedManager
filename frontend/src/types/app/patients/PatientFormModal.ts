@@ -1,6 +1,6 @@
-import { Patient } from "@/src/types/app/patients/PatientsPage";
+import { Patient } from "@/src/types/patient";
 
-export interface PatientModalProps {
+export interface PatientFormModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: Partial<Patient>) => void;

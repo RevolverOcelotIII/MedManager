@@ -4,13 +4,7 @@ import { FormModal } from "@/src/components/layout/Form/FormModal";
 import { Patient } from "@/src/types/patient";
 import { FormModalColumn } from "@/src/types/components/layout/Form/FormModal";
 import { PATIENT_COLUMNS } from "@/src/models/patient";
-
-interface PatientFormModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (data: Partial<Patient>) => void;
-  patient?: Patient | null;
-}
+import { PatientFormModalProps } from "@/src/types/app/patients/PatientFormModal";
 
 const formColumns: FormModalColumn[] = PATIENT_COLUMNS
   .filter(column => column.form)
