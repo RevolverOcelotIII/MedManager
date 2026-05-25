@@ -6,7 +6,7 @@ from app.models.catalog import ProcedureCategory
 class ProcedureBase(BaseModel):
     name: str
     code: Optional[str] = None
-    category: ProcedureCategory = ProcedureCategory.OTHER
+    category: ProcedureCategory = ProcedureCategory.other
     description: Optional[str] = None
 
 class ProcedureCreate(ProcedureBase):

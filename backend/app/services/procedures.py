@@ -6,14 +6,14 @@ from typing import Optional
 
 class ProcedureService:
     @staticmethod
-    def validate_tuss_code_unique(db_session: Session, tuss_code: str, exclude_procedure_id: Optional[int] = None):
-        if tuss_code:
+    def validate_code_unique(db_session: Session, code: str, exclude_procedure_id: Optional[int] = None):
+        if code:
             validate_unique(
                 db_session, 
                 Procedure, 
-                {"tuss_code": tuss_code}, 
+                {"code": code}, 
                 exclude_id=exclude_procedure_id, 
-                error_message="Procedure with this TUSS code already exists"
+                error_message="Procedure with this code already exists"
             )
 
     @staticmethod
@@ -26,7 +26,7 @@ class ProcedureService:
 
     @staticmethod
     def create(db_session: Session, procedure_data: ProcedureCreate):
-        ProcedureService.validate_tuss_code_unique(db_session, procedure_data.tuss_code)
+        ProcedureService.validate_code_unique(db_session, procedure_data.code)
         
         new_procedure = Procedure(**procedure_data.model_dump())
         db_session.add(new_procedure)
@@ -40,8 +40,8 @@ class ProcedureService:
         
         update_data = procedure_data.model_dump(exclude_unset=True)
         
-        if "tuss_code" in update_data:
-            ProcedureService.validate_tuss_code_unique(db_session, update_data["tuss_code"], exclude_procedure_id=procedure_id)
+        if "code" in update_data:
+            ProcedureService.validate_code_unique(db_session, update_data["code"], exclude_procedure_id=procedure_id)
             
         for field_name, field_value in update_data.items():
             setattr(procedure, field_name, field_value)
