@@ -1,0 +1,55 @@
+import { Medication } from "@/src/types/medication";
+import { ColumnDefinition } from "./patient";
+
+export const MEDICATION_COLUMNS: ColumnDefinition<Medication>[] = [
+  {
+    name: "trade_name",
+    label: "Trade Name",
+    type: "text",
+    width: "50",
+    required: true,
+    placeholder: "Enter trade name",
+    grid: true,
+    form: true,
+  },
+  {
+    name: "active_ingredient",
+    label: "Active Ingredient",
+    type: "text",
+    width: "50",
+    required: true,
+    placeholder: "Enter active ingredient",
+    grid: true,
+    form: true,
+  },
+  {
+    name: "dosage",
+    label: "Dosage",
+    type: "text",
+    width: "50",
+    required: true,
+    placeholder: "e.g. 500mg, 10ml",
+    grid: true,
+    form: true,
+  },
+  {
+    name: "unit",
+    label: "Unit",
+    type: "text",
+    width: "50",
+    required: true,
+    placeholder: "e.g. Tablet, Vial",
+    grid: true,
+    form: true,
+  },
+  {
+    name: "current_stock",
+    label: "Current Stock",
+    type: "text",
+    width: "25",
+    required: true,
+    placeholder: "0",
+    grid: true,
+    form: true,
+  },
+];
