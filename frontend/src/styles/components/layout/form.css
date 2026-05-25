@@ -73,6 +73,12 @@
   width: 100%;
 }
 
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
 .button-primary {
   background-color: var(--color-zinc-900);
   color: white;
