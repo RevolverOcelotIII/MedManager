@@ -10,7 +10,7 @@ const navigationItems = [
   { href: "/dashboard", label: "Dashboard", icon: MdDashboard },
   { href: "/patients", label: "Patients", icon: MdPeople },
   { href: "/employees", label: "Employees", icon: FaStethoscope },
-  { href: "/medicines", label: "Medicines", icon: FaPills },
+  { href: "/medications", label: "Medicines", icon: FaPills },
   { href: "/procedures", label: "Procedures", icon: MdTimeline },
 ];
 
