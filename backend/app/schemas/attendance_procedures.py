@@ -4,10 +4,13 @@ from datetime import datetime
 from app.schemas.medications import MedicationResponse
 from app.schemas.procedures import ProcedureResponse
 from app.schemas.employees import EmployeeResponse
+from app.models.attendance_procedure import AttendanceProcedureStatus
 
 class AttendanceProcedureBase(BaseModel):
     attendance_id: int
     procedure_id: int
+    status: AttendanceProcedureStatus = AttendanceProcedureStatus.pending
+    description: Optional[str] = None
     start_time: Optional[datetime] = None
     end_time: Optional[datetime] = None
     ordered_by_id: Optional[int] = None
@@ -17,6 +20,8 @@ class AttendanceProcedureCreate(AttendanceProcedureBase):
     medication_ids: Optional[List[int]] = []
 
 class AttendanceProcedureUpdate(BaseModel):
+    status: Optional[AttendanceProcedureStatus] = None
+    description: Optional[str] = None
     start_time: Optional[datetime] = None
     end_time: Optional[datetime] = None
     ordered_by_id: Optional[int] = None

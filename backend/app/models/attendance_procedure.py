@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, BigInteger, Table
+import enum
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, BigInteger, Table, Enum
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 from app.models.mixins import TimestampMixin
@@ -11,12 +12,25 @@ attendance_procedure_medications = Table(
     Column("medication_id", Integer, ForeignKey("medications.id"), primary_key=True),
 )
 
+class AttendanceProcedureStatus(str, enum.Enum):
+    pending = "pending"
+    in_progress = "in_progress"
+    done = "done"
+    canceled = "canceled"
+
 class AttendanceProcedure(Base, TimestampMixin):
     __tablename__ = "attendance_procedures"
     
     id = Column(BigInteger, primary_key=True, index=True)
     attendance_id = Column(BigInteger, ForeignKey("attendances.id"), nullable=False)
     procedure_id = Column(Integer, ForeignKey("procedures.id"), nullable=False)
+    
+    status = Column(
+        Enum(AttendanceProcedureStatus, values_callable=lambda obj: [e.value for e in obj], native_enum=False), 
+        nullable=False, 
+        server_default="pending"
+    )
+    description = Column(Text, nullable=True)
     
     start_time = Column(DateTime, nullable=True)
     end_time = Column(DateTime, nullable=True)

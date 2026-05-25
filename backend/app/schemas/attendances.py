@@ -1,25 +1,17 @@
 from pydantic import BaseModel
 from datetime import datetime
-from typing import Optional, List
-from app.models.attendance import AttendanceStatus
+from typing import Optional
+from app.models.attendance import GravityLevel
 
 class AttendanceBase(BaseModel):
     patient_id: int
-    status: AttendanceStatus = AttendanceStatus.WAITING_TRIAGE
-    triage_notes: Optional[str] = None
-    vitals_bp: Optional[str] = None
-    vitals_temp: Optional[str] = None
-    doctor_notes: Optional[str] = None
+    gravity: GravityLevel = GravityLevel.green
 
 class AttendanceCreate(AttendanceBase):
     pass
 
 class AttendanceUpdate(BaseModel):
-    status: Optional[AttendanceStatus] = None
-    triage_notes: Optional[str] = None
-    vitals_bp: Optional[str] = None
-    vitals_temp: Optional[str] = None
-    doctor_notes: Optional[str] = None
+    gravity: Optional[GravityLevel] = None
     finished_at: Optional[datetime] = None
 
 class AttendanceResponse(AttendanceBase):
