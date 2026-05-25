@@ -12,6 +12,7 @@ export interface GridProps<T> {
   columns: GridColumn<T>[];
   rowKey: keyof T | ((item: T) => string | number);
   className?: string;
+  isLoading?: boolean;
 }
 
 export interface GridHeaderProps<T> {

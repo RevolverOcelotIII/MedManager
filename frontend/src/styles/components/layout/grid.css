@@ -65,3 +65,30 @@
     }
   }
 }
+
+.loading-cell, .empty-cell {
+  padding: var(--spacing-4);
+  text-align: center;
+  color: var(--color-zinc-500);
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-3);
+
+  .spinner {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid var(--color-zinc-200);
+    border-top-color: var(--color-zinc-900);
+    border-radius: 50%;
+    animation: spin 800ms linear infinite;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

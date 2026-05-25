@@ -17,6 +17,7 @@ export function GridPage<T>({
   newButtonLabel,
   extraActions,
   breadcrumb,
+  isLoading,
 }: GridPageProps<T>) {
   return (
     <div className="grid-page-layout">
@@ -35,6 +36,7 @@ export function GridPage<T>({
           data={data}
           columns={columns}
           rowKey={rowKey}
+          isLoading={isLoading}
         />
       </GridPageContainer>
     </div>

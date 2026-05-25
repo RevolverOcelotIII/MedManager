@@ -13,6 +13,7 @@ export interface GridPageProps<T> {
   newButtonLabel?: string;
   extraActions?: ReactNode;
   breadcrumb?: string;
+  isLoading?: boolean;
 }
 
 export * from "@/src/types/components/layout/GridPage/GridPageHeader";
