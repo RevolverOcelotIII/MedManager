@@ -9,6 +9,7 @@ import "@/src/styles/components/Sidebar/sidebar-nav.css";
 const navigationItems = [
   { href: "/dashboard", label: "Dashboard", icon: MdDashboard },
   { href: "/patients", label: "Patients", icon: MdPeople },
+  { href: "/attendances", label: "Attendances", icon: FaStethoscope },
   { href: "/employees", label: "Employees", icon: FaStethoscope },
   { href: "/medications", label: "Medicines", icon: FaPills },
   { href: "/procedures", label: "Procedures", icon: MdTimeline },
