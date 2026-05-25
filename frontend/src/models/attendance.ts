@@ -11,6 +11,7 @@ export const ATTENDANCE_COLUMNS: ColumnDefinition<Attendance>[] = [
     placeholder: "Search patient by name or CPF",
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "status",
@@ -24,6 +25,8 @@ export const ATTENDANCE_COLUMNS: ColumnDefinition<Attendance>[] = [
     })),
     grid: true,
     form: true,
+    details: true,
+    badge: true,
   },
   {
     name: "triage_notes",
@@ -32,6 +35,7 @@ export const ATTENDANCE_COLUMNS: ColumnDefinition<Attendance>[] = [
     width: "100",
     grid: false,
     form: true,
+    details: true,
   },
   {
     name: "vitals_bp",
@@ -41,6 +45,7 @@ export const ATTENDANCE_COLUMNS: ColumnDefinition<Attendance>[] = [
     placeholder: "e.g. 120/80",
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "vitals_temp",
@@ -50,6 +55,7 @@ export const ATTENDANCE_COLUMNS: ColumnDefinition<Attendance>[] = [
     placeholder: "e.g. 36.5°C",
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "doctor_notes",
@@ -58,5 +64,15 @@ export const ATTENDANCE_COLUMNS: ColumnDefinition<Attendance>[] = [
     width: "100",
     grid: false,
     form: true,
+    details: true,
+  },
+  {
+    name: "created_at",
+    label: "Created At",
+    type: "text",
+    grid: false,
+    form: false,
+    details: true,
+    render: (attendance: Attendance) => new Date(attendance.created_at).toLocaleString(),
   },
 ];

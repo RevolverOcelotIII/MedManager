@@ -1,18 +1,20 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { MdEdit, MdDelete } from "react-icons/md";
+import { MdEdit, MdDelete, MdVisibility } from "react-icons/md";
 import { GridPage } from "@/src/components/layout/GridPage/GridPage";
 import { GridColumn } from "@/src/types";
 import { Attendance } from "@/src/types/attendance";
 import { ATTENDANCE_COLUMNS } from "@/src/models/attendance";
 import { AttendanceFormModal } from "@/src/app/attendances/AttendanceFormModal";
+import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
 import { AttendanceService } from "@/src/services/attendances";
 import "@/src/styles/app/patients.css";
 
 export default function AttendancesPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedAttendance, setSelectedAttendance] = useState<Attendance | null>(null);
   const [attendances, setAttendances] = useState<Attendance[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -40,12 +42,17 @@ export default function AttendancesPage() {
 
   const handleEdit = (attendance: Attendance) => {
     setSelectedAttendance(attendance);
-    setIsModalOpen(true);
+    setIsFormModalOpen(true);
+  };
+
+  const handleViewDetails = (attendance: Attendance) => {
+    setSelectedAttendance(attendance);
+    setIsDetailsModalOpen(true);
   };
 
   const handleNew = () => {
     setSelectedAttendance(null);
-    setIsModalOpen(true);
+    setIsFormModalOpen(true);
   };
 
   const handleSubmit = async (data: Partial<Attendance>) => {
@@ -55,7 +62,7 @@ export default function AttendancesPage() {
       } else {
         await AttendanceService.create(data);
       }
-      setIsModalOpen(false);
+      setIsFormModalOpen(false);
       fetchAttendances(true);
     } catch (error) {
       console.error("Failed to save attendance:", error);
@@ -78,28 +85,25 @@ export default function AttendancesPage() {
   const gridColumns: GridColumn<Attendance>[] = [
     ...ATTENDANCE_COLUMNS
       .filter(column => column.grid)
-      .map(column => {
-        if (column.name === "status") {
-          return {
-            header: column.label,
-            accessor: (attendance: Attendance) => (
-              <span className={`status-badge status-${attendance.status}`}>
-                {attendance.status.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-              </span>
-            )
-          };
-        }
-        return {
-          header: column.label,
-          accessor: column.name as keyof Attendance,
-        };
-      }),
+      .map(column => ({
+        header: column.label,
+        accessor: column.name as keyof Attendance,
+        badge: column.badge,
+        options: column.options,
+      })),
     {
       header: "Actions",
       align: "right",
       className: "actions-column",
       accessor: (attendance) => (
         <div className="action-buttons">
+          <button 
+            className="view-button" 
+            aria-label="View Details"
+            onClick={() => handleViewDetails(attendance)}
+          >
+            <MdVisibility size={16} />
+          </button>
           <button 
             className="edit-button" 
             aria-label="Edit"
@@ -134,10 +138,18 @@ export default function AttendancesPage() {
       />
 
       <AttendanceFormModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isFormModalOpen}
+        onClose={() => setIsFormModalOpen(false)}
         onSubmit={handleSubmit}
         attendance={selectedAttendance}
+      />
+
+      <DetailsModal
+        isOpen={isDetailsModalOpen}
+        onClose={() => setIsDetailsModalOpen(false)}
+        title="Attendance Details"
+        data={selectedAttendance}
+        columns={ATTENDANCE_COLUMNS}
       />
     </>
   );
