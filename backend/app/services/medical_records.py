@@ -30,11 +30,11 @@ class MedicalRecordService:
     def validate_record_consistency(db_session: Session, record_data: MedicalRecordCreate):
         if record_data.category == RecordType.MEDICATION:
             if not record_data.medication_id:
-                raise HTTPException(status_code=400, error_message="Medication ID is required for medication records")
+                raise HTTPException(status_code=400, detail="Medication ID is required for medication records")
             MedicalRecordService.validate_medication_exists(db_session, record_data.medication_id)
         elif record_data.category == RecordType.PROCEDURE:
             if not record_data.procedure_id:
-                raise HTTPException(status_code=400, error_message="Procedure ID is required for procedure records")
+                raise HTTPException(status_code=400, detail="Procedure ID is required for procedure records")
             MedicalRecordService.validate_procedure_exists(db_session, record_data.procedure_id)
 
     @staticmethod
@@ -46,15 +46,12 @@ class MedicalRecordService:
         return get_object_or_404(db_session, MedicalRecord, record_id, error_message="Medical record not found")
 
     @staticmethod
-    def create(db_session: Session, record_data: MedicalRecordCreate, current_employee_id: int):
+    def create(db_session: Session, record_data: MedicalRecordCreate):
         MedicalRecordService.validate_patient_exists(db_session, record_data.patient_id)
-        MedicalRecordService.validate_employee_exists(db_session, current_employee_id)
+        MedicalRecordService.validate_employee_exists(db_session, record_data.employee_id)
         MedicalRecordService.validate_record_consistency(db_session, record_data)
         
-        new_record = MedicalRecord(
-            **record_data.model_dump(),
-            employee_id=current_employee_id
-        )
+        new_record = MedicalRecord(**record_data.model_dump())
         db_session.add(new_record)
         db_session.commit()
         db_session.refresh(new_record)
@@ -66,6 +63,9 @@ class MedicalRecordService:
         
         update_data = record_data.model_dump(exclude_unset=True)
         
+        if "employee_id" in update_data:
+            MedicalRecordService.validate_employee_exists(db_session, update_data["employee_id"])
+            
         for field_name, field_value in update_data.items():
             setattr(record, field_name, field_value)
             
