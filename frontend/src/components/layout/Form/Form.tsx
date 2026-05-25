@@ -1,6 +1,6 @@
 "use client";
 
-import { FormFieldProps, InputProps, SelectProps } from "@/src/types/components/layout/Form/Form";
+import { FormFieldProps, InputProps, SelectProps, TextareaProps } from "@/src/types/components/layout/Form/Form";
 import { FaChevronDown } from "react-icons/fa";
 import "@/src/styles/components/layout/form.css";
 
@@ -34,5 +34,11 @@ export function Select({ width, options, ...props }: SelectProps) {
       </select>
       <FaChevronDown className="select-icon" size={16} />
     </div>
+  );
+}
+
+export function Textarea({ width, ...props }: TextareaProps) {
+  return (
+    <textarea className="form-input form-textarea" {...props} />
   );
 }

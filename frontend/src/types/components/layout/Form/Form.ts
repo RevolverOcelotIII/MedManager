@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, ReactNode, SelectHTMLAttributes } from "react";
+import { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
 
 export interface FormFieldProps {
   label: string;
@@ -14,4 +14,8 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   width?: "50" | "100";
   options: { label: string; value: string | number }[];
+}
+
+export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+  width?: "50" | "100";
 }
