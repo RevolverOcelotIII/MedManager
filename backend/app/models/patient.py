@@ -1,5 +1,6 @@
 import enum
 from sqlalchemy import Column, Integer, String, Date, Enum, Text, BigInteger
+from sqlalchemy.orm import relationship
 from app.core.database import Base
 from app.models.mixins import TimestampMixin
 
@@ -27,10 +28,12 @@ class Patient(Base, TimestampMixin):
     cpf = Column(String(14), unique=True, index=True, nullable=False)
     rg = Column(String(20), nullable=True)
     birth_date = Column(Date, nullable=False)
-    sex = Column(Enum(Sex), nullable=True)
+    sex = Column(Enum(Sex, values_callable=lambda obj: [e.value for e in obj]), nullable=True)
     marital_status = Column(String(50), nullable=True)
     nationality = Column(String(100), nullable=True)
     mother_name = Column(String(255), nullable=True)
     phone = Column(String(20), nullable=True)
-    blood_type = Column(Enum(BloodType), nullable=True)
+    blood_type = Column(Enum(BloodType, values_callable=lambda obj: [e.value for e in obj]), nullable=True)
     allergies = Column(Text, nullable=True)
+
+    attendances = relationship("Attendance", back_populates="patient")
