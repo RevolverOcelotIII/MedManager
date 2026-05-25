@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from datetime import date
+from datetime import date, datetime
 from typing import Optional
 
 class RoleBase(BaseModel):
@@ -7,6 +7,8 @@ class RoleBase(BaseModel):
 
 class RoleResponse(RoleBase):
     id: int
+    created_at: datetime
+    updated_at: datetime
     class Config:
         from_attributes = True
 
@@ -28,5 +30,7 @@ class EmployeeUpdate(BaseModel):
 class EmployeeResponse(EmployeeBase):
     id: int
     role: Optional[RoleResponse] = None
+    created_at: datetime
+    updated_at: datetime
     class Config:
         from_attributes = True

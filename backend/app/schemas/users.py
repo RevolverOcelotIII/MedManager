@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional
+from datetime import datetime
 from app.schemas.employees import EmployeeResponse
 
 class UserBase(BaseModel):
@@ -17,5 +18,7 @@ class UserUpdate(BaseModel):
 class UserResponse(UserBase):
     id: int
     employee: Optional[EmployeeResponse] = None
+    created_at: datetime
+    updated_at: datetime
     class Config:
         from_attributes = True

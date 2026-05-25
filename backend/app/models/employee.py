@@ -1,13 +1,14 @@
 from sqlalchemy import Column, Integer, String, Date, ForeignKey
 from sqlalchemy.orm import relationship
 from app.core.database import Base
+from app.models.mixins import TimestampMixin
 
-class Role(Base):
+class Role(Base, TimestampMixin):
     __tablename__ = "roles"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50), unique=True, nullable=False)
 
-class Employee(Base):
+class Employee(Base, TimestampMixin):
     __tablename__ = "employees"
     id = Column(Integer, primary_key=True, index=True)
     full_name = Column(String(255), nullable=False)

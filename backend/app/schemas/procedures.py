@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
+from datetime import datetime
 
 class ProcedureBase(BaseModel):
     name: str
@@ -20,5 +21,7 @@ class ProcedureUpdate(BaseModel):
 
 class ProcedureResponse(ProcedureBase):
     id: int
+    created_at: datetime
+    updated_at: datetime
     class Config:
         from_attributes = True
