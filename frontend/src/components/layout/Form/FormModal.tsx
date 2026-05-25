@@ -73,14 +73,15 @@ export function FormModal<T extends Record<string, any>>({
                   options={column.options || []}
                   required={column.required}
                 />
-              ) : column.type === "search_input" ? (
+              ) : column.type === "search_input" || column.type === "multi_search_input" ? (
                 <SearchInput
                   name={column.name}
-                  value={(formData[column.name] as string | number) || ""}
+                  value={formData[column.name] || (column.type === "multi_search_input" ? [] : "")}
                   onChange={handleChange}
                   options={column.options || []}
                   placeholder={column.placeholder}
                   required={column.required}
+                  isMulti={column.type === "multi_search_input"}
                 />
               ) : column.type === "textarea" ? (
                 <Textarea 
