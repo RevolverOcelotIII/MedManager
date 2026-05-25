@@ -1,4 +1,4 @@
-import { AttendanceProcedure } from "@/src/types/attendance_procedure";
+import { AttendanceProcedure, AttendanceProcedureStatus } from "@/src/types/attendance_procedure";
 import { ColumnDefinition } from "./patient";
 
 export const ATTENDANCE_PROCEDURE_COLUMNS: ColumnDefinition<AttendanceProcedure>[] = [
@@ -12,6 +12,30 @@ export const ATTENDANCE_PROCEDURE_COLUMNS: ColumnDefinition<AttendanceProcedure>
     form: true,
     details: true,
     render: (item) => item.procedure?.name || "—",
+  },
+  {
+    name: "status",
+    label: "Status",
+    type: "select",
+    width: "50",
+    required: true,
+    options: Object.values(AttendanceProcedureStatus).map((status) => ({
+      label: status.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+      value: status
+    })),
+    grid: true,
+    form: true,
+    details: true,
+    badge: true,
+  },
+  {
+    name: "description",
+    label: "Description",
+    type: "textarea",
+    width: "100",
+    grid: false,
+    form: true,
+    details: true,
   },
   {
     name: "start_time",

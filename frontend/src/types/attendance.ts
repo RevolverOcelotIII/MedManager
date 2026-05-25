@@ -1,24 +1,21 @@
 import { Patient } from "./patient";
+import { AttendanceProcedure } from "./attendance_procedure";
 
-export enum AttendanceStatus {
-  waiting_triage = "waiting_triage",
-  waiting_consultation = "waiting_consultation",
-  waiting_medication = "waiting_medication",
-  medical_return = "medical_return",
-  finished = "finished",
-  cancelled = "cancelled",
+export enum GravityLevel {
+  red = "red",
+  orange = "orange",
+  yellow = "yellow",
+  green = "green",
+  blue = "blue",
 }
 
 export interface Attendance {
   id: number;
   patient_id: number;
   patient?: Patient;
-  status: AttendanceStatus;
-  triage_notes?: string;
-  vitals_bp?: string;
-  vitals_temp?: string;
-  doctor_notes?: string;
+  gravity: GravityLevel;
   finished_at?: string;
   created_at: string;
   updated_at: string;
+  procedures?: AttendanceProcedure[];
 }

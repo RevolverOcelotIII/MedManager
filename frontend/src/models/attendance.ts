@@ -1,7 +1,26 @@
-import { Attendance, AttendanceStatus } from "@/src/types/attendance";
+import { Attendance, GravityLevel } from "@/src/types/attendance";
+import { AttendanceProcedureStatus } from "@/src/types/attendance_procedure";
 import { ColumnDefinition } from "./patient";
 
 export const ATTENDANCE_COLUMNS: ColumnDefinition<Attendance>[] = [
+  {
+    name: "patient_name",
+    label: "Patient name",
+    type: "text",
+    grid: true,
+    form: false,
+    details: true,
+    render: (attendance: Attendance) => attendance.patient?.full_name || "—"
+  },
+  {
+    name: "patient_cpf",
+    label: "Patient CPF",
+    type: "text",
+    grid: true,
+    form: false,
+    details: true,
+    render: (attendance: Attendance) => attendance.patient?.cpf || "—"
+  },
   {
     name: "patient_id",
     label: "Patient",
@@ -9,19 +28,19 @@ export const ATTENDANCE_COLUMNS: ColumnDefinition<Attendance>[] = [
     width: "100",
     required: true,
     placeholder: "Search patient by name or CPF",
-    grid: true,
+    grid: false,
     form: true,
-    details: true,
+    details: false,
   },
   {
-    name: "status",
-    label: "Status",
+    name: "gravity",
+    label: "Priority",
     type: "select",
     width: "50",
     required: true,
-    options: Object.values(AttendanceStatus).map((status) => ({
-      label: status.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
-      value: status
+    options: Object.values(GravityLevel).map((level) => ({
+      label: level.charAt(0).toUpperCase() + level.slice(1),
+      value: level
     })),
     grid: true,
     form: true,
@@ -29,48 +48,45 @@ export const ATTENDANCE_COLUMNS: ColumnDefinition<Attendance>[] = [
     badge: true,
   },
   {
-    name: "triage_notes",
-    label: "Triage Notes",
-    type: "textarea",
-    width: "100",
-    grid: false,
-    form: true,
-    details: true,
-  },
-  {
-    name: "vitals_bp",
-    label: "Blood Pressure",
+    name: "current_procedure",
+    label: "Current Procedure",
     type: "text",
-    width: "50",
-    placeholder: "e.g. 120/80",
     grid: true,
-    form: true,
+    form: false,
     details: true,
+    render: (attendance: Attendance) => {
+      if (!attendance.procedures || attendance.procedures.length === 0) return "Waiting Triage";
+      const sortedProcedures = [...attendance.procedures].sort((a, b) => 
+        new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+      );
+      return sortedProcedures[0].procedure.name;
+    }
   },
   {
-    name: "vitals_temp",
-    label: "Temperature",
+    name: "procedure_status",
+    label: "Status",
     type: "text",
-    width: "50",
-    placeholder: "e.g. 36.5°C",
     grid: true,
-    form: true,
+    form: false,
     details: true,
-  },
-  {
-    name: "doctor_notes",
-    label: "Doctor Notes",
-    type: "textarea",
-    width: "100",
-    grid: false,
-    form: true,
-    details: true,
+    badge: true,
+    options: Object.values(AttendanceProcedureStatus).map(status => ({
+      label: status.replace('_', ' '),
+      value: status
+    })),
+    render: (attendance: Attendance) => {
+      if (!attendance.procedures || attendance.procedures.length === 0) return null;
+      const sortedProcedures = [...attendance.procedures].sort((a, b) => 
+        new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+      );
+      return sortedProcedures[0].status;
+    }
   },
   {
     name: "created_at",
-    label: "Created At",
+    label: "Arrival Time",
     type: "text",
-    grid: false,
+    grid: true,
     form: false,
     details: true,
     render: (attendance: Attendance) => new Date(attendance.created_at).toLocaleString(),
