@@ -4,12 +4,12 @@ import { MdClose } from "react-icons/md";
 import { ModalProps } from "@/src/types/components/layout/Modal/Modal";
 import "@/src/styles/components/layout/modal.css";
 
-export function Modal({ isOpen, onClose, title, children, footer }: ModalProps) {
+export function Modal({ isOpen, onClose, title, children, footer, size = "md" }: ModalProps) {
   if (!isOpen) return null;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div className={`modal-content modal-${size}`} onClick={(e) => e.stopPropagation()}>
         <header className="modal-header">
           <h2 className="modal-title">{title}</h2>
           <button 
