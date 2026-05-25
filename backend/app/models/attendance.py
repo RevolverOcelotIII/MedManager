@@ -33,3 +33,4 @@ class Attendance(Base, TimestampMixin):
 
     patient = relationship("Patient", back_populates="attendances")
     prescriptions = relationship("Prescription", back_populates="attendance")
+    procedures = relationship("AttendanceProcedure", back_populates="attendance")

@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Text
+import enum
+from sqlalchemy import Column, Integer, String, Text, Enum
 from app.core.database import Base
 from app.models.mixins import TimestampMixin
 
@@ -11,11 +12,23 @@ class Medication(Base, TimestampMixin):
     current_stock = Column(Integer, default=0)
     unit = Column(String(20), nullable=False)
 
+class ProcedureCategory(str, enum.Enum):
+    screening = "screening"
+    exam = "exam"
+    surgery = "surgery"
+    consultation = "consultation"
+    nursing = "nursing"
+    therapy = "therapy"
+    other = "other"
+
 class Procedure(Base, TimestampMixin):
     __tablename__ = "procedures"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False)
-    tuss_code = Column(String(50), nullable=True)
+    code = Column(String(50), nullable=True, index=True)
+    category = Column(
+        Enum(ProcedureCategory, values_callable=lambda obj: [e.value for e in obj], native_enum=False),
+        nullable=False,
+        server_default="other"
+    )
     description = Column(Text, nullable=True)
-    sector = Column(String(100), nullable=False)
-    cid = Column(String(10), nullable=False)
