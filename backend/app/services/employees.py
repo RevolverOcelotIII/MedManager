@@ -20,6 +20,10 @@ class EmployeeService:
         get_object_or_404(db_session, Role, role_id, error_message="Role not found")
 
     @staticmethod
+    def get_all_roles(db_session: Session):
+        return db_session.query(Role).all()
+
+    @staticmethod
     def get_all(db_session: Session):
         return db_session.query(Employee).all()
 
