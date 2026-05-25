@@ -36,10 +36,17 @@ export default function AttendancesPage() {
     fetchAttendances();
   }, [fetchAttendances]);
   
-  const filteredAttendances = attendances.filter(attendance => 
-    attendance.patient_id.toString().includes(searchTerm) ||
-    attendance.status.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredAttendances = attendances.filter(attendance => {
+    const search = searchTerm.toLowerCase();
+    const patientName = attendance.patient?.full_name?.toLowerCase() || "";
+    const patientCpf = attendance.patient?.cpf?.toLowerCase() || "";
+    const gravity = attendance.gravity.toLowerCase();
+    
+    return patientName.includes(search) || 
+           patientCpf.includes(search) || 
+           gravity.includes(search) ||
+           attendance.patient_id.toString().includes(search);
+  });
 
   const handleEdit = (attendance: Attendance) => {
     setSelectedAttendance(attendance);
@@ -88,7 +95,7 @@ export default function AttendancesPage() {
       .filter(column => column.grid)
       .map(column => ({
         header: column.label,
-        accessor: column.name as keyof Attendance,
+        accessor: column.render ? (item: Attendance) => column.render!(item) : (column.name as keyof Attendance),
         badge: column.badge,
         options: column.options,
       })),
