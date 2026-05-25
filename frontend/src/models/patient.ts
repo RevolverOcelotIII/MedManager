@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 export interface ColumnDefinition<T> {
   name: keyof T | string;
   label: string;
-  type: "text" | "date" | "select" | "textarea" | "tel";
+  type: "text" | "date" | "select" | "textarea" | "tel" | "search_input";
   width?: string;
   required?: boolean;
   placeholder?: string;

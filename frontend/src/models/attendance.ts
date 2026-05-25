@@ -4,10 +4,11 @@ import { ColumnDefinition } from "./patient";
 export const ATTENDANCE_COLUMNS: ColumnDefinition<Attendance>[] = [
   {
     name: "patient_id",
-    label: "Patient ID",
-    type: "text",
-    width: "25",
+    label: "Patient",
+    type: "search_input",
+    width: "100",
     required: true,
+    placeholder: "Search patient by name or CPF",
     grid: true,
     form: true,
   },
@@ -15,7 +16,7 @@ export const ATTENDANCE_COLUMNS: ColumnDefinition<Attendance>[] = [
     name: "status",
     label: "Status",
     type: "select",
-    width: "25",
+    width: "50",
     required: true,
     options: Object.values(AttendanceStatus).map((status) => ({
       label: status.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),

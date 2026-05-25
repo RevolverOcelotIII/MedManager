@@ -2,8 +2,10 @@
 
 import { Modal } from "@/src/components/layout/Modal/Modal";
 import { FormField, Input, Select, Textarea } from "@/src/components/layout/Form/Form";
+import { SearchInput } from "@/src/components/layout/Form/SearchInput";
 import { FormModalProps } from "@/src/types/components/layout/Form/FormModal";
 import "@/src/styles/components/layout/form.css";
+import { useState, useEffect } from "react";
 
 export function FormModal<T extends Record<string, any>>({ 
   isOpen, 
@@ -13,11 +15,20 @@ export function FormModal<T extends Record<string, any>>({
   columns, 
   initialData 
 }: FormModalProps<T>) {
+  const [formData, setFormData] = useState<T>((initialData || {}) as T);
+
+  useEffect(() => {
+    setFormData((initialData || {}) as T);
+  }, [initialData, isOpen]);
+
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries()) as unknown as T;
-    onSubmit(data);
+    onSubmit(formData);
   };
 
   const footer = (
@@ -57,14 +68,25 @@ export function FormModal<T extends Record<string, any>>({
               {column.type === "select" ? (
                 <Select 
                   name={column.name}
-                  defaultValue={(initialData?.[column.name] as string) || (column.options?.[0]?.value as string)}
+                  value={(formData[column.name] as string) || ""}
+                  onChange={handleChange}
                   options={column.options || []}
+                  required={column.required}
+                />
+              ) : column.type === "search_input" ? (
+                <SearchInput
+                  name={column.name}
+                  value={(formData[column.name] as string | number) || ""}
+                  onChange={handleChange}
+                  options={column.options || []}
+                  placeholder={column.placeholder}
                   required={column.required}
                 />
               ) : column.type === "textarea" ? (
                 <Textarea 
                   name={column.name}
-                  defaultValue={initialData?.[column.name] as string}
+                  value={(formData[column.name] as string) || ""}
+                  onChange={handleChange}
                   placeholder={column.placeholder}
                   required={column.required}
                 />
@@ -72,7 +94,8 @@ export function FormModal<T extends Record<string, any>>({
                 <Input 
                   name={column.name}
                   type={column.type}
-                  defaultValue={initialData?.[column.name] as string}
+                  value={(formData[column.name] as string) || ""}
+                  onChange={handleChange}
                   placeholder={column.placeholder}
                   required={column.required}
                 />
