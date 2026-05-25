@@ -6,24 +6,23 @@ export function GridRow<T>({ item, columns }: GridRowProps<T>) {
     <tr className="grid-tr">
       {columns.map((column, index) => {
         let content: React.ReactNode;
-        const rawValue = typeof column.accessor === "function" 
-          ? null 
+        
+        const value = typeof column.accessor === "function" 
+          ? column.accessor(item) 
           : (item[column.accessor as keyof T]);
 
         if (column.badge && column.options) {
-          const optionIndex = column.options.findIndex(opt => opt.value === rawValue);
+          const optionIndex = column.options.findIndex(opt => opt.value === value);
           const colorIndex = optionIndex !== -1 ? (optionIndex % 10) + 1 : 1;
-          const label = column.options.find(opt => opt.value === rawValue)?.label || String(rawValue);
+          const label = column.options.find(opt => opt.value === value)?.label || String(value);
           
-          content = (
+          content = (value !== null && value !== undefined && value !== "") ? (
             <span className={`badge color-${colorIndex}`}>
               {label}
             </span>
-          );
+          ) : null;
         } else {
-          content = typeof column.accessor === "function" 
-            ? column.accessor(item) 
-            : (item[column.accessor] as React.ReactNode);
+          content = value as React.ReactNode;
         }
 
         return (
