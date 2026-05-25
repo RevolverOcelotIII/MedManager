@@ -11,6 +11,8 @@ export interface ColumnDefinition<T> {
   options?: { label: string; value: string | number }[];
   grid: boolean;
   form: boolean;
+  details?: boolean;
+  badge?: boolean;
   render?: (item: T) => ReactNode;
 }
 
@@ -24,6 +26,7 @@ export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
     placeholder: "Enter full name",
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "social_name",
@@ -33,6 +36,7 @@ export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
     placeholder: "Enter social name (optional)",
     grid: false,
     form: true,
+    details: true,
   },
   {
     name: "cpf",
@@ -43,6 +47,7 @@ export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
     placeholder: "000.000.000-00",
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "rg",
@@ -52,6 +57,7 @@ export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
     placeholder: "Enter RG",
     grid: false,
     form: true,
+    details: true,
   },
   {
     name: "birth_date",
@@ -61,6 +67,7 @@ export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
     required: true,
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "sex",
@@ -74,6 +81,7 @@ export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
     ],
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "marital_status",
@@ -82,6 +90,7 @@ export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
     width: "50",
     grid: false,
     form: true,
+    details: true,
   },
   {
     name: "nationality",
@@ -90,6 +99,7 @@ export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
     width: "50",
     grid: false,
     form: true,
+    details: true,
   },
   {
     name: "mother_name",
@@ -98,6 +108,7 @@ export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
     width: "100",
     grid: false,
     form: true,
+    details: true,
   },
   {
     name: "phone",
@@ -107,6 +118,7 @@ export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
     placeholder: "(00) 00000-0000",
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "blood_type",
@@ -116,6 +128,7 @@ export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
     options: Object.values(BloodType).map((bloodType) => ({ label: bloodType, value: bloodType })),
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "allergies",
@@ -124,5 +137,6 @@ export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
     width: "100",
     grid: false,
     form: true,
+    details: true,
   },
 ];

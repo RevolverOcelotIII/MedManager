@@ -37,3 +37,26 @@ table {
   width: 100%;
   border-collapse: collapse;
 }
+
+/* Badge System */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.625rem;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  line-height: 1.25rem;
+  white-space: nowrap;
+}
+
+.badge.color-1 { background-color: var(--badge-bg-1); color: var(--badge-text-1); }
+.badge.color-2 { background-color: var(--badge-bg-2); color: var(--badge-text-2); }
+.badge.color-3 { background-color: var(--badge-bg-3); color: var(--badge-text-3); }
+.badge.color-4 { background-color: var(--badge-bg-4); color: var(--badge-text-4); }
+.badge.color-5 { background-color: var(--badge-bg-5); color: var(--badge-text-5); }
+.badge.color-6 { background-color: var(--badge-bg-6); color: var(--badge-text-6); }
+.badge.color-7 { background-color: var(--badge-bg-7); color: var(--badge-text-7); }
+.badge.color-8 { background-color: var(--badge-bg-8); color: var(--badge-text-8); }
+.badge.color-9 { background-color: var(--badge-bg-9); color: var(--badge-text-9); }
+.badge.color-10 { background-color: var(--badge-bg-10); color: var(--badge-text-10); }

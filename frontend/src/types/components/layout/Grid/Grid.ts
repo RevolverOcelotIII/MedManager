@@ -5,6 +5,8 @@ export interface GridColumn<T> {
   accessor: keyof T | ((item: T) => ReactNode);
   className?: string;
   align?: "left" | "right" | "center";
+  badge?: boolean;
+  options?: { label: string; value: string | number }[];
 }
 
 export interface GridProps<T> {

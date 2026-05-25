@@ -31,6 +31,18 @@
   --color-success: #16a34a;
   --color-success-bg: #dcfce7;
 
+  /* Badge Colors */
+  --badge-bg-1: #f3f4f6; --badge-text-1: #1f2937; /* Gray */
+  --badge-bg-2: #fee2e2; --badge-text-2: #991b1b; /* Red */
+  --badge-bg-3: #fef3c7; --badge-text-3: #92400e; /* Amber */
+  --badge-bg-4: #dcfce7; --badge-text-4: #166534; /* Green */
+  --badge-bg-5: #d1fae5; --badge-text-5: #065f46; /* Emerald */
+  --badge-bg-6: #e0f2fe; --badge-text-6: #075985; /* Sky */
+  --badge-bg-7: #dbeafe; --badge-text-7: #1e40af; /* Blue */
+  --badge-bg-8: #e0e7ff; --badge-text-8: #3730a3; /* Indigo */
+  --badge-bg-9: #f3e8ff; --badge-text-9: #6b21a8; /* Purple */
+  --badge-bg-10: #fae8ff; --badge-text-10: #86198f; /* Fuchsia */
+
   /* Spacing */
   --spacing-1: 0.25rem;
   --spacing-2: 0.5rem;
