@@ -1,53 +1,44 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { MdEdit, MdDelete } from "react-icons/md";
 import { GridPage } from "@/src/components/layout/GridPage/GridPage";
 import { GridColumn } from "@/src/types";
-import { Patient, Sex, BloodType } from "@/src/types/patient";
+import { Patient } from "@/src/types/patient";
 import { PATIENT_COLUMNS } from "@/src/models/patient";
 import { PatientFormModal } from "@/src/app/patients/PatientFormModal";
+import { PatientService } from "@/src/services/patients";
 import "@/src/styles/app/patients.css";
-
-const initialPatients: Patient[] = [
-  { 
-    id: 1, 
-    full_name: "Anna Müller", 
-    birth_date: "1984-03-12", 
-    sex: Sex.MALE, 
-    cpf: "123.456.789-01",
-    phone: "(11) 98765-4321",
-    blood_type: BloodType.O_P
-  },
-  { 
-    id: 2, 
-    full_name: "James O'Connor", 
-    birth_date: "1971-09-02", 
-    sex: Sex.MALE, 
-    cpf: "987.654.321-09",
-    phone: "(21) 91234-5678",
-    blood_type: BloodType.A_P
-  },
-  { 
-    id: 3, 
-    full_name: "Sofia Almeida", 
-    birth_date: "1995-06-21", 
-    sex: Sex.FEMALE, 
-    cpf: "456.789.123-45",
-    phone: "(31) 99876-5432",
-    blood_type: BloodType.AB_N
-  },
-];
 
 export default function PatientsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
-  const [patients, setPatients] = useState<Patient[]>(initialPatients);
-  
-  const filteredPatients = patients.filter(patient => 
-    patient.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    patient.cpf.includes(searchTerm)
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchPatients = useCallback(async (showLoading = true) => {
+    try {
+      if (showLoading) {
+        setIsLoading(true);
+      }
+
+      const data = await PatientService.getAll();
+
+      setPatients(data);
+    } catch (error) {
+      console.error("Failed to fetch patients:", error);
+    } finally {
+      if (showLoading) {
+        setIsLoading(false);
+      }
+    }
+  }, []);
+
+  const filteredPatients = patients.filter(patient => {
+    return patient.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (patient.cpf && patient.cpf.includes(searchTerm))
+  }
   );
 
   const handleEdit = (patient: Patient) => {
@@ -60,24 +51,30 @@ export default function PatientsPage() {
     setIsModalOpen(true);
   };
 
-  const handleSubmit = (data: Partial<Patient>) => {
-    if (selectedPatient) {
-      setPatients(prev => prev.map(p => 
-        p.id === selectedPatient.id ? { ...p, ...data } as Patient : p
-      ));
-    } else {
-      const newPatient: Patient = {
-        ...data,
-        id: Math.max(...patients.map(p => p.id), 0) + 1,
-      } as Patient;
-      setPatients(prev => [...prev, newPatient]);
+  const handleSubmit = async (data: Partial<Patient>) => {
+    try {
+      if (selectedPatient) {
+        await PatientService.update(selectedPatient.id, data);
+      } else {
+        await PatientService.create(data);
+      }
+      setIsModalOpen(false);
+      fetchPatients(true);
+    } catch (error) {
+      console.error("Failed to save patient:", error);
+      alert("Error saving patient. Please check the data and try again.");
     }
-    setIsModalOpen(false);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (confirm("Are you sure you want to delete this patient?")) {
-      setPatients(prev => prev.filter(p => p.id !== id));
+      try {
+        await PatientService.delete(id);
+        fetchPatients(true);
+      } catch (error) {
+        console.error("Failed to delete patient:", error);
+        alert("Error deleting patient.");
+      }
     }
   };
 
@@ -113,6 +110,10 @@ export default function PatientsPage() {
     }
   ];
 
+  useEffect(() => {
+    fetchPatients();
+  }, []);
+
   return (
     <>
       <GridPage
@@ -124,6 +125,7 @@ export default function PatientsPage() {
         searchValue={searchTerm}
         onSearchChange={setSearchTerm}
         onNewClick={handleNew}
+        isLoading={isLoading}
       />
 
       <PatientFormModal
