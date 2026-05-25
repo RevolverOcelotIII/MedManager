@@ -16,25 +16,24 @@ export function DetailsModal<T extends Record<string, any>>({
   if (!data) return null;
 
   const renderField = (column: any) => {
-    let value: React.ReactNode;
+    const value = column.render ? column.render(data) : data[column.name];
+
+    if (value === null || value === undefined || value === "" || (Array.isArray(value) && value.length === 0)) {
+      return null;
+    }
+
+    let displayValue: React.ReactNode = value;
 
     if (column.badge && column.options) {
-      const rawValue = data[column.name];
-      const optionIndex = column.options.findIndex((opt: any) => opt.value === rawValue);
+      const optionIndex = column.options.findIndex((opt: any) => opt.value === value);
       const colorIndex = optionIndex !== -1 ? (optionIndex % 10) + 1 : 1;
-      const label = column.options.find((opt: any) => opt.value === rawValue)?.label || String(rawValue);
+      const label = column.options.find((opt: any) => opt.value === value)?.label || String(value);
       
-      value = (
+      displayValue = (
         <span className={`badge color-${colorIndex}`}>
           {label}
         </span>
       );
-    } else {
-      value = column.render ? column.render(data) : data[column.name];
-    }
-
-    if (value === null || value === undefined || value === "" || (Array.isArray(value) && value.length === 0)) {
-      return null;
     }
 
     return (
@@ -43,7 +42,7 @@ export function DetailsModal<T extends Record<string, any>>({
         className={`details-field width-${column.width || "50"}`}
       >
         <span className="details-field-label">{column.label}</span>
-        <div className="details-field-value">{value}</div>
+        <div className="details-field-value">{displayValue}</div>
       </div>
     );
   };
