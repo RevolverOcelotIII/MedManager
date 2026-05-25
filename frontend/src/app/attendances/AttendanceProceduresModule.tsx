@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { MdEdit, MdDelete } from "react-icons/md";
+import { MdEdit, MdDelete, MdVisibility } from "react-icons/md";
 import { Grid } from "@/src/components/layout/Grid/Grid";
 import { FormModal } from "@/src/components/layout/Form/FormModal";
+import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
 import { AttendanceProcedure } from "@/src/types/attendance_procedure";
 import { ATTENDANCE_PROCEDURE_COLUMNS } from "@/src/models/attendance_procedure";
 import { AttendanceProcedureService } from "@/src/services/attendance_procedures";
@@ -19,6 +20,7 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
   const [attendanceProcedures, setAttendanceProcedures] = useState<AttendanceProcedure[]>([]);
   const [isDataLoading, setIsDataLoading] = useState(true);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedAttendanceProcedure, setSelectedAttendanceProcedure] = useState<AttendanceProcedure | null>(null);
 
   const { procedureOptions, employeeOptions, medicationOptions } = useGetAttendanceProcedureFormData();
@@ -42,6 +44,11 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
   const handleEditAttendanceProcedure = (attendanceProcedure: AttendanceProcedure) => {
     setSelectedAttendanceProcedure(attendanceProcedure);
     setIsFormModalOpen(true);
+  };
+
+  const handleViewAttendanceProcedureDetails = (attendanceProcedure: AttendanceProcedure) => {
+    setSelectedAttendanceProcedure(attendanceProcedure);
+    setIsDetailsModalOpen(true);
   };
 
   const handleNewAttendanceProcedure = () => {
@@ -101,8 +108,27 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
       align: "right",
       accessor: (item) => (
         <div className="action-buttons">
-          <button className="edit-button" onClick={() => handleEditAttendanceProcedure(item)}><MdEdit size={16} /></button>
-          <button className="delete-button" onClick={() => handleDeleteAttendanceProcedure(item.id)}><MdDelete size={16} /></button>
+          <button 
+            className="view-button" 
+            aria-label="View Details"
+            onClick={() => handleViewAttendanceProcedureDetails(item)}
+          >
+            <MdVisibility size={16} />
+          </button>
+          <button 
+            className="edit-button" 
+            aria-label="Edit"
+            onClick={() => handleEditAttendanceProcedure(item)}
+          >
+            <MdEdit size={16} />
+          </button>
+          <button 
+            className="delete-button" 
+            aria-label="Delete"
+            onClick={() => handleDeleteAttendanceProcedure(item.id)}
+          >
+            <MdDelete size={16} />
+          </button>
         </div>
       ),
     }
@@ -158,6 +184,14 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
         title={selectedAttendanceProcedure ? "Edit Procedure Record" : "Add Procedure Record"}
         columns={formColumns}
         initialData={initialFormData}
+      />
+
+      <DetailsModal
+        isOpen={isDetailsModalOpen}
+        onClose={() => setIsDetailsModalOpen(false)}
+        title="Procedure Execution Details"
+        data={selectedAttendanceProcedure}
+        columns={ATTENDANCE_PROCEDURE_COLUMNS}
       />
     </div>
   );
