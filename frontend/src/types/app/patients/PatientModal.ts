@@ -1,4 +1,4 @@
-import { Patient } from "@/src/app/patients/PatientsPage";
+import { Patient } from "@/src/types/app/patients/PatientsPage";
 
 export interface PatientModalProps {
   isOpen: boolean;
