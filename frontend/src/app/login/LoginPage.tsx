@@ -1,4 +1,5 @@
 "use client";
+import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { LoginSidebar } from "@/src/app/login/LoginSidebar";
 import { LoginForm } from "@/src/app/login/LoginForm";
@@ -11,17 +12,24 @@ export default function LoginPage() {
 
   const handleLogin = async (data: LoginFormData) => {
     try {
-      console.log("Login attempt:", data);
-      const response = await ApiService.post("/auth/login", data, true);
-      console.log("Login success:", response);
-      // Success redirect
+      const response = await ApiService.post<{ access_token: string; token_type: string }>(
+        "/auth/login", 
+        data, 
+        true
+      );
+
+      Cookies.set("token", response.access_token, {
+        expires: 1,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+      });
+
       router.push("/patients");
     } catch (error) {
       console.error("Login failed:", error);
       alert("Login failed. Please check your credentials.");
     }
   };
-
 
   return (
     <div className="login-layout">
