@@ -1,18 +1,20 @@
 import { Sex, BloodType, Patient } from "@/src/types/patient";
+import { ReactNode } from "react";
 
-export interface ColumnDefinition {
-  name: keyof Patient;
+export interface ColumnDefinition<T> {
+  name: keyof T | string;
   label: string;
   type: "text" | "date" | "select" | "textarea" | "tel";
   width?: string;
   required?: boolean;
   placeholder?: string;
-  options?: { label: string; value: string }[];
+  options?: { label: string; value: string | number }[];
   grid: boolean;
   form: boolean;
+  render?: (item: T) => ReactNode;
 }
 
-export const PATIENT_COLUMNS: ColumnDefinition[] = [
+export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
   {
     name: "full_name",
     label: "Full Name",
