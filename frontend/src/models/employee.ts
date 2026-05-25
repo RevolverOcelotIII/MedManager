@@ -1,20 +1,8 @@
-import { Sex, BloodType, Patient } from "@/src/types/patient";
-import { ReactNode } from "react";
+import { Sex } from "@/src/types/patient";
+import { EmploymentType, Employee } from "@/src/types/employee";
+import { ColumnDefinition } from "./patient";
 
-export interface ColumnDefinition<T> {
-  name: keyof T | string;
-  label: string;
-  type: "text" | "date" | "select" | "textarea" | "tel";
-  width?: string;
-  required?: boolean;
-  placeholder?: string;
-  options?: { label: string; value: string | number }[];
-  grid: boolean;
-  form: boolean;
-  render?: (item: T) => ReactNode;
-}
-
-export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
+export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
   {
     name: "full_name",
     label: "Full Name",
@@ -92,14 +80,6 @@ export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
     form: true,
   },
   {
-    name: "mother_name",
-    label: "Mother's Name",
-    type: "text",
-    width: "100",
-    grid: false,
-    form: true,
-  },
-  {
     name: "phone",
     label: "Phone",
     type: "tel",
@@ -109,19 +89,66 @@ export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
     form: true,
   },
   {
-    name: "blood_type",
-    label: "Blood Type",
-    type: "select",
+    name: "hire_date",
+    label: "Hire Date",
+    type: "date",
     width: "50",
-    options: Object.values(BloodType).map((bloodType) => ({ label: bloodType, value: bloodType })),
+    required: true,
     grid: true,
     form: true,
   },
   {
-    name: "allergies",
-    label: "Allergies",
-    type: "textarea",
-    width: "100",
+    name: "termination_date",
+    label: "Termination Date",
+    type: "date",
+    width: "50",
+    grid: false,
+    form: true,
+  },
+  {
+    name: "employment_type",
+    label: "Employment Type",
+    type: "select",
+    width: "50",
+    options: Object.values(EmploymentType).map((type) => ({ label: type, value: type })),
+    grid: true,
+    form: true,
+  },
+  {
+    name: "salary",
+    label: "Salary",
+    type: "text",
+    width: "50",
+    placeholder: "0.00",
+    grid: true,
+    form: true,
+  },
+  {
+    name: "active",
+    label: "Active",
+    type: "select",
+    width: "50",
+    options: [
+      { label: "Yes", value: "true" },
+      { label: "No", value: "false" },
+    ],
+    grid: true,
+    form: true,
+  },
+  {
+    name: "role",
+    label: "Role",
+    type: "text",
+    grid: true,
+    form: false,
+    render: (employee: Employee) => employee.role?.name || "—",
+  },
+  {
+    name: "role_id",
+    label: "Role",
+    type: "select",
+    width: "50",
+    required: true,
     grid: false,
     form: true,
   },
