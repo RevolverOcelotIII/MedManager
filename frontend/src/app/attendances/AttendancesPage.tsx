@@ -8,6 +8,7 @@ import { Attendance } from "@/src/types/attendance";
 import { ATTENDANCE_COLUMNS } from "@/src/models/attendance";
 import { AttendanceFormModal } from "@/src/app/attendances/AttendanceFormModal";
 import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
+import { AttendanceProceduresModule } from "@/src/app/attendances/AttendanceProceduresModule";
 import { AttendanceService } from "@/src/services/attendances";
 import "@/src/styles/app/patients.css";
 
@@ -150,6 +151,9 @@ export default function AttendancesPage() {
         title="Attendance Details"
         data={selectedAttendance}
         columns={ATTENDANCE_COLUMNS}
+        customContent={selectedAttendance && (
+          <AttendanceProceduresModule attendanceId={selectedAttendance.id} />
+        )}
       />
     </>
   );
