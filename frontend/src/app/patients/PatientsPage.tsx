@@ -4,14 +4,39 @@ import { useState } from "react";
 import { MdEdit, MdDelete } from "react-icons/md";
 import { GridPage } from "@/src/components/layout/GridPage/GridPage";
 import { GridColumn } from "@/src/types";
-import { Patient } from "@/src/types/app/patients/PatientsPage";
-import { PatientModal } from "@/src/app/patients/PatientModal";
+import { Patient, Sex, BloodType } from "@/src/types/patient";
+import { PATIENT_COLUMNS } from "@/src/models/patient";
+import { PatientFormModal } from "@/src/app/patients/PatientFormModal";
 import "@/src/styles/app/patients.css";
 
 const initialPatients: Patient[] = [
-  { id: 1, name: "Anna Müller", birthDate: "1984-03-12", gender: "F", room: "204", status: "Admitted" },
-  { id: 2, name: "James O'Connor", birthDate: "1971-09-02", gender: "M", room: "112", status: "Observation" },
-  { id: 3, name: "Sofia Almeida", birthDate: "1995-06-21", gender: "F", room: "—", status: "Discharged" },
+  { 
+    id: 1, 
+    full_name: "Anna Müller", 
+    birth_date: "1984-03-12", 
+    sex: Sex.MALE, 
+    cpf: "123.456.789-01",
+    phone: "(11) 98765-4321",
+    blood_type: BloodType.O_P
+  },
+  { 
+    id: 2, 
+    full_name: "James O'Connor", 
+    birth_date: "1971-09-02", 
+    sex: Sex.MALE, 
+    cpf: "987.654.321-09",
+    phone: "(21) 91234-5678",
+    blood_type: BloodType.A_P
+  },
+  { 
+    id: 3, 
+    full_name: "Sofia Almeida", 
+    birth_date: "1995-06-21", 
+    sex: Sex.FEMALE, 
+    cpf: "456.789.123-45",
+    phone: "(31) 99876-5432",
+    blood_type: BloodType.AB_N
+  },
 ];
 
 export default function PatientsPage() {
@@ -21,7 +46,8 @@ export default function PatientsPage() {
   const [patients, setPatients] = useState<Patient[]>(initialPatients);
   
   const filteredPatients = patients.filter(patient => 
-    patient.name.toLowerCase().includes(searchTerm.toLowerCase())
+    patient.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    patient.cpf.includes(searchTerm)
   );
 
   const handleEdit = (patient: Patient) => {
@@ -55,22 +81,13 @@ export default function PatientsPage() {
     }
   };
 
-  const patientColumns: GridColumn<Patient>[] = [
-    { header: "Name", accessor: "name"},
-    { header: "Birth date", accessor: "birthDate"},
-    { header: "Gender", accessor: "gender" },
-    { header: "Room", accessor: "room"},
-    { 
-      header: "Status", 
-      accessor: (patient) => {
-        const statusType = patient.status.toLowerCase();
-        return (
-          <span className={`status-badge status-${statusType}`}>
-            {patient.status}
-          </span>
-        );
-      } 
-    },
+  const gridColumns: GridColumn<Patient>[] = [
+    ...PATIENT_COLUMNS
+      .filter(column => column.grid)
+      .map(column => ({
+        header: column.label,
+        accessor: column.name as keyof Patient,
+      })),
     {
       header: "Actions",
       align: "right",
@@ -102,14 +119,14 @@ export default function PatientsPage() {
         title="Patients"
         description="People currently registered with the hospital."
         data={filteredPatients}
-        columns={patientColumns}
+        columns={gridColumns}
         rowKey="id"
         searchValue={searchTerm}
         onSearchChange={setSearchTerm}
         onNewClick={handleNew}
       />
 
-      <PatientModal
+      <PatientFormModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleSubmit}
