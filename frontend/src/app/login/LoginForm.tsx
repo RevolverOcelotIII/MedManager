@@ -8,7 +8,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     onSubmit({
-      email: formData.get("email") as string,
+      username: formData.get("email") as string,
       password: formData.get("password") as string,
     });
   };
