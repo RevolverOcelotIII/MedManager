@@ -13,6 +13,7 @@
 
   .table {
     width: 100%;
+    min-width: max-content;
     font-size: var(--font-size-sm);
   }
 }
@@ -29,6 +30,7 @@
   font-weight: 500;
   color: var(--color-zinc-500);
   text-align: left;
+  white-space: nowrap;
 
   &.th-right {
     text-align: right;
@@ -55,6 +57,7 @@
     padding: var(--spacing-4);
     vertical-align: middle;
     font-size: var(--font-size-sm);
+    white-space: nowrap;
 
     &.td-right {
       text-align: right;
