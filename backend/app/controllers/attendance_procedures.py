@@ -4,6 +4,7 @@ from app.core.database import get_db
 from app.core.auth import get_current_user, require_admin
 from app.schemas.attendance_procedures import AttendanceProcedureResponse, AttendanceProcedureCreate, AttendanceProcedureUpdate
 from app.services.attendance_procedures import AttendanceProcedureService
+from app.services.procedures import ProcedureService
 from app.models.user import User
 from app.models.employee import AccessLevel
 from app.models.attendance_procedure import AttendanceProcedureStatus
@@ -27,10 +28,20 @@ def create_attendance_procedure(attendance_procedure_data: AttendanceProcedureCr
     if user_access not in allowed_creators:
         raise HTTPException(status_code=403, detail="Not authorized to create procedure records.")
 
+    # Check if the user's role is authorized to dispatch this specific procedure
+    if user_access != AccessLevel.admin:
+        procedure = ProcedureService.get_by_id(db_session, attendance_procedure_data.procedure_id)
+        authorized_role_ids = [role.id for role in procedure.dispatch_roles]
+        if current_user.employee.role_id not in authorized_role_ids:
+            raise HTTPException(
+                status_code=403, 
+                detail=f"Your role ({current_user.employee.role.name}) is not authorized to dispatch this procedure."
+            )
+
     # ordered_by should always be the logged user
     attendance_procedure_data.ordered_by_id = current_user.employee_id
     
-    # meds can create procedure attendances but not assign anybody
+    # doctor/nurse can create procedure attendances but not assign anybody
     if user_access in [AccessLevel.doctor, AccessLevel.nurse]:
         attendance_procedure_data.executed_by_id = None
         

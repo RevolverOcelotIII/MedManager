@@ -4,8 +4,17 @@ from sqlalchemy.orm import relationship
 from app.core.database import Base
 from app.models.mixins import TimestampMixin
 
-procedure_responsible_roles = Table(
-    "procedure_responsible_roles",
+# Junction table for roles authorized to dispatch (order) the procedure
+procedure_dispatch_roles = Table(
+    "procedure_dispatch_roles",
+    Base.metadata,
+    Column("procedure_id", Integer, ForeignKey("procedures.id"), primary_key=True),
+    Column("role_id", Integer, ForeignKey("roles.id"), primary_key=True),
+)
+
+# Junction table for roles authorized to execute (perform) the procedure
+procedure_execute_roles = Table(
+    "procedure_execute_roles",
     Base.metadata,
     Column("procedure_id", Integer, ForeignKey("procedures.id"), primary_key=True),
     Column("role_id", Integer, ForeignKey("roles.id"), primary_key=True),
@@ -41,4 +50,5 @@ class Procedure(Base, TimestampMixin):
     )
     description = Column(Text, nullable=True)
 
-    responsible_roles = relationship("Role", secondary=procedure_responsible_roles)
+    dispatch_roles = relationship("Role", secondary=procedure_dispatch_roles)
+    execute_roles = relationship("Role", secondary=procedure_execute_roles)

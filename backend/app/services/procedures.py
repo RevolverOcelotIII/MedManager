@@ -30,13 +30,18 @@ class ProcedureService:
         ProcedureService.validate_code_unique(db_session, procedure_data.code)
         
         data = procedure_data.model_dump()
-        responsible_role_ids = data.pop("responsible_role_ids", [])
+        dispatch_role_ids = data.pop("dispatch_role_ids", [])
+        execute_role_ids = data.pop("execute_role_ids", [])
         
         new_procedure = Procedure(**data)
         
-        if responsible_role_ids:
-            roles = db_session.query(Role).filter(Role.id.in_(responsible_role_ids)).all()
-            new_procedure.responsible_roles = roles
+        if dispatch_role_ids:
+            roles = db_session.query(Role).filter(Role.id.in_(dispatch_role_ids)).all()
+            new_procedure.dispatch_roles = roles
+            
+        if execute_role_ids:
+            roles = db_session.query(Role).filter(Role.id.in_(execute_role_ids)).all()
+            new_procedure.execute_roles = roles
             
         db_session.add(new_procedure)
         db_session.commit()
@@ -48,7 +53,8 @@ class ProcedureService:
         procedure = ProcedureService.get_by_id(db_session, procedure_id)
         
         update_data = procedure_data.model_dump(exclude_unset=True)
-        responsible_role_ids = update_data.pop("responsible_role_ids", None)
+        dispatch_role_ids = update_data.pop("dispatch_role_ids", None)
+        execute_role_ids = update_data.pop("execute_role_ids", None)
         
         if "code" in update_data:
             ProcedureService.validate_code_unique(db_session, update_data["code"], exclude_procedure_id=procedure_id)
@@ -56,9 +62,13 @@ class ProcedureService:
         for field_name, field_value in update_data.items():
             setattr(procedure, field_name, field_value)
             
-        if responsible_role_ids is not None:
-            roles = db_session.query(Role).filter(Role.id.in_(responsible_role_ids)).all()
-            procedure.responsible_roles = roles
+        if dispatch_role_ids is not None:
+            roles = db_session.query(Role).filter(Role.id.in_(dispatch_role_ids)).all()
+            procedure.dispatch_roles = roles
+
+        if execute_role_ids is not None:
+            roles = db_session.query(Role).filter(Role.id.in_(execute_role_ids)).all()
+            procedure.execute_roles = roles
             
         db_session.commit()
         db_session.refresh(procedure)
