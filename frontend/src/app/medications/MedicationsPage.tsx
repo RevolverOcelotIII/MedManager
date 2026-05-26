@@ -11,6 +11,7 @@ import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
 import { MedicationService } from "@/src/services/medications";
 import { useAuth } from "@/src/hooks/useAuth";
 import { AccessLevel } from "@/src/types/role";
+import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/app/patients.css";
 
 export default function MedicationsPage() {
@@ -71,18 +72,18 @@ export default function MedicationsPage() {
       fetchMedications(true);
     } catch (error) {
       console.error("Failed to save medication:", error);
-      alert("Error saving medication. Please check the data and try again.");
+      alert(i18n.t("common.error_saving"));
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm("Are you sure you want to delete this medication?")) {
+    if (confirm(i18n.t("common.confirm_delete"))) {
       try {
         await MedicationService.delete(id);
         fetchMedications(true);
       } catch (error) {
         console.error("Failed to delete medication:", error);
-        alert("Error deleting medication.");
+        alert(i18n.t("common.error_deleting"));
       }
     }
   };
@@ -99,14 +100,14 @@ export default function MedicationsPage() {
         options: column.options,
       })),
     {
-      header: "Actions",
+      header: i18n.t("common.actions"),
       align: "right",
       className: "actions-column",
       accessor: (medication) => (
         <div className="action-buttons">
           <button 
             className="view-button" 
-            aria-label="View Details"
+            aria-label={i18n.t("common.view_details")}
             onClick={() => handleViewDetails(medication)}
           >
             <MdVisibility size={16} />
@@ -116,14 +117,14 @@ export default function MedicationsPage() {
             <>
               <button 
                 className="edit-button" 
-                aria-label="Edit"
+                aria-label={i18n.t("common.edit")}
                 onClick={() => handleEdit(medication)}
               >
                 <MdEdit size={16} />
               </button>
               <button 
                 className="delete-button" 
-                aria-label="Delete"
+                aria-label={i18n.t("common.delete")}
                 onClick={() => handleDelete(medication.id)}
               >
                 <MdDelete size={16} />
@@ -138,8 +139,8 @@ export default function MedicationsPage() {
   return (
     <>
       <GridPage
-        title="Medications"
-        description="Manage the medicine catalog and stock."
+        title={i18n.t("pages.medications.title")}
+        description={i18n.t("pages.medications.description")}
         data={filteredMedications}
         columns={gridColumns}
         rowKey="id"
@@ -159,7 +160,7 @@ export default function MedicationsPage() {
       <DetailsModal
         isOpen={isDetailsModalOpen}
         onClose={() => setIsDetailsModalOpen(false)}
-        title="Medication Details"
+        title={i18n.t("pages.medications.details_title")}
         data={selectedMedication}
         columns={MEDICATION_COLUMNS}
       />

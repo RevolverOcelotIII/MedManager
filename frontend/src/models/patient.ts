@@ -1,5 +1,6 @@
 import { Sex, BloodType, Patient } from "@/src/types/patient";
 import { ReactNode } from "react";
+import { i18n } from "@/src/lib/i18n";
 
 export interface ColumnDefinition<T> {
   name: keyof T | string;
@@ -19,28 +20,28 @@ export interface ColumnDefinition<T> {
 export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
   {
     name: "full_name",
-    label: "Full Name",
+    label: i18n.t("models.patient.full_name"),
     type: "text",
     width: "100",
     required: true,
-    placeholder: "Enter full name",
+    placeholder: i18n.t("models.patient.full_name"),
     grid: true,
     form: true,
     details: true,
   },
   {
     name: "social_name",
-    label: "Social Name",
+    label: i18n.t("models.patient.social_name"),
     type: "text",
     width: "100",
-    placeholder: "Enter social name (optional)",
+    placeholder: i18n.t("models.patient.social_name"),
     grid: false,
     form: true,
     details: true,
   },
   {
     name: "cpf",
-    label: "CPF",
+    label: i18n.t("models.patient.cpf"),
     type: "text",
     width: "50",
     required: true,
@@ -51,17 +52,17 @@ export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
   },
   {
     name: "rg",
-    label: "RG",
+    label: i18n.t("models.patient.rg"),
     type: "text",
     width: "50",
-    placeholder: "Enter RG",
+    placeholder: i18n.t("models.patient.rg"),
     grid: false,
     form: true,
     details: true,
   },
   {
     name: "birth_date",
-    label: "Birth Date",
+    label: i18n.t("models.patient.birth_date"),
     type: "date",
     width: "50",
     required: true,
@@ -71,21 +72,20 @@ export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
   },
   {
     name: "sex",
-    label: "Sex",
+    label: i18n.t("models.patient.sex"),
     type: "select",
     width: "50",
-    options: [
-      { label: "Male", value: Sex.MALE },
-      { label: "Female", value: Sex.FEMALE },
-      { label: "Other", value: Sex.OTHER },
-    ],
+    options: Object.values(Sex).map((s) => ({
+      label: i18n.t(`enums.sex.${s.toLowerCase()}`),
+      value: s,
+    })),
     grid: true,
     form: true,
     details: true,
   },
   {
     name: "marital_status",
-    label: "Marital Status",
+    label: i18n.t("models.patient.marital_status"),
     type: "text",
     width: "50",
     grid: false,
@@ -94,7 +94,7 @@ export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
   },
   {
     name: "nationality",
-    label: "Nationality",
+    label: i18n.t("models.patient.nationality"),
     type: "text",
     width: "50",
     grid: false,
@@ -103,7 +103,7 @@ export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
   },
   {
     name: "mother_name",
-    label: "Mother's Name",
+    label: i18n.t("models.patient.mother_name"),
     type: "text",
     width: "100",
     grid: false,
@@ -112,7 +112,7 @@ export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
   },
   {
     name: "phone",
-    label: "Phone",
+    label: i18n.t("models.patient.phone"),
     type: "tel",
     width: "50",
     placeholder: "(00) 00000-0000",
@@ -122,7 +122,7 @@ export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
   },
   {
     name: "blood_type",
-    label: "Blood Type",
+    label: i18n.t("models.patient.blood_type"),
     type: "select",
     width: "50",
     options: Object.values(BloodType).map((bloodType) => ({ label: bloodType, value: bloodType })),
@@ -132,7 +132,7 @@ export const PATIENT_COLUMNS: ColumnDefinition<Patient>[] = [
   },
   {
     name: "allergies",
-    label: "Allergies",
+    label: i18n.t("models.patient.allergies"),
     type: "textarea",
     width: "100",
     grid: false,

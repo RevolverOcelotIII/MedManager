@@ -1,6 +1,7 @@
 import { GridProps } from "@/src/types";
 import { GridHeader } from "@/src/components/layout/Grid/GridHeader";
 import { GridRow } from "@/src/components/layout/Grid/GridRow";
+import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/components/layout/grid.css";
 
 export function Grid<T>({ data, columns, rowKey, className, isLoading }: GridProps<T>) {
@@ -15,14 +16,14 @@ export function Grid<T>({ data, columns, rowKey, className, isLoading }: GridPro
                 <td colSpan={columns.length} className="loading-cell">
                   <div className="loading-container">
                     <div className="spinner"></div>
-                    <span>Loading...</span>
+                    <span>{i18n.t("common.loading")}</span>
                   </div>
                 </td>
               </tr>
             ) : data.length === 0 ? (
               <tr>
                 <td colSpan={columns.length} className="empty-cell">
-                  No data found
+                  {i18n.t("common.no_data")}
                 </td>
               </tr>
             ) : (

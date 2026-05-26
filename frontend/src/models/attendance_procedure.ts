@@ -1,10 +1,11 @@
 import { AttendanceProcedure, AttendanceProcedureStatus } from "@/src/types/attendance_procedure";
 import { ColumnDefinition } from "./patient";
+import { i18n } from "@/src/lib/i18n";
 
 export const ATTENDANCE_PROCEDURE_COLUMNS: ColumnDefinition<AttendanceProcedure>[] = [
   {
     name: "procedure_id",
-    label: "Procedure",
+    label: i18n.t("models.attendance_procedure.procedure"),
     type: "search_input",
     width: "100",
     required: true,
@@ -15,13 +16,13 @@ export const ATTENDANCE_PROCEDURE_COLUMNS: ColumnDefinition<AttendanceProcedure>
   },
   {
     name: "status",
-    label: "Status",
+    label: i18n.t("models.attendance_procedure.status"),
     type: "select",
     width: "50",
     required: true,
-    options: Object.values(AttendanceProcedureStatus).map((status) => ({
-      label: status.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
-      value: status
+    options: Object.values(AttendanceProcedureStatus).map((s) => ({
+      label: i18n.t(`enums.procedure_status.${s.toLowerCase()}`),
+      value: s
     })),
     grid: true,
     form: true,
@@ -30,7 +31,7 @@ export const ATTENDANCE_PROCEDURE_COLUMNS: ColumnDefinition<AttendanceProcedure>
   },
   {
     name: "description",
-    label: "Description",
+    label: i18n.t("models.procedure.description"),
     type: "textarea",
     width: "100",
     grid: false,
@@ -39,7 +40,7 @@ export const ATTENDANCE_PROCEDURE_COLUMNS: ColumnDefinition<AttendanceProcedure>
   },
   {
     name: "start_time",
-    label: "Start Time",
+    label: i18n.t("models.attendance_procedure.start_time"),
     type: "date",
     width: "50",
     grid: true,
@@ -49,7 +50,7 @@ export const ATTENDANCE_PROCEDURE_COLUMNS: ColumnDefinition<AttendanceProcedure>
   },
   {
     name: "end_time",
-    label: "End Time",
+    label: i18n.t("models.attendance_procedure.end_time"),
     type: "date",
     width: "50",
     grid: true,
@@ -59,7 +60,7 @@ export const ATTENDANCE_PROCEDURE_COLUMNS: ColumnDefinition<AttendanceProcedure>
   },
   {
     name: "ordered_by_id",
-    label: "Ordered By",
+    label: i18n.t("models.attendance_procedure.ordered_by"),
     type: "search_input",
     width: "50",
     grid: false,
@@ -69,7 +70,7 @@ export const ATTENDANCE_PROCEDURE_COLUMNS: ColumnDefinition<AttendanceProcedure>
   },
   {
     name: "executed_by_id",
-    label: "Executed By",
+    label: i18n.t("models.attendance_procedure.executed_by"),
     type: "search_input",
     width: "50",
     grid: true,
@@ -79,7 +80,7 @@ export const ATTENDANCE_PROCEDURE_COLUMNS: ColumnDefinition<AttendanceProcedure>
   },
   {
     name: "medications",
-    label: "Medications",
+    label: i18n.t("models.attendance_procedure.medications"),
     type: "multi_search_input",
     width: "100",
     grid: false,

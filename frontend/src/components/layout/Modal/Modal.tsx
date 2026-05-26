@@ -2,6 +2,7 @@
 
 import { MdClose } from "react-icons/md";
 import { ModalProps } from "@/src/types/components/layout/Modal/Modal";
+import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/components/layout/modal.css";
 
 export function Modal({ isOpen, onClose, title, children, footer, size = "md" }: ModalProps) {
@@ -15,7 +16,7 @@ export function Modal({ isOpen, onClose, title, children, footer, size = "md" }:
           <button 
             className="close-button" 
             onClick={onClose}
-            aria-label="Close"
+            aria-label={i18n.t("common.close")}
           >
             <MdClose size={20} />
           </button>

@@ -1,37 +1,38 @@
 import { Procedure, ProcedureCategory } from "@/src/types/procedure";
 import { ColumnDefinition } from "./patient";
+import { i18n } from "@/src/lib/i18n";
 
 export const PROCEDURE_COLUMNS: ColumnDefinition<Procedure>[] = [
   {
     name: "name",
-    label: "Name",
+    label: i18n.t("models.procedure.name"),
     type: "text",
     width: "50",
     required: true,
-    placeholder: "Ex: Raio-X de Tórax",
+    placeholder: i18n.t("models.procedure.name"),
     grid: true,
     form: true,
     details: true,
   },
   {
     name: "code",
-    label: "Code",
+    label: i18n.t("models.procedure.code"),
     type: "text",
     width: "25",
-    placeholder: "SIGTAP/SUS Code",
+    placeholder: i18n.t("models.procedure.code"),
     grid: true,
     form: true,
     details: true,
   },
   {
     name: "category",
-    label: "Category",
+    label: i18n.t("models.procedure.category"),
     type: "select",
     width: "25",
     required: true,
-    options: Object.values(ProcedureCategory).map((cat) => ({ 
-      label: cat.charAt(0).toUpperCase() + cat.slice(1), 
-      value: cat 
+    options: Object.values(ProcedureCategory).map((s) => ({
+      label: i18n.t(`enums.procedure_category.${s.toLowerCase()}`),
+      value: s,
     })),
     grid: true,
     form: true,
@@ -40,7 +41,7 @@ export const PROCEDURE_COLUMNS: ColumnDefinition<Procedure>[] = [
   },
   {
     name: "responsible_role_ids",
-    label: "Responsible Roles",
+    label: i18n.t("models.procedure.responsible_roles"),
     type: "multi_search_input",
     width: "100",
     grid: false,
@@ -49,7 +50,7 @@ export const PROCEDURE_COLUMNS: ColumnDefinition<Procedure>[] = [
   },
   {
     name: "responsible_roles",
-    label: "Responsible Roles",
+    label: i18n.t("models.procedure.responsible_roles"),
     type: "text",
     grid: true,
     form: false,
@@ -58,10 +59,10 @@ export const PROCEDURE_COLUMNS: ColumnDefinition<Procedure>[] = [
   },
   {
     name: "description",
-    label: "Description",
+    label: i18n.t("models.procedure.description"),
     type: "textarea",
     width: "100",
-    placeholder: "Enter procedure description",
+    placeholder: i18n.t("models.procedure.description"),
     grid: false,
     form: true,
     details: true,

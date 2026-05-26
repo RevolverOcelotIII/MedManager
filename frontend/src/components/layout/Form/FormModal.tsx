@@ -4,6 +4,7 @@ import { Modal } from "@/src/components/layout/Modal/Modal";
 import { FormField, Input, Select, Textarea } from "@/src/components/layout/Form/Form";
 import { SearchInput } from "@/src/components/layout/Form/SearchInput";
 import { FormModalProps } from "@/src/types/components/layout/Form/FormModal";
+import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/components/layout/form.css";
 import { useState, useEffect } from "react";
 
@@ -38,14 +39,14 @@ export function FormModal<T extends Record<string, any>>({
         className="button-secondary" 
         onClick={onClose}
       >
-        Cancel
+        {i18n.t("common.cancel")}
       </button>
       <button 
         type="submit" 
         form="form-modal"
         className="button-primary"
       >
-        {initialData ? "Save Changes" : "Create"}
+        {initialData ? i18n.t("common.save") : i18n.t("common.new")}
       </button>
     </>
   );

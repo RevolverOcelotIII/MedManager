@@ -12,6 +12,7 @@ import { AttendanceProceduresModule } from "@/src/app/attendances/AttendanceProc
 import { AttendanceService } from "@/src/services/attendances";
 import { useAuth } from "@/src/hooks/useAuth";
 import { AccessLevel } from "@/src/types/role";
+import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/app/patients.css";
 
 export default function AttendancesPage() {
@@ -79,7 +80,7 @@ export default function AttendancesPage() {
       fetchAttendances(true);
     } catch (error) {
       console.error("Failed to save attendance:", error);
-      alert("Error saving attendance. Please check the data and try again.");
+      alert(i18n.t("common.error_saving"));
     }
   };
 
@@ -95,14 +96,14 @@ export default function AttendancesPage() {
         options: column.options,
       })),
     {
-      header: "Actions",
+      header: i18n.t("common.actions"),
       align: "right",
       className: "actions-column",
       accessor: (attendance) => (
         <div className="action-buttons">
           <button 
             className="view-button" 
-            aria-label="View Details"
+            aria-label={i18n.t("common.view_details")}
             onClick={() => handleViewDetails(attendance)}
           >
             <MdVisibility size={16} />
@@ -111,7 +112,7 @@ export default function AttendancesPage() {
           {canModifyHeader && (
             <button 
               className="edit-button" 
-              aria-label="Edit"
+              aria-label={i18n.t("common.edit")}
               onClick={() => handleEdit(attendance)}
             >
               <MdEdit size={16} />
@@ -125,8 +126,8 @@ export default function AttendancesPage() {
   return (
     <>
       <GridPage
-        title="Attendances"
-        description="Patient visits and clinical workflow."
+        title={i18n.t("pages.attendances.title")}
+        description={i18n.t("pages.attendances.description")}
         data={filteredAttendances}
         columns={gridColumns}
         rowKey="id"
@@ -146,7 +147,7 @@ export default function AttendancesPage() {
       <DetailsModal
         isOpen={isDetailsModalOpen}
         onClose={() => setIsDetailsModalOpen(false)}
-        title="Attendance Details"
+        title={i18n.t("pages.attendances.details_title")}
         data={selectedAttendance}
         columns={ATTENDANCE_COLUMNS}
         customContent={selectedAttendance && (

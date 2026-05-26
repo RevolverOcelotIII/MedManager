@@ -2,6 +2,7 @@
 
 import { MdLogout } from "react-icons/md";
 import { useAuth } from "@/src/hooks/useAuth";
+import { LanguageSwitcher } from "@/src/components/layout/LanguageSwitcher";
 import "@/src/styles/components/Sidebar/sidebar-footer.css";
 
 interface SidebarFooterProps {
@@ -25,6 +26,7 @@ export function SidebarFooter({ isCollapsed }: SidebarFooterProps) {
 
   return (
     <div className="sidebar-footer">
+      <LanguageSwitcher isCollapsed={isCollapsed} />
       <div className="user-container">
         {!isCollapsed && (
           <div className="user-info">

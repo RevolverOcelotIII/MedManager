@@ -12,6 +12,7 @@ import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
 import { ProcedureService } from "@/src/services/procedures";
 import { useAuth } from "@/src/hooks/useAuth";
 import { AccessLevel } from "@/src/types/role";
+import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/app/patients.css";
 
 export default function ProceduresPage() {
@@ -82,18 +83,18 @@ export default function ProceduresPage() {
       fetchProcedures(true);
     } catch (error) {
       console.error("Failed to save procedure:", error);
-      alert("Error saving procedure. Please check the data and try again.");
+      alert(i18n.t("common.error_saving"));
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm("Are you sure you want to delete this procedure?")) {
+    if (confirm(i18n.t("common.confirm_delete"))) {
       try {
         await ProcedureService.delete(id);
         fetchProcedures(true);
       } catch (error) {
         console.error("Failed to delete procedure:", error);
-        alert("Error deleting procedure.");
+        alert(i18n.t("common.error_deleting"));
       }
     }
   };
@@ -108,28 +109,28 @@ export default function ProceduresPage() {
         options: column.options,
       })),
     {
-      header: "Actions",
+      header: i18n.t("common.actions"),
       align: "right",
       className: "actions-column",
       accessor: (procedure) => (
         <div className="action-buttons">
           <button 
             className="view-button" 
-            aria-label="View Details"
+            aria-label={i18n.t("common.view_details")}
             onClick={() => handleViewDetails(procedure)}
           >
             <MdVisibility size={16} />
           </button>
           <button 
             className="edit-button" 
-            aria-label="Edit"
+            aria-label={i18n.t("common.edit")}
             onClick={() => handleEdit(procedure)}
           >
             <MdEdit size={16} />
           </button>
           <button 
             className="delete-button" 
-            aria-label="Delete"
+            aria-label={i18n.t("common.delete")}
             onClick={() => handleDelete(procedure.id)}
           >
             <MdDelete size={16} />
@@ -142,8 +143,8 @@ export default function ProceduresPage() {
   return (
     <>
       <GridPage
-        title="Procedures"
-        description="Medical procedures, exams, and clinical actions."
+        title={i18n.t("pages.procedures.title")}
+        description={i18n.t("pages.procedures.description")}
         data={filteredProcedures}
         columns={gridColumns}
         rowKey="id"
@@ -163,7 +164,7 @@ export default function ProceduresPage() {
       <DetailsModal
         isOpen={isDetailsModalOpen}
         onClose={() => setIsDetailsModalOpen(false)}
-        title="Procedure Details"
+        title={i18n.t("pages.procedures.details_title")}
         data={selectedProcedure}
         columns={PROCEDURE_COLUMNS}
       />

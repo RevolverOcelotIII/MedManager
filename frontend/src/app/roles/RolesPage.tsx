@@ -11,6 +11,7 @@ import { RoleFormModal } from "@/src/app/roles/RoleFormModal";
 import { RoleService } from "@/src/services/roles";
 import { useAuth } from "@/src/hooks/useAuth";
 import { AccessLevel } from "@/src/types/role";
+import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/app/patients.css";
 
 export default function RolesPage() {
@@ -75,18 +76,18 @@ export default function RolesPage() {
       fetchRoles(true);
     } catch (error) {
       console.error("Failed to save role:", error);
-      alert("Error saving role. Please check the data and try again.");
+      alert(i18n.t("common.error_saving"));
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm("Are you sure you want to delete this role?")) {
+    if (confirm(i18n.t("common.confirm_delete"))) {
       try {
         await RoleService.delete(id);
         fetchRoles(true);
       } catch (error) {
         console.error("Failed to delete role:", error);
-        alert("Error deleting role.");
+        alert(i18n.t("common.error_deleting"));
       }
     }
   };
@@ -101,21 +102,21 @@ export default function RolesPage() {
         options: column.options,
       })),
     {
-      header: "Actions",
+      header: i18n.t("common.actions"),
       align: "right",
       className: "actions-column",
       accessor: (role) => (
         <div className="action-buttons">
           <button 
             className="edit-button" 
-            aria-label="Edit"
+            aria-label={i18n.t("common.edit")}
             onClick={() => handleEdit(role)}
           >
             <MdEdit size={16} />
           </button>
           <button 
             className="delete-button" 
-            aria-label="Delete"
+            aria-label={i18n.t("common.delete")}
             onClick={() => handleDelete(role.id)}
           >
             <MdDelete size={16} />
@@ -128,8 +129,8 @@ export default function RolesPage() {
   return (
     <>
       <GridPage
-        title="Hospital Roles"
-        description="Define job titles and their corresponding access categories."
+        title={i18n.t("pages.roles.title")}
+        description={i18n.t("pages.roles.description")}
         data={filteredRoles}
         columns={gridColumns}
         rowKey="id"

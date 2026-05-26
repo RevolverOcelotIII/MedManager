@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import "@/src/styles/globals.css";
 import { Sidebar } from "@/src/components/Sidebar/Sidebar";
+import { i18n } from "@/src/lib/i18n";
 
 export default function RootLayout({
   children,
@@ -11,6 +12,13 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
   const isLoginPage = pathname === "/login";
+
+  if (typeof window !== "undefined") {
+    const savedLocale = localStorage.getItem("locale");
+    if (savedLocale === "pt" || savedLocale === "en") {
+      i18n.locale = savedLocale;
+    }
+  }
 
   return (
     <html lang="en">

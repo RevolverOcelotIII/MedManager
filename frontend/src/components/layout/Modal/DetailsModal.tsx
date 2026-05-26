@@ -2,6 +2,7 @@
 
 import { Modal } from "@/src/components/layout/Modal/Modal";
 import { DetailsModalProps } from "@/src/types/components/layout/DetailsModal";
+import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/components/layout/details-modal.css";
 
 export function DetailsModal<T extends Record<string, any>>({ 
@@ -47,12 +48,23 @@ export function DetailsModal<T extends Record<string, any>>({
     );
   };
 
+  const footer = (
+    <button 
+      type="button" 
+      className="button-secondary" 
+      onClick={onClose}
+    >
+      {i18n.t("common.close")}
+    </button>
+  );
+
   return (
     <Modal 
       isOpen={isOpen} 
       onClose={onClose} 
       title={title}
       size="lg"
+      footer={footer}
     >
       <div className="details-modal-content">
         {sections ? (

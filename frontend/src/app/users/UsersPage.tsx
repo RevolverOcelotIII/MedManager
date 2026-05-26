@@ -87,18 +87,18 @@ export default function UsersPage() {
       fetchUsers(true);
     } catch (error) {
       console.error("Failed to save user:", error);
-      alert("Error saving user account. Please check the data and try again.");
+      alert(i18n.t("common.error_saving"));
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm("Are you sure you want to delete this user account?")) {
+    if (confirm(i18n.t("common.confirm_delete"))) {
       try {
         await UserService.delete(id);
         fetchUsers(true);
       } catch (error) {
         console.error("Failed to delete user:", error);
-        alert("Error deleting user account.");
+        alert(i18n.t("common.error_deleting"));
       }
     }
   };
@@ -169,6 +169,14 @@ export default function UsersPage() {
         isOpen={isDetailsModalOpen}
         onClose={() => setIsDetailsModalOpen(false)}
         title="User Account Details"
+        data={selectedUser}
+        columns={USER_COLUMNS}
+      />
+    </>
+  );
+}
+)}
+        title={i18n.t("pages.users.details_title")}
         data={selectedUser}
         columns={USER_COLUMNS}
       />

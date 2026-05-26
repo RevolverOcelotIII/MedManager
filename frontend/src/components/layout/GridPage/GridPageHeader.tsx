@@ -1,5 +1,6 @@
 import { MdSearch, MdAdd } from "react-icons/md";
 import { GridPageHeaderProps } from "@/src/types";
+import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/components/layout/grid-page.css";
 
 export function GridPageHeader({
@@ -8,7 +9,7 @@ export function GridPageHeader({
   searchValue,
   onSearchChange,
   onNewClick,
-  newButtonLabel = "New",
+  newButtonLabel = i18n.t("common.new"),
   extraActions,
 }: GridPageHeaderProps) {
   return (
@@ -25,7 +26,7 @@ export function GridPageHeader({
             <MdSearch className="search-icon" />
             <input
               type="text"
-              placeholder="Search..."
+              placeholder={i18n.t("common.search")}
               value={searchValue}
               onChange={(e) => onSearchChange?.(e.target.value)}
               className="search-input"

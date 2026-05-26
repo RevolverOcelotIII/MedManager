@@ -11,6 +11,7 @@ import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
 import { PatientService } from "@/src/services/patients";
 import { useAuth } from "@/src/hooks/useAuth";
 import { AccessLevel } from "@/src/types/role";
+import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/app/patients.css";
 
 export default function PatientsPage() {
@@ -67,18 +68,18 @@ export default function PatientsPage() {
       fetchPatients(true);
     } catch (error) {
       console.error("Failed to save patient:", error);
-      alert("Error saving patient. Please check the data and try again.");
+      alert(i18n.t("common.error_saving"));
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm("Are you sure you want to delete this patient?")) {
+    if (confirm(i18n.t("common.confirm_delete"))) {
       try {
         await PatientService.delete(id);
         fetchPatients(true);
       } catch (error) {
         console.error("Failed to delete patient:", error);
-        alert("Error deleting patient.");
+        alert(i18n.t("common.error_deleting"));
       }
     }
   };
@@ -97,14 +98,14 @@ export default function PatientsPage() {
         options: column.options,
       })),
     {
-      header: "Actions",
+      header: i18n.t("common.actions"),
       align: "right",
       className: "actions-column",
       accessor: (patient) => (
         <div className="action-buttons">
           <button 
             className="view-button" 
-            aria-label="View Details"
+            aria-label={i18n.t("common.view_details")}
             onClick={() => handleViewDetails(patient)}
           >
             <MdVisibility size={16} />
@@ -113,7 +114,7 @@ export default function PatientsPage() {
           {canEdit && (
             <button 
               className="edit-button" 
-              aria-label="Edit"
+              aria-label={i18n.t("common.edit")}
               onClick={() => handleEdit(patient)}
             >
               <MdEdit size={16} />
@@ -123,7 +124,7 @@ export default function PatientsPage() {
           {canDelete && (
             <button 
               className="delete-button" 
-              aria-label="Delete"
+              aria-label={i18n.t("common.delete")}
               onClick={() => handleDelete(patient.id)}
             >
               <MdDelete size={16} />
@@ -141,8 +142,8 @@ export default function PatientsPage() {
   return (
     <>
       <GridPage
-        title="Patients"
-        description="People currently registered with the hospital."
+        title={i18n.t("pages.patients.title")}
+        description={i18n.t("pages.patients.description")}
         data={filteredPatients}
         columns={gridColumns}
         rowKey="id"
@@ -162,7 +163,7 @@ export default function PatientsPage() {
       <DetailsModal
         isOpen={isDetailsModalOpen}
         onClose={() => setIsDetailsModalOpen(false)}
-        title="Patient Details"
+        title={i18n.t("pages.patients.details_title")}
         data={selectedPatient}
         columns={PATIENT_COLUMNS}
       />

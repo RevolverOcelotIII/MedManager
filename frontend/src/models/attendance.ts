@@ -1,11 +1,12 @@
 import { Attendance, GravityLevel } from "@/src/types/attendance";
 import { AttendanceProcedureStatus } from "@/src/types/attendance_procedure";
 import { ColumnDefinition } from "./patient";
+import { i18n } from "@/src/lib/i18n";
 
 export const ATTENDANCE_COLUMNS: ColumnDefinition<Attendance>[] = [
   {
     name: "patient_name",
-    label: "Patient name",
+    label: i18n.t("models.attendance.patient"),
     type: "text",
     grid: true,
     form: false,
@@ -14,7 +15,7 @@ export const ATTENDANCE_COLUMNS: ColumnDefinition<Attendance>[] = [
   },
   {
     name: "patient_cpf",
-    label: "Patient CPF",
+    label: i18n.t("models.patient.cpf"),
     type: "text",
     grid: true,
     form: false,
@@ -23,24 +24,24 @@ export const ATTENDANCE_COLUMNS: ColumnDefinition<Attendance>[] = [
   },
   {
     name: "patient_id",
-    label: "Patient",
+    label: i18n.t("models.attendance.patient"),
     type: "search_input",
     width: "100",
     required: true,
-    placeholder: "Search patient by name or CPF",
+    placeholder: i18n.t("models.attendance.patient"),
     grid: false,
     form: true,
     details: false,
   },
   {
     name: "gravity",
-    label: "Priority",
+    label: i18n.t("models.attendance.gravity"),
     type: "select",
     width: "50",
     required: true,
-    options: Object.values(GravityLevel).map((level) => ({
-      label: level.charAt(0).toUpperCase() + level.slice(1),
-      value: level
+    options: Object.values(GravityLevel).map((s) => ({
+      label: i18n.t(`enums.gravity.${s.toLowerCase()}`),
+      value: s,
     })),
     grid: true,
     form: true,
@@ -49,13 +50,13 @@ export const ATTENDANCE_COLUMNS: ColumnDefinition<Attendance>[] = [
   },
   {
     name: "current_procedure",
-    label: "Current Procedure",
+    label: i18n.t("models.attendance_procedure.procedure"),
     type: "text",
     grid: true,
     form: false,
     details: true,
     render: (attendance: Attendance) => {
-      if (!attendance.procedures || attendance.procedures.length === 0) return "Waiting Triage";
+      if (!attendance.procedures || attendance.procedures.length === 0) return i18n.t("enums.procedure_status.pending");
       const sortedProcedures = [...attendance.procedures].sort((a, b) => 
         new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
       );
@@ -64,27 +65,27 @@ export const ATTENDANCE_COLUMNS: ColumnDefinition<Attendance>[] = [
   },
   {
     name: "procedure_status",
-    label: "Status",
+    label: i18n.t("models.attendance.status"),
     type: "text",
     grid: true,
     form: false,
     details: true,
     badge: true,
-    options: Object.values(AttendanceProcedureStatus).map(status => ({
-      label: status.replace('_', ' '),
-      value: status
+    options: Object.values(AttendanceProcedureStatus).map(s => ({
+      label: i18n.t(`enums.procedure_status.${s.toLowerCase()}`),
+      value: s
     })),
     render: (attendance: Attendance) => {
       if (!attendance.procedures || attendance.procedures.length === 0) return null;
       const sortedProcedures = [...attendance.procedures].sort((a, b) => 
         new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
       );
-      return sortedProcedures[0].status;
+      return i18n.t(`enums.procedure_status.${sortedProcedures[0].status.toLowerCase()}`);
     }
   },
   {
     name: "created_at",
-    label: "Arrival Time",
+    label: i18n.t("models.attendance.entry_time"),
     type: "text",
     grid: true,
     form: false,

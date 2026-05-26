@@ -1,32 +1,33 @@
 import { Sex } from "@/src/types/patient";
 import { EmploymentType, Employee } from "@/src/types/employee";
 import { ColumnDefinition } from "./patient";
+import { i18n } from "@/src/lib/i18n";
 
 export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
   {
     name: "full_name",
-    label: "Full Name",
+    label: i18n.t("models.employee.full_name"),
     type: "text",
     width: "100",
     required: true,
-    placeholder: "Enter full name",
+    placeholder: i18n.t("models.employee.full_name"),
     grid: true,
     form: true,
     details: true,
   },
   {
     name: "social_name",
-    label: "Social Name",
+    label: i18n.t("models.employee.social_name"),
     type: "text",
     width: "100",
-    placeholder: "Enter social name (optional)",
+    placeholder: i18n.t("models.employee.social_name"),
     grid: false,
     form: true,
     details: true,
   },
   {
     name: "cpf",
-    label: "CPF",
+    label: i18n.t("models.employee.cpf"),
     type: "text",
     width: "50",
     required: true,
@@ -37,17 +38,17 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
   },
   {
     name: "rg",
-    label: "RG",
+    label: i18n.t("models.employee.rg"),
     type: "text",
     width: "50",
-    placeholder: "Enter RG",
+    placeholder: i18n.t("models.employee.rg"),
     grid: false,
     form: true,
     details: true,
   },
   {
     name: "birth_date",
-    label: "Birth Date",
+    label: i18n.t("models.employee.birth_date"),
     type: "date",
     width: "50",
     required: true,
@@ -57,21 +58,20 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
   },
   {
     name: "sex",
-    label: "Sex",
+    label: i18n.t("models.employee.sex"),
     type: "select",
     width: "50",
-    options: [
-      { label: "Male", value: Sex.MALE },
-      { label: "Female", value: Sex.FEMALE },
-      { label: "Other", value: Sex.OTHER },
-    ],
+    options: Object.values(Sex).map((s) => ({
+      label: i18n.t(`enums.sex.${s.toLowerCase()}`),
+      value: s,
+    })),
     grid: true,
     form: true,
     details: true,
   },
   {
     name: "marital_status",
-    label: "Marital Status",
+    label: i18n.t("models.employee.marital_status"),
     type: "text",
     width: "50",
     grid: false,
@@ -80,7 +80,7 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
   },
   {
     name: "nationality",
-    label: "Nationality",
+    label: i18n.t("models.employee.nationality"),
     type: "text",
     width: "50",
     grid: false,
@@ -89,7 +89,7 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
   },
   {
     name: "phone",
-    label: "Phone",
+    label: i18n.t("models.employee.phone"),
     type: "tel",
     width: "50",
     placeholder: "(00) 00000-0000",
@@ -99,7 +99,7 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
   },
   {
     name: "hire_date",
-    label: "Hire Date",
+    label: i18n.t("models.employee.hire_date"),
     type: "date",
     width: "50",
     required: true,
@@ -109,7 +109,7 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
   },
   {
     name: "termination_date",
-    label: "Termination Date",
+    label: i18n.t("models.employee.termination_date"),
     type: "date",
     width: "50",
     grid: false,
@@ -118,17 +118,20 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
   },
   {
     name: "employment_type",
-    label: "Employment Type",
+    label: i18n.t("models.employee.employment_type"),
     type: "select",
     width: "50",
-    options: Object.values(EmploymentType).map((type) => ({ label: type, value: type })),
+    options: Object.values(EmploymentType).map((s) => ({
+      label: i18n.t(`enums.employment_type.${s.toLowerCase()}`),
+      value: s,
+    })),
     grid: true,
     form: true,
     details: true,
   },
   {
     name: "salary",
-    label: "Salary",
+    label: i18n.t("models.employee.salary"),
     type: "text",
     width: "50",
     placeholder: "0.00",
@@ -138,12 +141,12 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
   },
   {
     name: "active",
-    label: "Active",
+    label: i18n.t("models.employee.active"),
     type: "select",
     width: "50",
     options: [
-      { label: "Yes", value: true as any },
-      { label: "No", value: false as any },
+      { label: i18n.t("common.yes"), value: true as any },
+      { label: i18n.t("common.no"), value: false as any },
     ],
     grid: true,
     form: true,
@@ -152,7 +155,7 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
   },
   {
     name: "role",
-    label: "Role",
+    label: i18n.t("models.employee.role"),
     type: "text",
     grid: true,
     form: false,
@@ -161,7 +164,7 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
   },
   {
     name: "role_id",
-    label: "Role",
+    label: i18n.t("models.employee.role"),
     type: "select",
     width: "50",
     required: true,

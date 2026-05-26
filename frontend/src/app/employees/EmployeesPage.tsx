@@ -12,6 +12,7 @@ import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
 import { EmployeeService } from "@/src/services/employees";
 import { useAuth } from "@/src/hooks/useAuth";
 import { AccessLevel } from "@/src/types/role";
+import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/app/patients.css";
 
 export default function EmployeesPage() {
@@ -82,18 +83,18 @@ export default function EmployeesPage() {
       fetchEmployees(true);
     } catch (error) {
       console.error("Failed to save employee:", error);
-      alert("Error saving employee. Please check the data and try again.");
+      alert(i18n.t("common.error_saving"));
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm("Are you sure you want to delete this employee?")) {
+    if (confirm(i18n.t("common.confirm_delete"))) {
       try {
         await EmployeeService.delete(id);
         fetchEmployees(true);
       } catch (error) {
         console.error("Failed to delete employee:", error);
-        alert("Error deleting employee.");
+        alert(i18n.t("common.error_deleting"));
       }
     }
   };
@@ -108,28 +109,28 @@ export default function EmployeesPage() {
         options: column.options,
       })),
     {
-      header: "Actions",
+      header: i18n.t("common.actions"),
       align: "right",
       className: "actions-column",
       accessor: (employee) => (
         <div className="action-buttons">
           <button 
             className="view-button" 
-            aria-label="View Details"
+            aria-label={i18n.t("common.view_details")}
             onClick={() => handleViewDetails(employee)}
           >
             <MdVisibility size={16} />
           </button>
           <button 
             className="edit-button" 
-            aria-label="Edit"
+            aria-label={i18n.t("common.edit")}
             onClick={() => handleEdit(employee)}
           >
             <MdEdit size={16} />
           </button>
           <button 
             className="delete-button" 
-            aria-label="Delete"
+            aria-label={i18n.t("common.delete")}
             onClick={() => handleDelete(employee.id)}
           >
             <MdDelete size={16} />
@@ -142,8 +143,8 @@ export default function EmployeesPage() {
   return (
     <>
       <GridPage
-        title="Employees"
-        description="Healthcare professionals and administrative staff."
+        title={i18n.t("pages.employees.title")}
+        description={i18n.t("pages.employees.description")}
         data={filteredEmployees}
         columns={gridColumns}
         rowKey="id"
@@ -163,7 +164,7 @@ export default function EmployeesPage() {
       <DetailsModal
         isOpen={isDetailsModalOpen}
         onClose={() => setIsDetailsModalOpen(false)}
-        title="Employee Details"
+        title={i18n.t("pages.employees.details_title")}
         data={selectedEmployee}
         columns={EMPLOYEE_COLUMNS}
       />

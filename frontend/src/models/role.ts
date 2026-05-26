@@ -1,26 +1,27 @@
 import { Role, AccessLevel } from "@/src/types/role";
 import { ColumnDefinition } from "./patient";
+import { i18n } from "@/src/lib/i18n";
 
 export const ROLE_COLUMNS: ColumnDefinition<Role>[] = [
   {
     name: "name",
-    label: "Role Name",
+    label: i18n.t("models.role.name"),
     type: "text",
     width: "50",
     required: true,
-    placeholder: "Ex: Clinical Doctor",
+    placeholder: i18n.t("models.role.name"),
     grid: true,
     form: true,
   },
   {
     name: "access_level",
-    label: "Access Category",
+    label: i18n.t("models.role.access_level"),
     type: "select",
     width: "50",
     required: true,
-    options: Object.values(AccessLevel).map((level) => ({
-      label: level.charAt(0).toUpperCase() + level.slice(1),
-      value: level
+    options: Object.values(AccessLevel).map((s) => ({
+      label: i18n.t(`enums.access_level.${s.toLowerCase()}`),
+      value: s
     })),
     grid: true,
     form: true,

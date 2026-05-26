@@ -1,10 +1,11 @@
 import { User } from "@/src/types/user";
 import { ColumnDefinition } from "./patient";
+import { i18n } from "@/src/lib/i18n";
 
 export const USER_COLUMNS: ColumnDefinition<User>[] = [
   {
     name: "employee_id",
-    label: "Employee",
+    label: i18n.t("models.user.employee"),
     type: "search_input",
     width: "100",
     required: true,
@@ -14,7 +15,7 @@ export const USER_COLUMNS: ColumnDefinition<User>[] = [
   },
   {
     name: "employee_name",
-    label: "Employee",
+    label: i18n.t("models.user.employee"),
     type: "text",
     grid: true,
     form: false,
@@ -23,18 +24,18 @@ export const USER_COLUMNS: ColumnDefinition<User>[] = [
   },
   {
     name: "email",
-    label: "Email",
+    label: i18n.t("models.user.email"),
     type: "text",
     width: "100",
     required: true,
-    placeholder: "Enter user email",
+    placeholder: i18n.t("models.user.email"),
     grid: true,
     form: true,
     details: true,
   },
   {
     name: "password",
-    label: "Password",
+    label: i18n.t("models.user.password"),
     type: "password",
     width: "50",
     required: true,
@@ -44,7 +45,7 @@ export const USER_COLUMNS: ColumnDefinition<User>[] = [
   },
   {
     name: "confirm_password",
-    label: "Confirm Password",
+    label: i18n.t("models.user.confirm_password"),
     type: "password",
     width: "50",
     required: true,
@@ -54,7 +55,7 @@ export const USER_COLUMNS: ColumnDefinition<User>[] = [
   },
   {
     name: "created_at",
-    label: "Created At",
+    label: i18n.t("common.created_at"), // Using common since multiple entities have this
     type: "text",
     grid: true,
     form: false,

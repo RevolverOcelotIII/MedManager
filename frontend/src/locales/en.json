@@ -1,0 +1,197 @@
+{
+  "common": {
+    "actions": "Actions",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "view_details": "View Details",
+    "search": "Search...",
+    "new": "New",
+    "no_data": "No data found",
+    "loading": "Loading...",
+    "confirm_delete": "Are you sure you want to delete this record?",
+    "error_saving": "Error saving data. Please try again.",
+    "error_deleting": "Error deleting record.",
+    "yes": "Yes",
+    "no": "No",
+    "created_at": "Created At"
+  },
+  "enums": {
+    "sex": {
+      "male": "Male",
+      "female": "Female",
+      "other": "Other"
+    },
+    "access_level": {
+      "admin": "Admin",
+      "doctor": "Doctor",
+      "nurse": "Nurse",
+      "attendant": "Attendant",
+      "pharmaceutical": "Pharmacist"
+    },
+    "employment_type": {
+      "full_time": "Full-time",
+      "part_time": "Part-time",
+      "contractor": "Contractor",
+      "temporary": "Temporary"
+    },
+    "gravity": {
+      "red": "Emergency",
+      "orange": "Very Urgent",
+      "yellow": "Urgent",
+      "green": "Standard",
+      "blue": "Non-Urgent"
+    },
+    "procedure_category": {
+      "screening": "Screening",
+      "exam": "Exam",
+      "surgery": "Surgery",
+      "consultation": "Consultation",
+      "nursing": "Nursing",
+      "therapy": "Therapy",
+      "other": "Other"
+    },
+    "procedure_status": {
+      "pending": "Pending",
+      "in_progress": "In Progress",
+      "done": "Done",
+      "canceled": "Canceled"
+    }
+  },
+  "sidebar": {
+    "workspace": "Workspace",
+    "administration": "Administration",
+    "dashboard": "Dashboard",
+    "patients": "Patients",
+    "attendances": "Attendances",
+    "medicines": "Medicines",
+    "employees": "Employees",
+    "roles": "Roles",
+    "procedures": "Procedures",
+    "users": "Users"
+  },
+  "models": {
+    "patient": {
+      "full_name": "Full Name",
+      "social_name": "Social Name",
+      "cpf": "CPF",
+      "rg": "RG",
+      "birth_date": "Birth Date",
+      "sex": "Sex",
+      "marital_status": "Marital Status",
+      "nationality": "Nationality",
+      "mother_name": "Mother's Name",
+      "phone": "Phone",
+      "allergies": "Allergies",
+      "blood_type": "Blood Type"
+    },
+    "employee": {
+      "full_name": "Full Name",
+      "social_name": "Social Name",
+      "cpf": "CPF",
+      "rg": "RG",
+      "birth_date": "Birth Date",
+      "sex": "Sex",
+      "marital_status": "Marital Status",
+      "nationality": "Nationality",
+      "phone": "Phone",
+      "role": "Role",
+      "active": "Active",
+      "hire_date": "Hire Date",
+      "termination_date": "Termination Date",
+      "salary": "Salary",
+      "employment_type": "Employment Type"
+    },
+    "medication": {
+      "trade_name": "Trade Name",
+      "active_ingredient": "Active Ingredient",
+      "dosage": "Dosage",
+      "current_stock": "Current Stock",
+      "unit": "Unit"
+    },
+    "procedure": {
+      "name": "Name",
+      "code": "Code",
+      "category": "Category",
+      "responsible_roles": "Responsible Roles",
+      "description": "Description"
+    },
+    "role": {
+      "name": "Role Name",
+      "access_level": "Access Category"
+    },
+    "attendance": {
+      "patient": "Patient",
+      "gravity": "Urgency",
+      "status": "Status",
+      "entry_time": "Entry Time"
+    },
+    "attendance_procedure": {
+      "procedure": "Procedure",
+      "ordered_by": "Ordered By",
+      "executed_by": "Executed By",
+      "status": "Status",
+      "start_time": "Start Time",
+      "end_time": "End Time",
+      "medications": "Medications"
+    },
+    "user": {
+      "email": "Email",
+      "employee": "Employee",
+      "password": "Password",
+      "confirm_password": "Confirm Password"
+    }
+  },
+  "pages": {
+    "home": {
+      "title": "Welcome to MedManager",
+      "subtitle": "Your comprehensive hospital suite management system.",
+      "go_to_patients": "Go to Patients"
+    },
+    "patients": {
+      "title": "Patients",
+      "description": "People currently registered with the hospital.",
+      "details_title": "Patient Details"
+    },
+    "medications": {
+      "title": "Medications",
+      "description": "Manage the medicine catalog and stock.",
+      "details_title": "Medication Details"
+    },
+    "attendances": {
+      "title": "Attendances",
+      "description": "Patient visits and clinical workflow.",
+      "details_title": "Attendance Details"
+    },
+    "employees": {
+      "title": "Employees",
+      "description": "Healthcare professionals and administrative staff.",
+      "details_title": "Employee Details"
+    },
+    "roles": {
+      "title": "Hospital Roles",
+      "description": "Define job titles and their corresponding access categories."
+    },
+    "procedures": {
+      "title": "Procedures",
+      "description": "Medical procedures, exams, and clinical actions.",
+      "details_title": "Procedure Details"
+    },
+    "users": {
+      "title": "User Accounts",
+      "description": "Manage hospital system access and credentials.",
+      "details_title": "User Account Details"
+    },
+    "login": {
+      "welcome": "Welcome back",
+      "subtitle": "Sign in with your hospital credentials.",
+      "email": "Email",
+      "email_placeholder": "Enter your email",
+      "password": "Password",
+      "password_placeholder": "Enter your password",
+      "sign_in": "Sign in"
+    }
+  }
+}
