@@ -4,13 +4,14 @@ from app.core.database import get_db
 from app.core.auth import get_current_user, require_admin
 from app.schemas.procedures import ProcedureResponse, ProcedureCreate, ProcedureUpdate
 from app.services.procedures import ProcedureService
+from app.models.user import User
 from typing import List
 
 router = APIRouter(prefix="/procedures", tags=["Procedures"], dependencies=[Depends(get_current_user)])
 
 @router.get("/", response_model=List[ProcedureResponse])
-def list_procedures(db_session: Session = Depends(get_db)):
-    return ProcedureService.get_all(db_session)
+def list_procedures(current_user: User = Depends(get_current_user), db_session: Session = Depends(get_db)):
+    return ProcedureService.get_all(db_session, current_user)
 
 @router.get("/{procedure_id}", response_model=ProcedureResponse)
 def get_procedure(procedure_id: int, db_session: Session = Depends(get_db)):

@@ -6,13 +6,17 @@ from app.schemas.employees import EmployeeResponse, RestrictedEmployeeResponse, 
 from app.services.employees import EmployeeService
 from app.services.roles import RoleService
 from app.models.user import User
-from typing import List, Union
+from typing import List, Union, Optional
 
 router = APIRouter(prefix="/employees", tags=["Employees"], dependencies=[Depends(get_current_user)])
 
 @router.get("/", response_model=List[Union[EmployeeResponse, RestrictedEmployeeResponse]])
-def list_employees(current_user: User = Depends(get_current_user), db_session: Session = Depends(get_db)):
-    return EmployeeService.get_all(db_session, current_user)
+def list_employees(
+    can_execute_procedure_id: Optional[int] = None,
+    current_user: User = Depends(get_current_user), 
+    db_session: Session = Depends(get_db)
+):
+    return EmployeeService.get_all(db_session, current_user, can_execute_procedure_id=can_execute_procedure_id)
 
 @router.get("/{employee_id}", response_model=Union[EmployeeResponse, RestrictedEmployeeResponse])
 def get_employee(employee_id: int, current_user: User = Depends(get_current_user), db_session: Session = Depends(get_db)):
