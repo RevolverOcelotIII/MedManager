@@ -7,12 +7,15 @@ import { BsFillFileEarmarkMedicalFill } from "react-icons/bs";
 import { SidebarItem } from "@/src/components/Sidebar/SidebarItem";
 import "@/src/styles/components/Sidebar/sidebar-nav.css";
 
-const navigationItems = [
+const workspaceItems = [
   { href: "/dashboard", label: "Dashboard", icon: MdDashboard },
   { href: "/patients", label: "Patients", icon: MdPeople },
   { href: "/attendances", label: "Attendances", icon: BsFillFileEarmarkMedicalFill },
-  { href: "/employees", label: "Employees", icon: FaStethoscope },
   { href: "/medications", label: "Medicines", icon: FaPills },
+];
+
+const administrationItems = [
+  { href: "/employees", label: "Employees", icon: FaStethoscope },
   { href: "/procedures", label: "Procedures", icon: MdTimeline },
   { href: "/users", label: "Users", icon: MdAccountCircle },
 ];
@@ -26,19 +29,37 @@ export function SidebarNav({ isCollapsed }: SidebarNavProps) {
 
   return (
     <div className="sidebar-nav-container">
-      {!isCollapsed && <div className="label">Workspace</div>}
-      <nav className="nav">
-        {navigationItems.map((item) => (
-          <SidebarItem
-            key={item.href}
-            href={item.href}
-            label={item.label}
-            Icon={item.icon}
-            isActive={currentPathname === item.href}
-            isCollapsed={isCollapsed}
-          />
-        ))}
-      </nav>
+      <div className="nav-section">
+        {!isCollapsed && <div className="label">Workspace</div>}
+        <nav className="nav">
+          {workspaceItems.map((item) => (
+            <SidebarItem
+              key={item.href}
+              href={item.href}
+              label={item.label}
+              Icon={item.icon}
+              isActive={currentPathname === item.href}
+              isCollapsed={isCollapsed}
+            />
+          ))}
+        </nav>
+      </div>
+
+      <div className="nav-section">
+        {!isCollapsed && <div className="label">Administration</div>}
+        <nav className="nav">
+          {administrationItems.map((item) => (
+            <SidebarItem
+              key={item.href}
+              href={item.href}
+              label={item.label}
+              Icon={item.icon}
+              isActive={currentPathname === item.href}
+              isCollapsed={isCollapsed}
+            />
+          ))}
+        </nav>
+      </div>
     </div>
   );
 }
