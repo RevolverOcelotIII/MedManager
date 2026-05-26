@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom';
+import { i18n } from '@/src/lib/i18n';
 import Cookies from 'js-cookie';
 
 jest.mock('next/navigation', () => ({
@@ -20,10 +21,15 @@ jest.mock('@/src/services/api', () => ({
   },
 }));
 
+beforeAll(() => {
+  i18n.locale = 'en';
+});
+
 beforeEach(() => {
+  jest.clearAllMocks();
   Cookies.set('token', 'mock-token');
 });
 
-afterEach(() => {
+afterAll(() => {
   Cookies.remove('token');
 });
