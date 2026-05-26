@@ -1,3 +1,4 @@
+import { Role, AccessLevel } from "./role";
 import { Sex } from "./patient";
 
 export enum EmploymentType {
@@ -5,11 +6,6 @@ export enum EmploymentType {
   PART_TIME = "Part-time",
   CONTRACTOR = "Contractor",
   TEMPORARY = "Temporary",
-}
-
-export interface Role {
-  id: number;
-  name: string;
 }
 
 export interface Employee {

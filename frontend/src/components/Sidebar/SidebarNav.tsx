@@ -16,6 +16,7 @@ const workspaceItems = [
 
 const administrationItems = [
   { href: "/employees", label: "Employees", icon: FaStethoscope },
+  { href: "/roles", label: "Roles", icon: MdTimeline },
   { href: "/procedures", label: "Procedures", icon: MdTimeline },
   { href: "/users", label: "Users", icon: MdAccountCircle },
 ];
