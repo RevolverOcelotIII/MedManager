@@ -1,7 +1,7 @@
 export interface FormModalColumn {
   name: string;
   label: string;
-  type: "text" | "date" | "select" | "textarea" | "tel" | "search_input" | "multi_search_input";
+  type: "text" | "date" | "select" | "textarea" | "tel" | "search_input" | "multi_search_input" | "password";
   width?: string;
   required?: boolean;
   placeholder?: string;
