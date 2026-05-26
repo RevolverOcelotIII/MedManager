@@ -1,3 +1,5 @@
+import { Role } from "./employee";
+
 export enum ProcedureCategory {
   screening = "screening",
   exam = "exam",
@@ -14,4 +16,5 @@ export interface Procedure {
   code?: string | null;
   category: ProcedureCategory;
   description?: string | null;
+  responsible_roles: Role[];
 }
