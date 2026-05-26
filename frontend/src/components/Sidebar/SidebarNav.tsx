@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { MdDashboard, MdPeople, MdTimeline, MdAccountCircle } from "react-icons/md";
 import { FaStethoscope, FaPills } from "react-icons/fa";
 import { BsFillFileEarmarkMedicalFill } from "react-icons/bs";
+import { FaUserDoctor } from "react-icons/fa6";
 import { SidebarItem } from "@/src/components/Sidebar/SidebarItem";
 import "@/src/styles/components/Sidebar/sidebar-nav.css";
 
@@ -16,7 +17,7 @@ const workspaceItems = [
 
 const administrationItems = [
   { href: "/employees", label: "Employees", icon: FaStethoscope },
-  { href: "/roles", label: "Roles", icon: MdTimeline },
+  { href: "/roles", label: "Roles", icon: FaUserDoctor },
   { href: "/procedures", label: "Procedures", icon: MdTimeline },
   { href: "/users", label: "Users", icon: MdAccountCircle },
 ];
