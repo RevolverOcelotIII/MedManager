@@ -34,9 +34,7 @@ describe('SidebarNav', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
     (usePathname as jest.Mock).mockReturnValue('/patients');
-    i18n.locale = 'en';
   });
 
   describe('when the user is an admin', () => {

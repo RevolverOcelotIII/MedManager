@@ -1,4 +1,5 @@
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Sidebar } from '@/src/components/Sidebar/Sidebar';
 import { ApiService } from '@/src/services/api';
 
@@ -7,7 +8,6 @@ describe('Sidebar', () => {
   const EXPAND_LABEL = 'Expand Sidebar';
 
   beforeEach(async () => {
-    jest.clearAllMocks();
     (ApiService.get as jest.Mock).mockResolvedValue({
       id: 1,
       email: 'user@medmanager.com',
@@ -42,8 +42,9 @@ describe('Sidebar', () => {
 
     describe('when the toggle button is clicked', () => {
       beforeEach(async () => {
+        const user = userEvent.setup();
         await act(async () => {
-          fireEvent.click(screen.getByLabelText(COLLAPSE_LABEL));
+          await user.click(screen.getByLabelText(COLLAPSE_LABEL));
         });
       });
 

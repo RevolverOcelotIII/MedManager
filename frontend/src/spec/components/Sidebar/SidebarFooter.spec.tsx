@@ -1,8 +1,8 @@
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, act, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { SidebarFooter } from '@/src/components/Sidebar/SidebarFooter';
 import { ApiService } from '@/src/services/api';
 import Cookies from 'js-cookie';
-import { i18n } from '@/src/lib/i18n';
 
 describe('SidebarFooter', () => {
   const MOCK_USER_NAME = 'Gregory House';
@@ -21,62 +21,53 @@ describe('SidebarFooter', () => {
     }
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-    i18n.locale = 'en';
-  });
-
   describe('when it is loading', () => {
-    beforeEach(() => {
+    it('should show the loading message', async () => {
       (ApiService.get as jest.Mock).mockReturnValue(new Promise(() => {}));
       render(<SidebarFooter isCollapsed={false} />);
-    });
-
-    it('should show the loading message', () => {
       expect(screen.getByText('Loading...')).toBeInTheDocument();
     });
   });
 
-  describe('when there is no user (token removed)', () => {
-    beforeEach(async () => {
+  describe('when there is no user', () => {
+    it('should render nothing', async () => {
       Cookies.remove('token');
       (ApiService.get as jest.Mock).mockResolvedValue(null);
-      await act(async () => {
-        render(<SidebarFooter isCollapsed={false} />);
+      
+      const { container } = render(<SidebarFooter isCollapsed={false} />);
+      
+      await waitFor(() => {
+        expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
       });
-    });
-
-    it('should render nothing', () => {
-      expect(screen.queryByRole('button', { name: 'Logout' })).not.toBeInTheDocument();
+      
+      expect(container.firstChild).toBeNull();
     });
   });
 
   describe('when a user is logged in', () => {
-    beforeEach(async () => {
+    beforeEach(() => {
+      Cookies.set('token', 'mock-token');
       (ApiService.get as jest.Mock).mockResolvedValue(MOCK_USER);
-      await act(async () => {
-        render(<SidebarFooter isCollapsed={false} />);
-      });
     });
 
-    describe('and the sidebar is expanded', () => {
-      it('should show the user name', () => {
-        expect(screen.getByText(MOCK_USER_NAME)).toBeInTheDocument();
-      });
-
-      it('should show the user email', () => {
-        expect(screen.getByText(MOCK_USER_EMAIL)).toBeInTheDocument();
-      });
+    it('should show the user name', async () => {
+      render(<SidebarFooter isCollapsed={false} />);
+      expect(await screen.findByText(MOCK_USER_NAME)).toBeInTheDocument();
     });
 
-    describe('when the logout button is clicked', () => {
-      beforeEach(() => {
-        fireEvent.click(screen.getByRole('button', { name: 'Logout' }));
-      });
+    it('should show the user email', async () => {
+      render(<SidebarFooter isCollapsed={false} />);
+      expect(await screen.findByText(MOCK_USER_EMAIL)).toBeInTheDocument();
+    });
 
-      it('should remove the token cookie', () => {
-        expect(Cookies.get('token')).toBeUndefined();
-      });
+    it('should remove the token cookie when logout is clicked', async () => {
+      const user = userEvent.setup();
+      render(<SidebarFooter isCollapsed={false} />);
+      
+      const logoutButton = await screen.findByRole('button', { name: 'Logout' });
+      await user.click(logoutButton);
+      
+      expect(Cookies.get('token')).toBeUndefined();
     });
   });
 });
