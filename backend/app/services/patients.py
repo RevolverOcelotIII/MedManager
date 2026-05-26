@@ -1,5 +1,7 @@
 from sqlalchemy.orm import Session
 from app.models.patient import Patient
+from app.models.attendance import Attendance
+from app.models.attendance_procedure import AttendanceProcedure
 from app.schemas.patients import PatientCreate, PatientUpdate
 from app.services.utils import get_object_or_404, validate_unique
 from typing import Optional
@@ -16,11 +18,22 @@ class PatientService:
         )
 
     @staticmethod
-    def get_all(db_session: Session):
-        return db_session.query(Patient).all()
+    def get_all(db_session: Session, med_employee_id: Optional[int] = None):
+        query = db_session.query(Patient)
+        if med_employee_id:
+            query = query.join(Attendance).join(AttendanceProcedure).filter(AttendanceProcedure.executed_by_id == med_employee_id).distinct()
+        return query.all()
 
     @staticmethod
-    def get_by_id(db_session: Session, patient_id: int):
+    def get_by_id(db_session: Session, patient_id: int, med_employee_id: Optional[int] = None):
+        query = db_session.query(Patient).filter(Patient.id == patient_id)
+        if med_employee_id:
+            query = query.join(Attendance).join(AttendanceProcedure).filter(AttendanceProcedure.executed_by_id == med_employee_id)
+            patient = query.first()
+            if not patient:
+                from fastapi import HTTPException
+                raise HTTPException(status_code=404, detail="Patient not found or not allocated to you.")
+            return patient
         return get_object_or_404(db_session, Patient, patient_id)
 
     @staticmethod
