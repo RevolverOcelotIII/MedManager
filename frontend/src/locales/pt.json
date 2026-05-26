@@ -215,10 +215,8 @@
       "email_placeholder": "Digite seu e-mail",
       "password": "Senha",
       "password_placeholder": "Digite sua senha",
-      "sign_in": "Entrar"
-    }
-  }
-}
+      "sign_in": "Entrar",
+      "login_failed": "Falha no login. Verifique suas credenciais."
     }
   }
 }

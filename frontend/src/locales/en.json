@@ -215,11 +215,8 @@
       "email_placeholder": "Enter your email",
       "password": "Password",
       "password_placeholder": "Enter your password",
-      "sign_in": "Sign in"
-    }
-  }
-}
-."
+      "sign_in": "Sign in",
+      "login_failed": "Login failed. Please check your credentials."
     }
   }
 }
