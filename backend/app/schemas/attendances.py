@@ -1,7 +1,9 @@
 from pydantic import BaseModel
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 from app.models.attendance import GravityLevel
+from app.schemas.attendance_procedures import AttendanceProcedureResponse
+from app.schemas.patients import PatientResponse
 
 class AttendanceBase(BaseModel):
     patient_id: int
@@ -19,5 +21,8 @@ class AttendanceResponse(AttendanceBase):
     created_at: datetime
     updated_at: datetime
     finished_at: Optional[datetime] = None
+    patient: Optional[PatientResponse] = None
+    procedures: List[AttendanceProcedureResponse] = []
+    
     class Config:
         from_attributes = True

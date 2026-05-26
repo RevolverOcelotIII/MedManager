@@ -22,7 +22,7 @@ def create_attendance_procedure(attendance_procedure_data: AttendanceProcedureCr
 
 @router.put("/{attendance_procedure_id}", response_model=AttendanceProcedureResponse)
 def update_attendance_procedure(attendance_procedure_id: int, attendance_procedure_data: AttendanceProcedureUpdate, db_session: Session = Depends(get_db)):
-    return AttendanceProcedureService.update(attendance_procedure_id, attendance_procedure_data)
+    return AttendanceProcedureService.update(db_session, attendance_procedure_id, attendance_procedure_data)
 
 @router.delete("/{attendance_procedure_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_attendance_procedure(attendance_procedure_id: int, db_session: Session = Depends(get_db)):
