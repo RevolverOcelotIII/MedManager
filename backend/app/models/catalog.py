@@ -36,6 +36,8 @@ class ProcedureCategory(str, enum.Enum):
     consultation = "consultation"
     nursing = "nursing"
     therapy = "therapy"
+    request = "request"
+    attendance = "attendance"
     other = "other"
 
 class Procedure(Base, TimestampMixin):
