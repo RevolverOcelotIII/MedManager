@@ -1,27 +1,38 @@
-import { MdLogout } from "react-icons/md";
-import { UserProfile } from "@/src/types/components/Sidebar";
-import "@/src/styles/components/Sidebar/sidebar-footer.css";
+"use client";
 
-const currentUser: UserProfile = {
-  name: "Dr Elena",
-  email: "dr.elena@hospital.org",
-};
+import { MdLogout } from "react-icons/md";
+import { useAuth } from "@/src/hooks/useAuth";
+import "@/src/styles/components/Sidebar/sidebar-footer.css";
 
 interface SidebarFooterProps {
   isCollapsed: boolean;
 }
 
 export function SidebarFooter({ isCollapsed }: SidebarFooterProps) {
+  const { user, logout, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="sidebar-footer">
+        <div className="user-container">
+          {!isCollapsed && <div className="user-info">Loading...</div>}
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) return null;
+
   return (
     <div className="sidebar-footer">
       <div className="user-container">
         {!isCollapsed && (
           <div className="user-info">
             <p className="user-name">
-              {currentUser.name}
+              {user.employee?.full_name || "User"}
             </p>
             <p className="user-email">
-              {currentUser.email}
+              {user.email}
             </p>
           </div>
         )}
@@ -29,6 +40,7 @@ export function SidebarFooter({ isCollapsed }: SidebarFooterProps) {
           className="logout-button"
           aria-label="Logout"
           title={isCollapsed ? "Logout" : undefined}
+          onClick={logout}
         >
           <MdLogout size={16} />
         </button>
