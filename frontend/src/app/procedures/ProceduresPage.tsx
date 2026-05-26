@@ -1,18 +1,20 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { MdEdit, MdDelete } from "react-icons/md";
+import { MdEdit, MdDelete, MdVisibility } from "react-icons/md";
 import { GridPage } from "@/src/components/layout/GridPage/GridPage";
 import { GridColumn } from "@/src/types";
 import { Procedure } from "@/src/types/procedure";
 import { PROCEDURE_COLUMNS } from "@/src/models/procedure";
 import { ProcedureFormModal } from "@/src/app/procedures/ProcedureFormModal";
+import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
 import { ProcedureService } from "@/src/services/procedures";
 import "@/src/styles/app/patients.css";
 
 export default function ProceduresPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedProcedure, setSelectedProcedure] = useState<Procedure | null>(null);
   const [procedures, setProcedures] = useState<Procedure[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -40,12 +42,17 @@ export default function ProceduresPage() {
 
   const handleEdit = (procedure: Procedure) => {
     setSelectedProcedure(procedure);
-    setIsModalOpen(true);
+    setIsFormModalOpen(true);
+  };
+
+  const handleViewDetails = (procedure: Procedure) => {
+    setSelectedProcedure(procedure);
+    setIsDetailsModalOpen(true);
   };
 
   const handleNew = () => {
     setSelectedProcedure(null);
-    setIsModalOpen(true);
+    setIsFormModalOpen(true);
   };
 
   const handleSubmit = async (data: Partial<Procedure>) => {
@@ -55,7 +62,7 @@ export default function ProceduresPage() {
       } else {
         await ProcedureService.create(data);
       }
-      setIsModalOpen(false);
+      setIsFormModalOpen(false);
       fetchProcedures(true);
     } catch (error) {
       console.error("Failed to save procedure:", error);
@@ -78,28 +85,25 @@ export default function ProceduresPage() {
   const gridColumns: GridColumn<Procedure>[] = [
     ...PROCEDURE_COLUMNS
       .filter(column => column.grid)
-      .map(column => {
-        if (column.name === "category") {
-          return {
-            header: column.label,
-            accessor: (procedure: Procedure) => (
-              <span className="category-badge">
-                {procedure.category.charAt(0).toUpperCase() + procedure.category.slice(1)}
-              </span>
-            )
-          };
-        }
-        return {
-          header: column.label,
-          accessor: column.name as keyof Procedure,
-        };
-      }),
+      .map(column => ({
+        header: column.label,
+        accessor: column.render ? (item: Procedure) => column.render!(item) : (column.name as keyof Procedure),
+        badge: column.badge,
+        options: column.options,
+      })),
     {
       header: "Actions",
       align: "right",
       className: "actions-column",
       accessor: (procedure) => (
         <div className="action-buttons">
+          <button 
+            className="view-button" 
+            aria-label="View Details"
+            onClick={() => handleViewDetails(procedure)}
+          >
+            <MdVisibility size={16} />
+          </button>
           <button 
             className="edit-button" 
             aria-label="Edit"
@@ -134,10 +138,18 @@ export default function ProceduresPage() {
       />
 
       <ProcedureFormModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isFormModalOpen}
+        onClose={() => setIsFormModalOpen(false)}
         onSubmit={handleSubmit}
         procedure={selectedProcedure}
+      />
+
+      <DetailsModal
+        isOpen={isDetailsModalOpen}
+        onClose={() => setIsDetailsModalOpen(false)}
+        title="Procedure Details"
+        data={selectedProcedure}
+        columns={PROCEDURE_COLUMNS}
       />
     </>
   );

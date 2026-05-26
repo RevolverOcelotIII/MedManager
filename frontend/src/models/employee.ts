@@ -12,6 +12,7 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
     placeholder: "Enter full name",
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "social_name",
@@ -21,6 +22,7 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
     placeholder: "Enter social name (optional)",
     grid: false,
     form: true,
+    details: true,
   },
   {
     name: "cpf",
@@ -31,6 +33,7 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
     placeholder: "000.000.000-00",
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "rg",
@@ -40,6 +43,7 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
     placeholder: "Enter RG",
     grid: false,
     form: true,
+    details: true,
   },
   {
     name: "birth_date",
@@ -49,6 +53,7 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
     required: true,
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "sex",
@@ -62,6 +67,7 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
     ],
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "marital_status",
@@ -70,6 +76,7 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
     width: "50",
     grid: false,
     form: true,
+    details: true,
   },
   {
     name: "nationality",
@@ -78,6 +85,7 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
     width: "50",
     grid: false,
     form: true,
+    details: true,
   },
   {
     name: "phone",
@@ -87,6 +95,7 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
     placeholder: "(00) 00000-0000",
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "hire_date",
@@ -96,6 +105,7 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
     required: true,
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "termination_date",
@@ -104,6 +114,7 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
     width: "50",
     grid: false,
     form: true,
+    details: true,
   },
   {
     name: "employment_type",
@@ -113,6 +124,7 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
     options: Object.values(EmploymentType).map((type) => ({ label: type, value: type })),
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "salary",
@@ -122,6 +134,7 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
     placeholder: "0.00",
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "active",
@@ -129,11 +142,13 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
     type: "select",
     width: "50",
     options: [
-      { label: "Yes", value: "true" },
-      { label: "No", value: "false" },
+      { label: "Yes", value: true as any },
+      { label: "No", value: false as any },
     ],
     grid: true,
     form: true,
+    details: true,
+    badge: true,
   },
   {
     name: "role",
@@ -141,6 +156,7 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
     type: "text",
     grid: true,
     form: false,
+    details: true,
     render: (employee: Employee) => employee.role?.name || "—",
   },
   {
@@ -151,5 +167,6 @@ export const EMPLOYEE_COLUMNS: ColumnDefinition<Employee>[] = [
     required: true,
     grid: false,
     form: true,
+    details: false,
   },
 ];

@@ -11,6 +11,7 @@ export const PROCEDURE_COLUMNS: ColumnDefinition<Procedure>[] = [
     placeholder: "Ex: Raio-X de Tórax",
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "code",
@@ -20,6 +21,7 @@ export const PROCEDURE_COLUMNS: ColumnDefinition<Procedure>[] = [
     placeholder: "SIGTAP/SUS Code",
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "category",
@@ -33,6 +35,8 @@ export const PROCEDURE_COLUMNS: ColumnDefinition<Procedure>[] = [
     })),
     grid: true,
     form: true,
+    details: true,
+    badge: true,
   },
   {
     name: "description",
@@ -42,5 +46,6 @@ export const PROCEDURE_COLUMNS: ColumnDefinition<Procedure>[] = [
     placeholder: "Enter procedure description",
     grid: false,
     form: true,
+    details: true,
   },
 ];

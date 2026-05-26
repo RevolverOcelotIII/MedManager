@@ -11,6 +11,7 @@ export const MEDICATION_COLUMNS: ColumnDefinition<Medication>[] = [
     placeholder: "Enter trade name",
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "active_ingredient",
@@ -21,6 +22,7 @@ export const MEDICATION_COLUMNS: ColumnDefinition<Medication>[] = [
     placeholder: "Enter active ingredient",
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "dosage",
@@ -31,6 +33,7 @@ export const MEDICATION_COLUMNS: ColumnDefinition<Medication>[] = [
     placeholder: "e.g. 500mg, 10ml",
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "unit",
@@ -41,6 +44,7 @@ export const MEDICATION_COLUMNS: ColumnDefinition<Medication>[] = [
     placeholder: "e.g. Tablet, Vial",
     grid: true,
     form: true,
+    details: true,
   },
   {
     name: "current_stock",
@@ -51,5 +55,6 @@ export const MEDICATION_COLUMNS: ColumnDefinition<Medication>[] = [
     placeholder: "0",
     grid: true,
     form: true,
+    details: true,
   },
 ];

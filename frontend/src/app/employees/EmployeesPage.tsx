@@ -1,18 +1,20 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { MdEdit, MdDelete } from "react-icons/md";
+import { MdEdit, MdDelete, MdVisibility } from "react-icons/md";
 import { GridPage } from "@/src/components/layout/GridPage/GridPage";
 import { GridColumn } from "@/src/types";
 import { Employee } from "@/src/types/employee";
 import { EMPLOYEE_COLUMNS } from "@/src/models/employee";
 import { EmployeeFormModal } from "@/src/app/employees/EmployeeFormModal";
+import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
 import { EmployeeService } from "@/src/services/employees";
 import "@/src/styles/app/patients.css";
 
 export default function EmployeesPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -40,12 +42,17 @@ export default function EmployeesPage() {
 
   const handleEdit = (employee: Employee) => {
     setSelectedEmployee(employee);
-    setIsModalOpen(true);
+    setIsFormModalOpen(true);
+  };
+
+  const handleViewDetails = (employee: Employee) => {
+    setSelectedEmployee(employee);
+    setIsDetailsModalOpen(true);
   };
 
   const handleNew = () => {
     setSelectedEmployee(null);
-    setIsModalOpen(true);
+    setIsFormModalOpen(true);
   };
 
   const handleSubmit = async (data: Partial<Employee>) => {
@@ -55,7 +62,7 @@ export default function EmployeesPage() {
       } else {
         await EmployeeService.create(data);
       }
-      setIsModalOpen(false);
+      setIsFormModalOpen(false);
       fetchEmployees(true);
     } catch (error) {
       console.error("Failed to save employee:", error);
@@ -78,34 +85,25 @@ export default function EmployeesPage() {
   const gridColumns: GridColumn<Employee>[] = [
     ...EMPLOYEE_COLUMNS
       .filter(column => column.grid)
-      .map(column => {
-        if (column.name === "active") {
-          return {
-            header: column.label,
-            accessor: (employee: Employee) => (
-              <span className={`status-badge status-${employee.active ? "admitted" : "discharged"}`}>
-                {employee.active ? "Yes" : "No"}
-              </span>
-            )
-          };
-        }
-        if (column.name === "role") {
-          return {
-            header: column.label,
-            accessor: (employee: Employee) => employee.role?.name || "—",
-          };
-        }
-        return {
-          header: column.label,
-          accessor: column.name as keyof Employee,
-        };
-      }),
+      .map(column => ({
+        header: column.label,
+        accessor: column.render ? (item: Employee) => column.render!(item) : (column.name as keyof Employee),
+        badge: column.badge,
+        options: column.options,
+      })),
     {
       header: "Actions",
       align: "right",
       className: "actions-column",
       accessor: (employee) => (
         <div className="action-buttons">
+          <button 
+            className="view-button" 
+            aria-label="View Details"
+            onClick={() => handleViewDetails(employee)}
+          >
+            <MdVisibility size={16} />
+          </button>
           <button 
             className="edit-button" 
             aria-label="Edit"
@@ -140,10 +138,18 @@ export default function EmployeesPage() {
       />
 
       <EmployeeFormModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isFormModalOpen}
+        onClose={() => setIsFormModalOpen(false)}
         onSubmit={handleSubmit}
         employee={selectedEmployee}
+      />
+
+      <DetailsModal
+        isOpen={isDetailsModalOpen}
+        onClose={() => setIsDetailsModalOpen(false)}
+        title="Employee Details"
+        data={selectedEmployee}
+        columns={EMPLOYEE_COLUMNS}
       />
     </>
   );
