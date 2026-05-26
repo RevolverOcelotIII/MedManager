@@ -19,7 +19,7 @@ export function UserFormModal({ isOpen, onClose, onSubmit, user }: UserFormModal
 
   const handleFormSubmit = (formData: any) => {
     if (formData.password !== formData.confirm_password) {
-      alert("Passwords do not match!");
+      alert(i18n.t("models.user.passwords_mismatch"));
       return;
     }
 
@@ -41,7 +41,7 @@ export function UserFormModal({ isOpen, onClose, onSubmit, user }: UserFormModal
         return {
           ...column,
           required: false,
-          placeholder: "Leave blank to keep current"
+          placeholder: i18n.t("models.user.keep_current")
         } as FormModalColumn;
       }
 

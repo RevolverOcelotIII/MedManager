@@ -32,8 +32,8 @@
       "pharmaceutical": "Pharmacist"
     },
     "employment_type": {
-      "full_time": "Full-time",
-      "part_time": "Part-time",
+      "full-time": "Full-time",
+      "part-time": "Part-time",
       "contractor": "Contractor",
       "temporary": "Temporary"
     },
@@ -51,6 +51,8 @@
       "consultation": "Consultation",
       "nursing": "Nursing",
       "therapy": "Therapy",
+      "request": "Request",
+      "attendance": "Attendance",
       "other": "Other"
     },
     "procedure_status": {
@@ -115,7 +117,8 @@
       "name": "Name",
       "code": "Code",
       "category": "Category",
-      "responsible_roles": "Responsible Roles",
+      "dispatch_roles": "Dispatch Roles",
+      "execute_roles": "Execute Roles",
       "description": "Description"
     },
     "role": {
@@ -141,7 +144,9 @@
       "email": "Email",
       "employee": "Employee",
       "password": "Password",
-      "confirm_password": "Confirm Password"
+      "confirm_password": "Confirm Password",
+      "keep_current": "Leave blank to keep current",
+      "passwords_mismatch": "Passwords do not match!"
     }
   },
   "pages": {
@@ -211,6 +216,10 @@
       "password": "Password",
       "password_placeholder": "Enter your password",
       "sign_in": "Sign in"
+    }
+  }
+}
+."
     }
   }
 }

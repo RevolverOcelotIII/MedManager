@@ -32,8 +32,8 @@
       "pharmaceutical": "Farmacêutico(a)"
     },
     "employment_type": {
-      "full_time": "Tempo Integral",
-      "part_time": "Meio Período",
+      "full-time": "Tempo Integral",
+      "part-time": "Meio Período",
       "contractor": "Contratado",
       "temporary": "Temporário"
     },
@@ -51,6 +51,8 @@
       "consultation": "Consulta",
       "nursing": "Enfermagem",
       "therapy": "Terapia",
+      "request": "Solicitação",
+      "attendance": "Atendimento",
       "other": "Outro"
     },
     "procedure_status": {
@@ -115,7 +117,8 @@
       "name": "Nome",
       "code": "Código",
       "category": "Categoria",
-      "responsible_roles": "Cargos Responsáveis",
+      "dispatch_roles": "Cargos Solicitantes",
+      "execute_roles": "Cargos Executantes",
       "description": "Descrição"
     },
     "role": {
@@ -141,7 +144,9 @@
       "email": "E-mail",
       "employee": "Funcionário",
       "password": "Senha",
-      "confirm_password": "Confirme a Senha"
+      "confirm_password": "Confirme a Senha",
+      "keep_current": "Deixe em branco para manter a atual",
+      "passwords_mismatch": "As senhas não coincidem!"
     }
   },
   "pages": {
@@ -211,6 +216,9 @@
       "password": "Senha",
       "password_placeholder": "Digite sua senha",
       "sign_in": "Entrar"
+    }
+  }
+}
     }
   }
 }

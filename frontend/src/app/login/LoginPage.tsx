@@ -5,6 +5,7 @@ import { LoginSidebar } from "@/src/app/login/LoginSidebar";
 import { LoginForm } from "@/src/app/login/LoginForm";
 import { LoginFormData } from "@/src/types/app/login/LoginPage";
 import { ApiService } from "@/src/services/api";
+import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/app/login.css";
 
 export default function LoginPage() {
@@ -27,7 +28,7 @@ export default function LoginPage() {
       router.push("/patients");
     } catch (error) {
       console.error("Login failed:", error);
-      alert("Login failed. Please check your credentials.");
+      alert(i18n.t("login.login_failed"));
     }
   };
 

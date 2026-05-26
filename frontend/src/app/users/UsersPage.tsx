@@ -12,6 +12,7 @@ import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
 import { UserService } from "@/src/services/users";
 import { useAuth } from "@/src/hooks/useAuth";
 import { AccessLevel } from "@/src/types/role";
+import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/app/patients.css";
 
 export default function UsersPage() {
@@ -113,28 +114,28 @@ export default function UsersPage() {
         options: column.options,
       })),
     {
-      header: "Actions",
+      header: i18n.t("common.actions"),
       align: "right",
       className: "actions-column",
       accessor: (user) => (
         <div className="action-buttons">
           <button 
             className="view-button" 
-            aria-label="View Details"
+            aria-label={i18n.t("common.view_details")}
             onClick={() => handleViewDetails(user)}
           >
             <MdVisibility size={16} />
           </button>
           <button 
             className="edit-button" 
-            aria-label="Edit"
+            aria-label={i18n.t("common.edit")}
             onClick={() => handleEdit(user)}
           >
             <MdEdit size={16} />
           </button>
           <button 
             className="delete-button" 
-            aria-label="Delete"
+            aria-label={i18n.t("common.delete")}
             onClick={() => handleDelete(user.id)}
           >
             <MdDelete size={16} />
@@ -147,8 +148,8 @@ export default function UsersPage() {
   return (
     <>
       <GridPage
-        title="User Accounts"
-        description="Manage hospital system access and credentials."
+        title={i18n.t("pages.users.title")}
+        description={i18n.t("pages.users.description")}
         data={filteredUsers}
         columns={gridColumns}
         rowKey="id"
@@ -168,14 +169,6 @@ export default function UsersPage() {
       <DetailsModal
         isOpen={isDetailsModalOpen}
         onClose={() => setIsDetailsModalOpen(false)}
-        title="User Account Details"
-        data={selectedUser}
-        columns={USER_COLUMNS}
-      />
-    </>
-  );
-}
-)}
         title={i18n.t("pages.users.details_title")}
         data={selectedUser}
         columns={USER_COLUMNS}
