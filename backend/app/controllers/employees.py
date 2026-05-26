@@ -2,19 +2,19 @@ from fastapi import APIRouter, Depends, status, Response
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.auth import get_current_user, require_admin
-from app.schemas.employees import EmployeeResponse, EmployeeCreate, EmployeeUpdate, RoleResponse
+from app.schemas.employees import EmployeeResponse, RestrictedEmployeeResponse, EmployeeCreate, EmployeeUpdate, RoleResponse
 from app.services.employees import EmployeeService
 from app.services.roles import RoleService
 from app.models.user import User
-from typing import List
+from typing import List, Union
 
 router = APIRouter(prefix="/employees", tags=["Employees"], dependencies=[Depends(get_current_user)])
 
-@router.get("/", response_model=List[EmployeeResponse])
+@router.get("/", response_model=List[Union[EmployeeResponse, RestrictedEmployeeResponse]])
 def list_employees(current_user: User = Depends(get_current_user), db_session: Session = Depends(get_db)):
     return EmployeeService.get_all(db_session, current_user)
 
-@router.get("/{employee_id}", response_model=EmployeeResponse)
+@router.get("/{employee_id}", response_model=Union[EmployeeResponse, RestrictedEmployeeResponse])
 def get_employee(employee_id: int, current_user: User = Depends(get_current_user), db_session: Session = Depends(get_db)):
     return EmployeeService.get_by_id(db_session, employee_id, current_user)
 

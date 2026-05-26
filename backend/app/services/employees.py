@@ -1,8 +1,9 @@
 from sqlalchemy.orm import Session
-from app.models.employee import Employee, Role
-from app.schemas.employees import EmployeeCreate, EmployeeUpdate
+from app.models.employee import Employee, Role, AccessLevel
+from app.models.user import User
+from app.schemas.employees import EmployeeCreate, EmployeeUpdate, EmployeeResponse, RestrictedEmployeeResponse
 from app.services.utils import get_object_or_404, validate_unique
-from typing import Optional
+from typing import Optional, List, Any
 
 class EmployeeService:
     @staticmethod
@@ -20,16 +21,45 @@ class EmployeeService:
         get_object_or_404(db_session, Role, role_id, error_message="Role not found")
 
     @staticmethod
-    def get_all_roles(db_session: Session):
-        return db_session.query(Role).all()
+    def get_serialized_employee(employee: Employee, is_admin: bool):
+        if is_admin:
+            return EmployeeResponse.model_validate(employee)
+        return RestrictedEmployeeResponse.model_validate(employee)
 
     @staticmethod
-    def get_all(db_session: Session):
-        return db_session.query(Employee).all()
+    def get_all(db_session: Session, current_user: User) -> List[Any]:
+        user_access = current_user.employee.role.access_level
+        is_admin = user_access == AccessLevel.admin
+
+        query = db_session.query(Employee).join(Role)
+        
+        results = []
+        if is_admin:
+            results = query.all()
+        elif user_access == AccessLevel.attendant:
+            results = query.filter(Role.access_level.in_([AccessLevel.doctor, AccessLevel.nurse])).all()
+        elif user_access in [AccessLevel.doctor, AccessLevel.nurse, AccessLevel.pharmaceutical]:
+            results = query.filter(Employee.id == current_user.employee_id).all()
+
+        return [EmployeeService.get_serialized_employee(e, is_admin) for e in results]
 
     @staticmethod
-    def get_by_id(db_session: Session, employee_id: int):
-        return get_object_or_404(db_session, Employee, employee_id)
+    def get_by_id(db_session: Session, employee_id: int, current_user: User) -> Any:
+        user_access = current_user.employee.role.access_level
+        is_admin = user_access == AccessLevel.admin
+        
+        employee = get_object_or_404(db_session, Employee, employee_id)
+
+        if not is_admin:
+            if user_access == AccessLevel.attendant:
+                if employee.role.access_level not in [AccessLevel.doctor, AccessLevel.nurse]:
+                    from fastapi import HTTPException
+                    raise HTTPException(status_code=403, detail="Attendants can only view medical staff details.")
+            elif employee_id != current_user.employee_id:
+                from fastapi import HTTPException
+                raise HTTPException(status_code=403, detail="You can only view your own employee data.")
+
+        return EmployeeService.get_serialized_employee(employee, is_admin)
 
     @staticmethod
     def create(db_session: Session, employee_data: EmployeeCreate):
@@ -44,7 +74,7 @@ class EmployeeService:
 
     @staticmethod
     def update(db_session: Session, employee_id: int, employee_data: EmployeeUpdate):
-        employee = EmployeeService.get_by_id(db_session, employee_id)
+        employee = get_object_or_404(db_session, Employee, employee_id)
         
         update_data = employee_data.model_dump(exclude_unset=True)
         
@@ -63,6 +93,6 @@ class EmployeeService:
 
     @staticmethod
     def delete(db_session: Session, employee_id: int):
-        employee = EmployeeService.get_by_id(db_session, employee_id)
+        employee = get_object_or_404(db_session, Employee, employee_id)
         db_session.delete(employee)
         db_session.commit()

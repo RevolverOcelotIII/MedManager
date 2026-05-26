@@ -60,3 +60,16 @@ class EmployeeResponse(EmployeeBase):
     updated_at: datetime
     class Config:
         from_attributes = True
+
+class RestrictedEmployeeResponse(BaseModel):
+    id: int
+    full_name: str
+    social_name: Optional[str] = None
+    cpf: str
+    active: bool
+    role: Optional[RoleResponse] = None
+    created_at: datetime
+    updated_at: datetime
+    
+    class Config:
+        from_attributes = True
