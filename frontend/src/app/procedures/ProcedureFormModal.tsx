@@ -21,7 +21,7 @@ export function ProcedureFormModal({ isOpen, onClose, onSubmit, procedure }: Pro
   const formColumns: FormModalColumn[] = PROCEDURE_COLUMNS
     .filter(column => column.form)
     .map(column => {
-      if (column.name === "responsible_role_ids") {
+      if (column.name === "dispatch_role_ids" || column.name === "execute_role_ids") {
         return {
           ...column,
           options: roleOptions
@@ -42,16 +42,20 @@ export function ProcedureFormModal({ isOpen, onClose, onSubmit, procedure }: Pro
     if (!procedure) return {};
     return {
       ...procedure,
-      responsible_role_ids: procedure.responsible_roles?.map(r => r.id) || []
+      dispatch_role_ids: procedure.dispatch_roles?.map(r => r.id) || [],
+      execute_role_ids: procedure.execute_roles?.map(r => r.id) || []
     };
   }, [procedure]);
 
   const handleFormSubmit = (formData: any) => {
     const payload = {
       ...formData,
-      responsible_role_ids: typeof formData.responsible_role_ids === 'string'
-        ? JSON.parse(formData.responsible_role_ids)
-        : formData.responsible_role_ids
+      dispatch_role_ids: typeof formData.dispatch_role_ids === 'string'
+        ? JSON.parse(formData.dispatch_role_ids)
+        : formData.dispatch_role_ids,
+      execute_role_ids: typeof formData.execute_role_ids === 'string'
+        ? JSON.parse(formData.execute_role_ids)
+        : formData.execute_role_ids
     };
     onSubmit(payload);
   };
