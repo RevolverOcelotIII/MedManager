@@ -127,18 +127,28 @@ describe('SearchInput', () => {
   });
 
   describe('when states are restricted', () => {
-    it('should NOT open dropdown when disabled', async () => {
-      const user = userEvent.setup();
-      render(<SearchInput options={OPTIONS} disabled placeholder={PLACEHOLDER} name={NAME} />);
-      await user.click(screen.getByPlaceholderText(PLACEHOLDER));
-      expect(screen.queryByText('Apple')).not.toBeInTheDocument();
+    describe('when it is disabled', () => {
+      beforeEach(async () => {
+        render(<SearchInput options={OPTIONS} disabled placeholder={PLACEHOLDER} name={NAME} />);
+        const user = userEvent.setup();
+        await user.click(screen.getByPlaceholderText(PLACEHOLDER));
+      });
+
+      it('should NOT open dropdown', () => {
+        expect(screen.queryByText('Apple')).not.toBeInTheDocument();
+      });
     });
 
-    it('should NOT open dropdown when readOnly', async () => {
-      const user = userEvent.setup();
-      render(<SearchInput options={OPTIONS} readOnly placeholder={PLACEHOLDER} name={NAME} />);
-      await user.click(screen.getByPlaceholderText(PLACEHOLDER));
-      expect(screen.queryByText('Apple')).not.toBeInTheDocument();
+    describe('when it is readOnly', () => {
+      beforeEach(async () => {
+        render(<SearchInput options={OPTIONS} readOnly placeholder={PLACEHOLDER} name={NAME} />);
+        const user = userEvent.setup();
+        await user.click(screen.getByPlaceholderText(PLACEHOLDER));
+      });
+
+      it('should NOT open dropdown', () => {
+        expect(screen.queryByText('Apple')).not.toBeInTheDocument();
+      });
     });
   });
 });

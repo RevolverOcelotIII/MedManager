@@ -1,4 +1,4 @@
-import { render, screen, act, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { SidebarFooter } from '@/src/components/Sidebar/SidebarFooter';
 import { ApiService } from '@/src/services/api';
@@ -22,24 +22,32 @@ describe('SidebarFooter', () => {
   };
 
   describe('when it is loading', () => {
-    it('should show the loading message', async () => {
+    beforeEach(() => {
       (ApiService.get as jest.Mock).mockReturnValue(new Promise(() => {}));
       render(<SidebarFooter isCollapsed={false} />);
+    });
+
+    it('should show the loading message', () => {
       expect(screen.getByText('Loading...')).toBeInTheDocument();
     });
   });
 
   describe('when there is no user', () => {
-    it('should render nothing', async () => {
+    let container: HTMLElement;
+
+    beforeEach(async () => {
       Cookies.remove('token');
       (ApiService.get as jest.Mock).mockResolvedValue(null);
       
-      const { container } = render(<SidebarFooter isCollapsed={false} />);
+      const rendered = render(<SidebarFooter isCollapsed={false} />);
+      container = rendered.container;
       
       await waitFor(() => {
         expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
       });
-      
+    });
+
+    it('should render nothing', () => {
       expect(container.firstChild).toBeNull();
     });
   });
@@ -50,24 +58,30 @@ describe('SidebarFooter', () => {
       (ApiService.get as jest.Mock).mockResolvedValue(MOCK_USER);
     });
 
-    it('should show the user name', async () => {
-      render(<SidebarFooter isCollapsed={false} />);
-      expect(await screen.findByText(MOCK_USER_NAME)).toBeInTheDocument();
-    });
+    describe('when the sidebar is expanded', () => {
+      beforeEach(() => {
+        render(<SidebarFooter isCollapsed={false} />);
+      });
 
-    it('should show the user email', async () => {
-      render(<SidebarFooter isCollapsed={false} />);
-      expect(await screen.findByText(MOCK_USER_EMAIL)).toBeInTheDocument();
-    });
+      it('should show the user name', async () => {
+        expect(await screen.findByText(MOCK_USER_NAME)).toBeInTheDocument();
+      });
 
-    it('should remove the token cookie when logout is clicked', async () => {
-      const user = userEvent.setup();
-      render(<SidebarFooter isCollapsed={false} />);
-      
-      const logoutButton = await screen.findByRole('button', { name: 'Logout' });
-      await user.click(logoutButton);
-      
-      expect(Cookies.get('token')).toBeUndefined();
+      it('should show the user email', async () => {
+        expect(await screen.findByText(MOCK_USER_EMAIL)).toBeInTheDocument();
+      });
+
+      describe('when the logout button is clicked', () => {
+        beforeEach(async () => {
+          const user = userEvent.setup();
+          const logoutButton = await screen.findByRole('button', { name: 'Logout' });
+          await user.click(logoutButton);
+        });
+
+        it('should remove the token cookie', () => {
+          expect(Cookies.get('token')).toBeUndefined();
+        });
+      });
     });
   });
 });

@@ -45,25 +45,30 @@ describe('Form Components', () => {
     const VALUE = 'Hello';
     const onChange = jest.fn();
 
-    beforeEach(() => {
-      render(
-        <Input 
-          placeholder={PLACEHOLDER} 
-          value={VALUE} 
-          onChange={onChange} 
-        />
-      );
-    });
+    describe('when it is rendered', () => {
+      beforeEach(() => {
+        render(
+          <Input 
+            placeholder={PLACEHOLDER} 
+            value={VALUE} 
+            onChange={onChange} 
+          />
+        );
+      });
 
-    it('should show the correct value', () => {
-      expect(screen.getByDisplayValue(VALUE)).toBeInTheDocument();
-    });
+      it('should show the correct value', () => {
+        expect(screen.getByDisplayValue(VALUE)).toBeInTheDocument();
+      });
 
-    describe('when the user types into the input', () => {
-      it('should call the onChange callback', async () => {
-        const user = userEvent.setup();
-        await user.type(screen.getByPlaceholderText(PLACEHOLDER), 'New');
-        expect(onChange).toHaveBeenCalled();
+      describe('when the user types into the input', () => {
+        beforeEach(async () => {
+          const user = userEvent.setup();
+          await user.type(screen.getByPlaceholderText(PLACEHOLDER), 'New');
+        });
+
+        it('should call the onChange callback', () => {
+          expect(onChange).toHaveBeenCalled();
+        });
       });
     });
   });
@@ -90,9 +95,12 @@ describe('Form Components', () => {
       });
 
       describe('when an option is selected', () => {
-        it('should call the onChange callback', async () => {
+        beforeEach(async () => {
           const user = userEvent.setup();
           await user.selectOptions(screen.getByRole('combobox'), '2');
+        });
+
+        it('should call the onChange callback', () => {
           expect(onChange).toHaveBeenCalled();
         });
       });
