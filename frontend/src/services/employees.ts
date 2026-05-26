@@ -2,8 +2,11 @@ import { ApiService } from "./api";
 import { Employee, Role } from "@/src/types/employee";
 
 export const EmployeeService = {
-  getAll: (canExecuteProcedureId?: number) => {
-    const params = canExecuteProcedureId ? { can_execute_procedure_id: canExecuteProcedureId } : {};
+  getAll: (canExecuteProcedureId?: number, canDispatchProcedureId?: number) => {
+    const params: any = {};
+    if (canExecuteProcedureId) params.can_execute_procedure_id = canExecuteProcedureId;
+    if (canDispatchProcedureId) params.can_dispatch_procedure_id = canDispatchProcedureId;
+    
     return ApiService.get<Employee[]>("/employees/", { params });
   },
   

@@ -8,7 +8,7 @@ import { Medication } from "@/src/types/medication";
 
 export function useGetAttendanceProcedureFormData(procedureId?: number) {
   const [procedures, setProcedures] = useState<Procedure[]>([]);
-  const [allEmployees, setAllEmployees] = useState<Employee[]>([]);
+  const [authorizedDispatchers, setAuthorizedDispatchers] = useState<Employee[]>([]);
   const [qualifiedExecutors, setQualifiedExecutors] = useState<Employee[]>([]);
   const [medications, setMedications] = useState<Medication[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -17,16 +17,14 @@ export function useGetAttendanceProcedureFormData(procedureId?: number) {
     async function fetchData() {
       setIsLoading(true);
       try {
-        const [procData, allEmpData, medData] = await Promise.all([
+        const [procData, medData] = await Promise.all([
           ProcedureService.getAll(),
-          EmployeeService.getAll(),
           MedicationService.getAll()
         ]);
         setProcedures(procData);
-        setAllEmployees(allEmpData);
         setMedications(medData);
       } catch (error) {
-        console.error("Failed to fetch general attendance procedure form data:", error);
+        console.error("Failed to fetch basic attendance procedure form data:", error);
       } finally {
         setIsLoading(false);
       }
@@ -35,7 +33,19 @@ export function useGetAttendanceProcedureFormData(procedureId?: number) {
     fetchData();
   }, []);
 
-  // Separate effect to fetch qualified executors when procedureId changes
+  useEffect(() => {
+    async function fetchDispatchers() {
+      try {
+        const dispatchers = await EmployeeService.getAll(undefined, procedureId);
+        setAuthorizedDispatchers(dispatchers);
+      } catch (error) {
+        console.error("Failed to fetch authorized dispatchers:", error);
+      }
+    }
+
+    fetchDispatchers();
+  }, [procedureId]);
+
   useEffect(() => {
     async function fetchExecutors() {
       if (!procedureId) {
@@ -62,15 +72,15 @@ export function useGetAttendanceProcedureFormData(procedureId?: number) {
     [procedures]
   );
 
-  const allEmployeeOptions = useMemo(() => 
-    allEmployees.map(e => ({
+  const dispatcherOptions = useMemo(() => 
+    authorizedDispatchers.map(e => ({
       label: e.full_name,
       value: e.id
     })), 
-    [allEmployees]
+    [authorizedDispatchers]
   );
 
-  const qualifiedExecutorOptions = useMemo(() => 
+  const executorOptions = useMemo(() => 
     qualifiedExecutors.map(e => ({
       label: e.full_name,
       value: e.id
@@ -88,8 +98,8 @@ export function useGetAttendanceProcedureFormData(procedureId?: number) {
 
   return {
     procedureOptions,
-    allEmployeeOptions,
-    qualifiedExecutorOptions,
+    dispatcherOptions,
+    executorOptions,
     medicationOptions,
     isLoading
   };

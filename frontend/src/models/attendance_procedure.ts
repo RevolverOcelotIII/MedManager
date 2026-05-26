@@ -56,7 +56,7 @@ export const ATTENDANCE_PROCEDURE_COLUMNS: ColumnDefinition<AttendanceProcedure>
     grid: false,
     form: true,
     details: false,
-    required: true,
+    required: false,
   },
   {
     name: "end_date",
@@ -75,6 +75,7 @@ export const ATTENDANCE_PROCEDURE_COLUMNS: ColumnDefinition<AttendanceProcedure>
     grid: false,
     form: true,
     details: false,
+    required: false,
   },
   {
     name: "start_time",

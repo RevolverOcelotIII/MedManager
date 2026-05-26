@@ -31,12 +31,11 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
   
   const [activeFormProcedureId, setActiveFormProcedureId] = useState<number | undefined>(undefined);
 
-  // Only trigger full data fetching if we are NOT in edit mode (since in edit mode we use pre-filled data)
   const isEditing = !!selectedAttendanceProcedure;
   const { 
     procedureOptions, 
-    allEmployeeOptions, 
-    qualifiedExecutorOptions, 
+    dispatcherOptions, 
+    executorOptions, 
     medicationOptions 
   } = useGetAttendanceProcedureFormData(isEditing ? undefined : activeFormProcedureId);
 
@@ -58,7 +57,6 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
 
   const handleEditAttendanceProcedure = (attendanceProcedure: AttendanceProcedure) => {
     setSelectedAttendanceProcedure(attendanceProcedure);
-    // When editing, we don't necessarily need to trigger new fetches for the active procedure
     setActiveFormProcedureId(attendanceProcedure.procedure_id);
     setIsFormModalOpen(true);
   };
@@ -75,7 +73,7 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
   };
 
   const handleFormChange = (data: any) => {
-    if (isEditing) return; // Ignore changes to restricted fields in edit mode
+    if (isEditing) return; 
     
     const procId = data.procedure_id ? Number(data.procedure_id) : undefined;
     if (procId !== activeFormProcedureId) {
@@ -90,13 +88,17 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
         : formData.medications;
 
       let start_time = null;
-      if (formData.start_date && formData.start_hour) {
-        start_time = `${formData.start_date}T${formData.start_hour}:00`;
+      if (formData.start_date) {
+        start_time = formData.start_hour 
+          ? `${formData.start_date}T${formData.start_hour}:00`
+          : `${formData.start_date}T00:00:00`;
       }
 
       let end_time = null;
-      if (formData.end_date && formData.end_hour) {
-        end_time = `${formData.end_date}T${formData.end_hour}:00`;
+      if (formData.end_date) {
+        end_time = formData.end_hour
+          ? `${formData.end_date}T${formData.end_hour}:00`
+          : `${formData.end_date}T00:00:00`;
       }
 
       const payload = {
@@ -226,11 +228,10 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
               }];
           }
       } else {
-          // Create mode logic
           if (column.name === "procedure_id") options = procedureOptions;
-          if (column.name === "ordered_by_id") options = allEmployeeOptions;
+          if (column.name === "ordered_by_id") options = dispatcherOptions;
           if (column.name === "executed_by_id") {
-              options = qualifiedExecutorOptions;
+              options = executorOptions; 
               if (!activeFormProcedureId) disabled = true;
           }
       }
