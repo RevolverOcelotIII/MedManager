@@ -28,14 +28,17 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedAttendanceProcedure, setSelectedAttendanceProcedure] = useState<AttendanceProcedure | null>(null);
+  
   const [activeFormProcedureId, setActiveFormProcedureId] = useState<number | undefined>(undefined);
 
+  // Only trigger full data fetching if we are NOT in edit mode (since in edit mode we use pre-filled data)
+  const isEditing = !!selectedAttendanceProcedure;
   const { 
     procedureOptions, 
     allEmployeeOptions, 
     qualifiedExecutorOptions, 
     medicationOptions 
-  } = useGetAttendanceProcedureFormData(activeFormProcedureId);
+  } = useGetAttendanceProcedureFormData(isEditing ? undefined : activeFormProcedureId);
 
   const fetchAttendanceProcedures = useCallback(async () => {
     setIsDataLoading(true);
@@ -55,6 +58,7 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
 
   const handleEditAttendanceProcedure = (attendanceProcedure: AttendanceProcedure) => {
     setSelectedAttendanceProcedure(attendanceProcedure);
+    // When editing, we don't necessarily need to trigger new fetches for the active procedure
     setActiveFormProcedureId(attendanceProcedure.procedure_id);
     setIsFormModalOpen(true);
   };
@@ -71,7 +75,8 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
   };
 
   const handleFormChange = (data: any) => {
-    // Ensure we parse the procedure_id if it's a string from a generic input
+    if (isEditing) return; // Ignore changes to restricted fields in edit mode
+    
     const procId = data.procedure_id ? Number(data.procedure_id) : undefined;
     if (procId !== activeFormProcedureId) {
       setActiveFormProcedureId(procId);
@@ -102,7 +107,6 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
         end_time
       };
       
-      // Remove virtual fields
       delete payload.medications;
       delete payload.start_date;
       delete payload.start_hour;
@@ -149,37 +153,46 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
     {
       header: i18n.t("common.actions"),
       align: "right",
-      accessor: (item) => (
-        <div className="action-buttons">
-          <button 
-            className="view-button" 
-            aria-label={i18n.t("common.view_details")}
-            onClick={() => handleViewAttendanceProcedureDetails(item)}
-          >
-            <MdVisibility size={16} />
-          </button>
-          
-          {canEdit && (
-            <button 
-              className="edit-button" 
-              aria-label={i18n.t("common.edit")}
-              onClick={() => handleEditAttendanceProcedure(item)}
-            >
-              <MdEdit size={16} />
-            </button>
-          )}
+      accessor: (item) => {
+        const isMed = accessLevel === AccessLevel.doctor || accessLevel === AccessLevel.nurse;
+        const isExecutor = item.executed_by_id === user?.employee_id;
+        const isCreator = item.ordered_by_id === user?.employee_id;
+        const isAdmin = accessLevel === AccessLevel.admin;
 
-          {canDelete && (
+        const canEditThisItem = isAdmin || (isMed ? isExecutor : isCreator);
+
+        return (
+          <div className="action-buttons">
             <button 
-              className="delete-button" 
-              aria-label={i18n.t("common.delete")}
-              onClick={() => handleDeleteAttendanceProcedure(item.id)}
+              className="view-button" 
+              aria-label={i18n.t("common.view_details")}
+              onClick={() => handleViewAttendanceProcedureDetails(item)}
             >
-              <MdDelete size={16} />
+              <MdVisibility size={16} />
             </button>
-          )}
-        </div>
-      ),
+            
+            {canEditThisItem && canEdit && (
+              <button 
+                className="edit-button" 
+                aria-label={i18n.t("common.edit")}
+                onClick={() => handleEditAttendanceProcedure(item)}
+              >
+                <MdEdit size={16} />
+              </button>
+            )}
+
+            {canDelete && (
+              <button 
+                className="delete-button" 
+                aria-label={i18n.t("common.delete")}
+                onClick={() => handleDeleteAttendanceProcedure(item.id)}
+              >
+                <MdDelete size={16} />
+              </button>
+            )}
+          </div>
+        );
+      },
     }
   ];
 
@@ -188,16 +201,41 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
     .map(column => {
       let options = column.options;
       let disabled = column.disabled;
+      let readOnly = column.readOnly;
 
-      if (column.name === "procedure_id") options = procedureOptions;
-      if (column.name === "ordered_by_id") options = allEmployeeOptions;
-      if (column.name === "executed_by_id") options = qualifiedExecutorOptions;
-      if (column.name === "medications") options = medicationOptions;
-
-      // Business Rule: executed_by_id is disabled until a procedure is selected
-      if (column.name === "executed_by_id" && !activeFormProcedureId) {
-        disabled = true;
+      if (isEditing && selectedAttendanceProcedure) {
+          if (column.name === "procedure_id") {
+              readOnly = true;
+              options = [{ 
+                  label: selectedAttendanceProcedure.procedure?.name || "", 
+                  value: selectedAttendanceProcedure.procedure_id 
+              }];
+          }
+          if (column.name === "ordered_by_id") {
+              readOnly = true;
+              options = [{ 
+                  label: selectedAttendanceProcedure.ordered_by?.full_name || "", 
+                  value: selectedAttendanceProcedure.ordered_by_id || 0
+              }];
+          }
+          if (column.name === "executed_by_id") {
+              readOnly = true;
+              options = [{ 
+                  label: selectedAttendanceProcedure.executed_by?.full_name || "", 
+                  value: selectedAttendanceProcedure.executed_by_id || 0
+              }];
+          }
+      } else {
+          // Create mode logic
+          if (column.name === "procedure_id") options = procedureOptions;
+          if (column.name === "ordered_by_id") options = allEmployeeOptions;
+          if (column.name === "executed_by_id") {
+              options = qualifiedExecutorOptions;
+              if (!activeFormProcedureId) disabled = true;
+          }
       }
+
+      if (column.name === "medications") options = medicationOptions;
 
       return {
         name: column.name,
@@ -207,7 +245,7 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
         required: column.required,
         placeholder: column.placeholder,
         disabled: disabled,
-        readOnly: column.readOnly,
+        readOnly: readOnly,
         options: options,
       } as FormModalColumn;
     });
@@ -223,7 +261,6 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
       };
     }
 
-    // Split existing times into date and hour for the form
     let start_date = today;
     let start_hour = "";
     if (selectedAttendanceProcedure.start_time) {
