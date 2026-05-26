@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom';
+import Cookies from 'js-cookie';
 
 jest.mock('next/navigation', () => ({
   usePathname: jest.fn(() => '/'),
@@ -18,3 +19,11 @@ jest.mock('@/src/services/api', () => ({
     delete: jest.fn(),
   },
 }));
+
+beforeEach(() => {
+  Cookies.set('token', 'mock-token');
+});
+
+afterEach(() => {
+  Cookies.remove('token');
+});
