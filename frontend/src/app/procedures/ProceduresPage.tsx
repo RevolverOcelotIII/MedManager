@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { MdEdit, MdDelete, MdVisibility } from "react-icons/md";
 import { GridPage } from "@/src/components/layout/GridPage/GridPage";
 import { GridColumn } from "@/src/types";
@@ -9,9 +10,14 @@ import { PROCEDURE_COLUMNS } from "@/src/models/procedure";
 import { ProcedureFormModal } from "@/src/app/procedures/ProcedureFormModal";
 import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
 import { ProcedureService } from "@/src/services/procedures";
+import { useAuth } from "@/src/hooks/useAuth";
+import { AccessLevel } from "@/src/types/role";
 import "@/src/styles/app/patients.css";
 
 export default function ProceduresPage() {
+  const { user, isLoading: isAuthLoading } = useAuth();
+  const router = useRouter();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -32,8 +38,18 @@ export default function ProceduresPage() {
   }, []);
 
   useEffect(() => {
-    fetchProcedures();
-  }, [fetchProcedures]);
+    if (!isAuthLoading) {
+      if (user?.employee?.role?.access_level !== AccessLevel.admin) {
+        router.push("/patients");
+      } else {
+        fetchProcedures();
+      }
+    }
+  }, [isAuthLoading, user, router, fetchProcedures]);
+
+  if (isAuthLoading || user?.employee?.role?.access_level !== AccessLevel.admin) {
+    return null;
+  }
   
   const filteredProcedures = procedures.filter(procedure => 
     procedure.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

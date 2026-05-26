@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { MdEdit, MdDelete, MdVisibility } from "react-icons/md";
 import { GridPage } from "@/src/components/layout/GridPage/GridPage";
 import { GridColumn } from "@/src/types";
@@ -9,9 +10,14 @@ import { EMPLOYEE_COLUMNS } from "@/src/models/employee";
 import { EmployeeFormModal } from "@/src/app/employees/EmployeeFormModal";
 import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
 import { EmployeeService } from "@/src/services/employees";
+import { useAuth } from "@/src/hooks/useAuth";
+import { AccessLevel } from "@/src/types/role";
 import "@/src/styles/app/patients.css";
 
 export default function EmployeesPage() {
+  const { user, isLoading: isAuthLoading } = useAuth();
+  const router = useRouter();
+  
   const [searchTerm, setSearchTerm] = useState("");
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -32,8 +38,18 @@ export default function EmployeesPage() {
   }, []);
 
   useEffect(() => {
-    fetchEmployees();
-  }, [fetchEmployees]);
+    if (!isAuthLoading) {
+      if (user?.employee?.role?.access_level !== AccessLevel.admin) {
+        router.push("/patients");
+      } else {
+        fetchEmployees();
+      }
+    }
+  }, [isAuthLoading, user, router, fetchEmployees]);
+
+  if (isAuthLoading || user?.employee?.role?.access_level !== AccessLevel.admin) {
+    return null;
+  }
   
   const filteredEmployees = employees.filter(employee => 
     employee.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||

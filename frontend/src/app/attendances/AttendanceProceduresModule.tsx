@@ -9,6 +9,8 @@ import { AttendanceProcedure } from "@/src/types/attendance_procedure";
 import { ATTENDANCE_PROCEDURE_COLUMNS } from "@/src/models/attendance_procedure";
 import { AttendanceProcedureService } from "@/src/services/attendance_procedures";
 import { useGetAttendanceProcedureFormData } from "@/src/hooks/useGetAttendanceProcedureFormData";
+import { useAuth } from "@/src/hooks/useAuth";
+import { AccessLevel } from "@/src/types/role";
 import { GridColumn } from "@/src/types";
 import { FormModalColumn } from "@/src/types/components/layout/Form/FormModal";
 
@@ -17,6 +19,9 @@ interface AttendanceProceduresModuleProps {
 }
 
 export function AttendanceProceduresModule({ attendanceId }: AttendanceProceduresModuleProps) {
+  const { user } = useAuth();
+  const accessLevel = user?.employee?.role?.access_level;
+
   const [attendanceProcedures, setAttendanceProcedures] = useState<AttendanceProcedure[]>([]);
   const [isDataLoading, setIsDataLoading] = useState(true);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
@@ -94,6 +99,10 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
     }
   };
 
+  const canCreate = accessLevel !== AccessLevel.pharmaceutical;
+  const canEdit = accessLevel !== AccessLevel.pharmaceutical;
+  const canDelete = accessLevel === AccessLevel.admin;
+
   const gridColumns: GridColumn<AttendanceProcedure>[] = [
     ...ATTENDANCE_PROCEDURE_COLUMNS
       .filter(column => column.grid)
@@ -115,20 +124,18 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
           >
             <MdVisibility size={16} />
           </button>
-          <button 
-            className="edit-button" 
-            aria-label="Edit"
-            onClick={() => handleEditAttendanceProcedure(item)}
-          >
-            <MdEdit size={16} />
-          </button>
-          <button 
-            className="delete-button" 
-            aria-label="Delete"
-            onClick={() => handleDeleteAttendanceProcedure(item.id)}
-          >
-            <MdDelete size={16} />
-          </button>
+          
+          {canEdit && (
+            <button className="edit-button" onClick={() => handleEditAttendanceProcedure(item)}>
+              <MdEdit size={16} />
+            </button>
+          )}
+
+          {canDelete && (
+            <button className="delete-button" onClick={() => handleDeleteAttendanceProcedure(item.id)}>
+              <MdDelete size={16} />
+            </button>
+          )}
         </div>
       ),
     }
@@ -150,14 +157,14 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
         required: column.required,
         placeholder: column.placeholder,
         options: options,
-      };
+      } as FormModalColumn;
     });
 
   const initialFormData = useMemo(() => {
     if (!selectedAttendanceProcedure) return {};
     return {
       ...selectedAttendanceProcedure,
-      medications: selectedAttendanceProcedure.medications.map(m => m.id)
+      medications: selectedAttendanceProcedure.medications?.map(m => m.id) || []
     };
   }, [selectedAttendanceProcedure]);
 
@@ -165,7 +172,9 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
     <div className="attendance-procedures-module">
       <div className="module-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
         <h3 className="details-section-title">Executed Procedures</h3>
-        <button className="button-primary" onClick={handleNewAttendanceProcedure}>Add Procedure</button>
+        {canCreate && (
+          <button className="button-primary" onClick={handleNewAttendanceProcedure}>Add Procedure</button>
+        )}
       </div>
       
       <div className="module-grid">

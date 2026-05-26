@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { MdEdit, MdDelete } from "react-icons/md";
 import { GridPage } from "@/src/components/layout/GridPage/GridPage";
 import { GridColumn } from "@/src/types";
@@ -8,9 +9,14 @@ import { Role } from "@/src/types/role";
 import { ROLE_COLUMNS } from "@/src/models/role";
 import { RoleFormModal } from "@/src/app/roles/RoleFormModal";
 import { RoleService } from "@/src/services/roles";
+import { useAuth } from "@/src/hooks/useAuth";
+import { AccessLevel } from "@/src/types/role";
 import "@/src/styles/app/patients.css";
 
 export default function RolesPage() {
+  const { user, isLoading: isAuthLoading } = useAuth();
+  const router = useRouter();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
@@ -30,8 +36,18 @@ export default function RolesPage() {
   }, []);
 
   useEffect(() => {
-    fetchRoles();
-  }, [fetchRoles]);
+    if (!isAuthLoading) {
+      if (user?.employee?.role?.access_level !== AccessLevel.admin) {
+        router.push("/patients");
+      } else {
+        fetchRoles();
+      }
+    }
+  }, [isAuthLoading, user, router, fetchRoles]);
+
+  if (isAuthLoading || user?.employee?.role?.access_level !== AccessLevel.admin) {
+    return null;
+  }
   
   const filteredRoles = roles.filter(role => 
     role.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

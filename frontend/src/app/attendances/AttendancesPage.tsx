@@ -10,9 +10,14 @@ import { AttendanceFormModal } from "@/src/app/attendances/AttendanceFormModal";
 import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
 import { AttendanceProceduresModule } from "@/src/app/attendances/AttendanceProceduresModule";
 import { AttendanceService } from "@/src/services/attendances";
+import { useAuth } from "@/src/hooks/useAuth";
+import { AccessLevel } from "@/src/types/role";
 import "@/src/styles/app/patients.css";
 
 export default function AttendancesPage() {
+  const { user } = useAuth();
+  const accessLevel = user?.employee?.role?.access_level;
+
   const [searchTerm, setSearchTerm] = useState("");
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -78,17 +83,7 @@ export default function AttendancesPage() {
     }
   };
 
-  const handleDelete = async (id: number) => {
-    if (confirm("Are you sure you want to delete this attendance?")) {
-      try {
-        await AttendanceService.delete(id);
-        fetchAttendances(true);
-      } catch (error) {
-        console.error("Failed to delete attendance:", error);
-        alert("Error deleting attendance.");
-      }
-    }
-  };
+  const canModifyHeader = accessLevel === AccessLevel.admin || accessLevel === AccessLevel.attendant;
 
   const gridColumns: GridColumn<Attendance>[] = [
     ...ATTENDANCE_COLUMNS
@@ -112,20 +107,16 @@ export default function AttendancesPage() {
           >
             <MdVisibility size={16} />
           </button>
-          <button 
-            className="edit-button" 
-            aria-label="Edit"
-            onClick={() => handleEdit(attendance)}
-          >
-            <MdEdit size={16} />
-          </button>
-          <button 
-            className="delete-button" 
-            aria-label="Delete"
-            onClick={() => handleDelete(attendance.id)}
-          >
-            <MdDelete size={16} />
-          </button>
+          
+          {canModifyHeader && (
+            <button 
+              className="edit-button" 
+              aria-label="Edit"
+              onClick={() => handleEdit(attendance)}
+            >
+              <MdEdit size={16} />
+            </button>
+          )}
         </div>
       )
     }
@@ -141,7 +132,7 @@ export default function AttendancesPage() {
         rowKey="id"
         searchValue={searchTerm}
         onSearchChange={setSearchTerm}
-        onNewClick={handleNew}
+        onNewClick={canModifyHeader ? handleNew : undefined}
         isLoading={isLoading}
       />
 

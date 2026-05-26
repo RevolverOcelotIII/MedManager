@@ -9,9 +9,14 @@ import { PATIENT_COLUMNS } from "@/src/models/patient";
 import { PatientFormModal } from "@/src/app/patients/PatientFormModal";
 import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
 import { PatientService } from "@/src/services/patients";
+import { useAuth } from "@/src/hooks/useAuth";
+import { AccessLevel } from "@/src/types/role";
 import "@/src/styles/app/patients.css";
 
 export default function PatientsPage() {
+  const { user } = useAuth();
+  const accessLevel = user?.employee?.role?.access_level;
+
   const [searchTerm, setSearchTerm] = useState("");
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -78,6 +83,10 @@ export default function PatientsPage() {
     }
   };
 
+  const canCreate = accessLevel === AccessLevel.admin || accessLevel === AccessLevel.attendant;
+  const canEdit = accessLevel !== AccessLevel.pharmaceutical;
+  const canDelete = accessLevel === AccessLevel.admin;
+
   const gridColumns: GridColumn<Patient>[] = [
     ...PATIENT_COLUMNS
       .filter(column => column.grid)
@@ -100,20 +109,26 @@ export default function PatientsPage() {
           >
             <MdVisibility size={16} />
           </button>
-          <button 
-            className="edit-button" 
-            aria-label="Edit"
-            onClick={() => handleEdit(patient)}
-          >
-            <MdEdit size={16} />
-          </button>
-          <button 
-            className="delete-button" 
-            aria-label="Delete"
-            onClick={() => handleDelete(patient.id)}
-          >
-            <MdDelete size={16} />
-          </button>
+          
+          {canEdit && (
+            <button 
+              className="edit-button" 
+              aria-label="Edit"
+              onClick={() => handleEdit(patient)}
+            >
+              <MdEdit size={16} />
+            </button>
+          )}
+
+          {canDelete && (
+            <button 
+              className="delete-button" 
+              aria-label="Delete"
+              onClick={() => handleDelete(patient.id)}
+            >
+              <MdDelete size={16} />
+            </button>
+          )}
         </div>
       )
     }
@@ -121,7 +136,7 @@ export default function PatientsPage() {
 
   useEffect(() => {
     fetchPatients();
-  }, []);
+  }, [fetchPatients]);
 
   return (
     <>
@@ -133,7 +148,7 @@ export default function PatientsPage() {
         rowKey="id"
         searchValue={searchTerm}
         onSearchChange={setSearchTerm}
-        onNewClick={handleNew}
+        onNewClick={canCreate ? handleNew : undefined}
         isLoading={isLoading}
       />
 

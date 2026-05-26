@@ -82,7 +82,7 @@ export const ATTENDANCE_PROCEDURE_COLUMNS: ColumnDefinition<AttendanceProcedure>
     label: "Medications",
     type: "multi_search_input",
     width: "100",
-    grid: true,
+    grid: false,
     form: true,
     details: true,
     render: (item) => item.medications?.map(m => m.trade_name).join(", ") || "—",

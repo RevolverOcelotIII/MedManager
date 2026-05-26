@@ -6,6 +6,8 @@ import { FaStethoscope, FaPills } from "react-icons/fa";
 import { BsFillFileEarmarkMedicalFill } from "react-icons/bs";
 import { FaUserDoctor } from "react-icons/fa6";
 import { SidebarItem } from "@/src/components/Sidebar/SidebarItem";
+import { useAuth } from "@/src/hooks/useAuth";
+import { AccessLevel } from "@/src/types/role";
 import "@/src/styles/components/Sidebar/sidebar-nav.css";
 
 const workspaceItems = [
@@ -28,6 +30,8 @@ interface SidebarNavProps {
 
 export function SidebarNav({ isCollapsed }: SidebarNavProps) {
   const currentPathname = usePathname();
+  const { user } = useAuth();
+  const isAdmin = user?.employee?.role?.access_level === AccessLevel.admin;
 
   return (
     <div className="sidebar-nav-container">
@@ -47,21 +51,23 @@ export function SidebarNav({ isCollapsed }: SidebarNavProps) {
         </nav>
       </div>
 
-      <div className="nav-section">
-        {!isCollapsed && <div className="label">Administration</div>}
-        <nav className="nav">
-          {administrationItems.map((item) => (
-            <SidebarItem
-              key={item.href}
-              href={item.href}
-              label={item.label}
-              Icon={item.icon}
-              isActive={currentPathname === item.href}
-              isCollapsed={isCollapsed}
-            />
-          ))}
-        </nav>
-      </div>
+      {isAdmin && (
+        <div className="nav-section" style={{ marginTop: '1.5rem' }}>
+          {!isCollapsed && <div className="label">Administration</div>}
+          <nav className="nav">
+            {administrationItems.map((item) => (
+              <SidebarItem
+                key={item.href}
+                href={item.href}
+                label={item.label}
+                Icon={item.icon}
+                isActive={currentPathname === item.href}
+                isCollapsed={isCollapsed}
+              />
+            ))}
+          </nav>
+        </div>
+      )}
     </div>
   );
 }

@@ -9,9 +9,14 @@ import { MEDICATION_COLUMNS } from "@/src/models/medication";
 import { MedicationFormModal } from "@/src/app/medications/MedicationFormModal";
 import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
 import { MedicationService } from "@/src/services/medications";
+import { useAuth } from "@/src/hooks/useAuth";
+import { AccessLevel } from "@/src/types/role";
 import "@/src/styles/app/patients.css";
 
 export default function MedicationsPage() {
+  const { user } = useAuth();
+  const accessLevel = user?.employee?.role?.access_level;
+
   const [searchTerm, setSearchTerm] = useState("");
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -82,6 +87,8 @@ export default function MedicationsPage() {
     }
   };
 
+  const canModify = accessLevel === AccessLevel.admin || accessLevel === AccessLevel.pharmaceutical;
+
   const gridColumns: GridColumn<Medication>[] = [
     ...MEDICATION_COLUMNS
       .filter(column => column.grid)
@@ -104,20 +111,25 @@ export default function MedicationsPage() {
           >
             <MdVisibility size={16} />
           </button>
-          <button 
-            className="edit-button" 
-            aria-label="Edit"
-            onClick={() => handleEdit(medication)}
-          >
-            <MdEdit size={16} />
-          </button>
-          <button 
-            className="delete-button" 
-            aria-label="Delete"
-            onClick={() => handleDelete(medication.id)}
-          >
-            <MdDelete size={16} />
-          </button>
+          
+          {canModify && (
+            <>
+              <button 
+                className="edit-button" 
+                aria-label="Edit"
+                onClick={() => handleEdit(medication)}
+              >
+                <MdEdit size={16} />
+              </button>
+              <button 
+                className="delete-button" 
+                aria-label="Delete"
+                onClick={() => handleDelete(medication.id)}
+              >
+                <MdDelete size={16} />
+              </button>
+            </>
+          )}
         </div>
       )
     }
@@ -133,7 +145,7 @@ export default function MedicationsPage() {
         rowKey="id"
         searchValue={searchTerm}
         onSearchChange={setSearchTerm}
-        onNewClick={handleNew}
+        onNewClick={canModify ? handleNew : undefined}
         isLoading={isLoading}
       />
 

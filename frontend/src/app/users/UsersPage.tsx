@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { MdEdit, MdDelete, MdVisibility } from "react-icons/md";
 import { GridPage } from "@/src/components/layout/GridPage/GridPage";
 import { GridColumn } from "@/src/types";
@@ -9,9 +10,14 @@ import { USER_COLUMNS } from "@/src/models/user";
 import { UserFormModal } from "@/src/app/users/UserFormModal";
 import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
 import { UserService } from "@/src/services/users";
+import { useAuth } from "@/src/hooks/useAuth";
+import { AccessLevel } from "@/src/types/role";
 import "@/src/styles/app/patients.css";
 
 export default function UsersPage() {
+  const { user, isLoading: isAuthLoading } = useAuth();
+  const router = useRouter();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -32,8 +38,18 @@ export default function UsersPage() {
   }, []);
 
   useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
+    if (!isAuthLoading) {
+      if (user?.employee?.role?.access_level !== AccessLevel.admin) {
+        router.push("/patients");
+      } else {
+        fetchUsers();
+      }
+    }
+  }, [isAuthLoading, user, router, fetchUsers]);
+
+  if (isAuthLoading || user?.employee?.role?.access_level !== AccessLevel.admin) {
+    return null;
+  }
   
   const filteredUsers = users.filter(user => {
     const search = searchTerm.toLowerCase();
@@ -62,7 +78,6 @@ export default function UsersPage() {
   const handleSubmit = async (data: Partial<User> & { password?: string }) => {
     try {
       if (selectedUser) {
-        // Remove password if empty to not overwrite with blank
         if (!data.password) delete data.password;
         await UserService.update(selectedUser.id, data);
       } else {
