@@ -12,5 +12,5 @@ export const EmployeeService = {
   
   delete: (id: number) => ApiService.delete(`/employees/${id}`),
 
-  getRoles: () => ApiService.get<Role[]>("/employees/roles"),
+  getRoles: () => ApiService.get<Role[]>("/roles"),
 };

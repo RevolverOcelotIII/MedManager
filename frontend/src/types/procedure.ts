@@ -1,4 +1,4 @@
-import { Role } from "./employee";
+import { Role } from "./role";
 
 export enum ProcedureCategory {
   screening = "screening",
@@ -7,6 +7,8 @@ export enum ProcedureCategory {
   consultation = "consultation",
   nursing = "nursing",
   therapy = "therapy",
+  request = "request",
+  attendance = "attendance",
   other = "other",
 }
 
@@ -16,5 +18,6 @@ export interface Procedure {
   code?: string | null;
   category: ProcedureCategory;
   description?: string | null;
-  responsible_roles: Role[];
+  dispatch_roles: Role[];
+  execute_roles: Role[];
 }
