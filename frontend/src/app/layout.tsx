@@ -18,7 +18,7 @@ export default function RootLayout({
         {!isLoginPage && <Sidebar />}
         <main style={{ 
           flex: 1, 
-          marginLeft: isLoginPage ? 0 : 'var(--sidebar-width)',
+          marginLeft: isLoginPage ? 0 : 'var(--current-sidebar-width)',
           transition: 'margin-left 300ms ease-in-out'
         }}>
           {children}

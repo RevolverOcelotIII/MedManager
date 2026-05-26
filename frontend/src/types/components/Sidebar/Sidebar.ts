@@ -5,6 +5,7 @@ export interface SidebarItemProps {
   label: string;
   Icon: IconType;
   isActive: boolean;
+  isCollapsed: boolean;
 }
 
 export interface UserProfile {

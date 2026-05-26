@@ -15,14 +15,16 @@ const navigationItems = [
   { href: "/procedures", label: "Procedures", icon: MdTimeline },
 ];
 
-export function SidebarNav() {
+interface SidebarNavProps {
+  isCollapsed: boolean;
+}
+
+export function SidebarNav({ isCollapsed }: SidebarNavProps) {
   const currentPathname = usePathname();
 
   return (
     <div className="sidebar-nav-container">
-      <div className="label">
-        Workspace
-      </div>
+      {!isCollapsed && <div className="label">Workspace</div>}
       <nav className="nav">
         {navigationItems.map((item) => (
           <SidebarItem
@@ -31,6 +33,7 @@ export function SidebarNav() {
             label={item.label}
             Icon={item.icon}
             isActive={currentPathname === item.href}
+            isCollapsed={isCollapsed}
           />
         ))}
       </nav>

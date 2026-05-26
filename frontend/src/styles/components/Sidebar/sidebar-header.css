@@ -31,11 +31,11 @@
   .title {
     font-size: var(--font-size-sm);
     font-weight: 600;
-    color: var(--color-zinc-900);
+    color: white;
   }
 
   .subtitle {
     font-size: var(--font-size-xs);
-    color: var(--color-zinc-500);
+    color: white;
   }
 }

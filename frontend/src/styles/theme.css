@@ -73,5 +73,10 @@
 
   /* Sizes */
   --sidebar-width: 18rem;
+  --sidebar-collapsed-width: 4.5rem;
+  --current-sidebar-width: var(--sidebar-width);
   --header-height: 3.5rem;
+
+  /* Backgrounds */
+  --sidebar: oklch(22% .05 235);
 }
