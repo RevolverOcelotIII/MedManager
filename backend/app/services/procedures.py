@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from app.models.catalog import Procedure
+from app.models.employee import Role
 from app.schemas.procedures import ProcedureCreate, ProcedureUpdate
 from app.services.utils import get_object_or_404, validate_unique
 from typing import Optional
@@ -28,7 +29,15 @@ class ProcedureService:
     def create(db_session: Session, procedure_data: ProcedureCreate):
         ProcedureService.validate_code_unique(db_session, procedure_data.code)
         
-        new_procedure = Procedure(**procedure_data.model_dump())
+        data = procedure_data.model_dump()
+        responsible_role_ids = data.pop("responsible_role_ids", [])
+        
+        new_procedure = Procedure(**data)
+        
+        if responsible_role_ids:
+            roles = db_session.query(Role).filter(Role.id.in_(responsible_role_ids)).all()
+            new_procedure.responsible_roles = roles
+            
         db_session.add(new_procedure)
         db_session.commit()
         db_session.refresh(new_procedure)
@@ -39,12 +48,17 @@ class ProcedureService:
         procedure = ProcedureService.get_by_id(db_session, procedure_id)
         
         update_data = procedure_data.model_dump(exclude_unset=True)
+        responsible_role_ids = update_data.pop("responsible_role_ids", None)
         
         if "code" in update_data:
             ProcedureService.validate_code_unique(db_session, update_data["code"], exclude_procedure_id=procedure_id)
             
         for field_name, field_value in update_data.items():
             setattr(procedure, field_name, field_value)
+            
+        if responsible_role_ids is not None:
+            roles = db_session.query(Role).filter(Role.id.in_(responsible_role_ids)).all()
+            procedure.responsible_roles = roles
             
         db_session.commit()
         db_session.refresh(procedure)

@@ -1,6 +1,6 @@
 from datetime import date
 from app.core.database import SessionLocal
-from app.models.employee import Role, Employee, EmploymentType
+from app.models.employee import Role, Employee, EmploymentType, AccessLevel
 from app.models.patient import Sex
 from app.models.user import User
 from app.core.security import pwd_context
@@ -9,10 +9,19 @@ from decimal import Decimal
 def seed_data():
     db_session = SessionLocal()
     # 1. Create Roles
-    roles = ['admin', 'doctor', 'nurse']
-    for role_name in roles:
-        if not db_session.query(Role).filter(Role.name == role_name).first():
-            db_session.add(Role(name=role_name))
+    roles_config = [
+        {'name': 'admin', 'access_level': AccessLevel.admin},
+        {'name': 'doctor', 'access_level': AccessLevel.doctor},
+        {'name': 'nurse', 'access_level': AccessLevel.nurse},
+        {'name': 'attendant', 'access_level': AccessLevel.attendant},
+    ]
+    for config in roles_config:
+        role = db_session.query(Role).filter(Role.name == config['name']).first()
+        if not role:
+            db_session.add(Role(name=config['name'], access_level=config['access_level']))
+        else:
+            # Update existing role with access_level if it's different
+            role.access_level = config['access_level']
 
     db_session.commit()
 

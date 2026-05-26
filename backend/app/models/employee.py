@@ -11,10 +11,22 @@ class EmploymentType(str, enum.Enum):
     CONTRACTOR = "Contractor"
     TEMPORARY = "Temporary"
 
+class AccessLevel(str, enum.Enum):
+    admin = "admin"
+    doctor = "doctor"
+    nurse = "nurse"
+    pharmaceutical = "pharmaceutical"
+    attendant = "attendant"
+
 class Role(Base, TimestampMixin):
     __tablename__ = "roles"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(50), unique=True, nullable=False)
+    access_level = Column(
+        Enum(AccessLevel, values_callable=lambda obj: [e.value for e in obj], native_enum=False),
+        nullable=False,
+        server_default="attendant"
+    )
 
 class Employee(Base, TimestampMixin):
     __tablename__ = "employees"

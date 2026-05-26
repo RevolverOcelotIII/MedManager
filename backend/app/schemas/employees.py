@@ -3,10 +3,11 @@ from datetime import date, datetime
 from typing import Optional
 from decimal import Decimal
 from app.models.patient import Sex
-from app.models.employee import EmploymentType
+from app.models.employee import EmploymentType, AccessLevel
 
 class RoleBase(BaseModel):
     name: str
+    access_level: AccessLevel = AccessLevel.attendant
 
 class RoleResponse(RoleBase):
     id: int
