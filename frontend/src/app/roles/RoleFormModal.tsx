@@ -4,6 +4,7 @@ import { FormModal } from "@/src/components/layout/Form/FormModal";
 import { Role } from "@/src/types/role";
 import { FormModalColumn } from "@/src/types/components/layout/Form/FormModal";
 import { ROLE_COLUMNS } from "@/src/models/role";
+import { i18n } from "@/src/lib/i18n";
 
 interface RoleFormModalProps {
   isOpen: boolean;
@@ -30,7 +31,7 @@ export function RoleFormModal({ isOpen, onClose, onSubmit, role }: RoleFormModal
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={onSubmit}
-      title={role ? "Edit Role" : "New Role"}
+      title={role ? i18n.t("pages.roles.edit_title") : i18n.t("pages.roles.new_title")}
       columns={formColumns}
       initialData={role || {}}
     />

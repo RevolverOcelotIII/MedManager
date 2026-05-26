@@ -153,36 +153,55 @@
     "patients": {
       "title": "Pacientes",
       "description": "Pessoas atualmente cadastradas no hospital.",
-      "details_title": "Detalhes do Paciente"
+      "details_title": "Detalhes do Paciente",
+      "new_title": "Novo Paciente",
+      "edit_title": "Editar Paciente"
     },
     "medications": {
       "title": "Medicamentos",
       "description": "Gerencie o catálogo de medicamentos e estoque.",
-      "details_title": "Detalhes do Medicamento"
+      "details_title": "Detalhes do Medicamento",
+      "new_title": "Novo Medicamento",
+      "edit_title": "Editar Medicamento"
     },
     "attendances": {
       "title": "Atendimentos",
       "description": "Visitas de pacientes e fluxo clínico.",
-      "details_title": "Detalhes do Atendimento"
+      "details_title": "Detalhes do Atendimento",
+      "new_title": "Novo Atendimento",
+      "edit_title": "Editar Atendimento"
     },
     "employees": {
       "title": "Funcionários",
       "description": "Profissionais de saúde e equipe administrativa.",
-      "details_title": "Detalhes do Funcionário"
+      "details_title": "Detalhes do Funcionário",
+      "new_title": "Novo Funcionário",
+      "edit_title": "Editar Funcionário"
     },
     "roles": {
       "title": "Cargos Hospitalares",
-      "description": "Defina títulos de cargos e suas categorias de acesso correspondentes."
+      "description": "Defina títulos de cargos e suas categorias de acesso correspondentes.",
+      "new_title": "Novo Cargo",
+      "edit_title": "Editar Cargo"
     },
     "procedures": {
       "title": "Procedimentos",
       "description": "Procedimentos médicos, exames e ações clínicas.",
-      "details_title": "Detalhes do Procedimento"
+      "details_title": "Detalhes do Procedimento",
+      "new_title": "Novo Procedimento",
+      "edit_title": "Editar Procedimento"
     },
     "users": {
       "title": "Contas de Usuário",
       "description": "Gerencie o acesso e credenciais do sistema hospitalar.",
-      "details_title": "Detalhes da Conta de Usuário"
+      "details_title": "Detalhes da Conta de Usuário",
+      "new_title": "Nova Conta de Usuário",
+      "edit_title": "Editar Conta de Usuário"
+    },
+    "attendance_procedure": {
+      "details_title": "Detalhes da Execução do Procedimento",
+      "new_title": "Adicionar Registro de Procedimento",
+      "edit_title": "Editar Registro de Procedimento"
     },
     "login": {
       "welcome": "Bem-vindo de volta",

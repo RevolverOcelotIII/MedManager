@@ -4,6 +4,7 @@ import { FormModal } from "@/src/components/layout/Form/FormModal";
 import { Medication } from "@/src/types/medication";
 import { FormModalColumn } from "@/src/types/components/layout/Form/FormModal";
 import { MEDICATION_COLUMNS } from "@/src/models/medication";
+import { i18n } from "@/src/lib/i18n";
 
 interface MedicationFormModalProps {
   isOpen: boolean;
@@ -30,7 +31,7 @@ export function MedicationFormModal({ isOpen, onClose, onSubmit, medication }: M
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={onSubmit}
-      title={medication ? "Edit Medication" : "New Medication"}
+      title={medication ? i18n.t("pages.medications.edit_title") : i18n.t("pages.medications.new_title")}
       columns={formColumns}
       initialData={medication || {}}
     />

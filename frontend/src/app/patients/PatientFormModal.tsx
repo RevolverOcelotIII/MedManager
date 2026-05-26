@@ -24,7 +24,7 @@ export function PatientFormModal({ isOpen, onClose, onSubmit, patient }: Patient
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={onSubmit}
-      title={patient ? "Edit Patient" : "New Patient"}
+      title={patient ? i18n.t("pages.patients.edit_title") : i18n.t("pages.patients.new_title")}
       columns={formColumns}
       initialData={patient || {}}
     />

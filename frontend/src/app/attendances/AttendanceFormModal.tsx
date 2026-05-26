@@ -5,6 +5,7 @@ import { Attendance } from "@/src/types/attendance";
 import { FormModalColumn } from "@/src/types/components/layout/Form/FormModal";
 import { ATTENDANCE_COLUMNS } from "@/src/models/attendance";
 import { useGetAttendanceFormData } from "@/src/hooks/useGetAttendanceFormData";
+import { i18n } from "@/src/lib/i18n";
 
 interface AttendanceFormModalProps {
   isOpen: boolean;
@@ -41,7 +42,7 @@ export function AttendanceFormModal({ isOpen, onClose, onSubmit, attendance }: A
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={onSubmit}
-      title={attendance ? "Edit Attendance" : "New Attendance"}
+      title={attendance ? i18n.t("pages.attendances.edit_title") : i18n.t("pages.attendances.new_title")}
       columns={formColumns}
       initialData={attendance || {}}
     />

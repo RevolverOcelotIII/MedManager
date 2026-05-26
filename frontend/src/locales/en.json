@@ -153,36 +153,55 @@
     "patients": {
       "title": "Patients",
       "description": "People currently registered with the hospital.",
-      "details_title": "Patient Details"
+      "details_title": "Patient Details",
+      "new_title": "New Patient",
+      "edit_title": "Edit Patient"
     },
     "medications": {
       "title": "Medications",
       "description": "Manage the medicine catalog and stock.",
-      "details_title": "Medication Details"
+      "details_title": "Medication Details",
+      "new_title": "New Medication",
+      "edit_title": "Edit Medication"
     },
     "attendances": {
       "title": "Attendances",
       "description": "Patient visits and clinical workflow.",
-      "details_title": "Attendance Details"
+      "details_title": "Attendance Details",
+      "new_title": "New Attendance",
+      "edit_title": "Edit Attendance"
     },
     "employees": {
       "title": "Employees",
       "description": "Healthcare professionals and administrative staff.",
-      "details_title": "Employee Details"
+      "details_title": "Employee Details",
+      "new_title": "New Employee",
+      "edit_title": "Edit Employee"
     },
     "roles": {
       "title": "Hospital Roles",
-      "description": "Define job titles and their corresponding access categories."
+      "description": "Define job titles and their corresponding access categories.",
+      "new_title": "New Role",
+      "edit_title": "Edit Role"
     },
     "procedures": {
       "title": "Procedures",
       "description": "Medical procedures, exams, and clinical actions.",
-      "details_title": "Procedure Details"
+      "details_title": "Procedure Details",
+      "new_title": "New Procedure",
+      "edit_title": "Edit Procedure"
     },
     "users": {
       "title": "User Accounts",
       "description": "Manage hospital system access and credentials.",
-      "details_title": "User Account Details"
+      "details_title": "User Account Details",
+      "new_title": "New User Account",
+      "edit_title": "Edit User Account"
+    },
+    "attendance_procedure": {
+      "details_title": "Procedure Execution Details",
+      "new_title": "Add Procedure Record",
+      "edit_title": "Edit Procedure Record"
     },
     "login": {
       "welcome": "Welcome back",

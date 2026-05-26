@@ -6,6 +6,7 @@ import { Procedure } from "@/src/types/procedure";
 import { FormModalColumn } from "@/src/types/components/layout/Form/FormModal";
 import { PROCEDURE_COLUMNS } from "@/src/models/procedure";
 import { useGetProcedureFormData } from "@/src/hooks/useGetProcedureFormData";
+import { i18n } from "@/src/lib/i18n";
 
 interface ProcedureFormModalProps {
   isOpen: boolean;
@@ -60,7 +61,7 @@ export function ProcedureFormModal({ isOpen, onClose, onSubmit, procedure }: Pro
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleFormSubmit}
-      title={procedure ? "Edit Procedure" : "New Procedure"}
+      title={procedure ? i18n.t("pages.procedures.edit_title") : i18n.t("pages.procedures.new_title")}
       columns={formColumns}
       initialData={initialData}
     />

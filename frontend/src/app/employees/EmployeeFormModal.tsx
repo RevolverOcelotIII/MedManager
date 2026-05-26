@@ -6,6 +6,7 @@ import { Employee, Role } from "@/src/types/employee";
 import { FormModalColumn } from "@/src/types/components/layout/Form/FormModal";
 import { EMPLOYEE_COLUMNS } from "@/src/models/employee";
 import { EmployeeService } from "@/src/services/employees";
+import { i18n } from "@/src/lib/i18n";
 
 interface EmployeeFormModalProps {
   isOpen: boolean;
@@ -50,7 +51,7 @@ export function EmployeeFormModal({ isOpen, onClose, onSubmit, employee }: Emplo
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={onSubmit}
-      title={employee ? "Edit Employee" : "New Employee"}
+      title={employee ? i18n.t("pages.employees.edit_title") : i18n.t("pages.employees.new_title")}
       columns={formColumns}
       initialData={employee || {}}
     />

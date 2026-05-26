@@ -5,6 +5,7 @@ import { User } from "@/src/types/user";
 import { FormModalColumn } from "@/src/types/components/layout/Form/FormModal";
 import { USER_COLUMNS } from "@/src/models/user";
 import { useGetUserFormData } from "@/src/hooks/useGetUserFormData";
+import { i18n } from "@/src/lib/i18n";
 
 interface UserFormModalProps {
   isOpen: boolean;
@@ -60,7 +61,7 @@ export function UserFormModal({ isOpen, onClose, onSubmit, user }: UserFormModal
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleFormSubmit}
-      title={user ? "Edit User Account" : "New User Account"}
+      title={user ? i18n.t("pages.users.edit_title") : i18n.t("pages.users.new_title")}
       columns={formColumns}
       initialData={user || {}}
     />

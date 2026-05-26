@@ -13,6 +13,7 @@ import { useAuth } from "@/src/hooks/useAuth";
 import { AccessLevel } from "@/src/types/role";
 import { GridColumn } from "@/src/types";
 import { FormModalColumn } from "@/src/types/components/layout/Form/FormModal";
+import { i18n } from "@/src/lib/i18n";
 
 interface AttendanceProceduresModuleProps {
   attendanceId: number;
@@ -84,12 +85,12 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
       fetchAttendanceProcedures();
     } catch (error) {
       console.error("Failed to save attendance procedure:", error);
-      alert("Error saving procedure execution record.");
+      alert(i18n.t("common.error_saving"));
     }
   };
 
   const handleDeleteAttendanceProcedure = async (id: number) => {
-    if (confirm("Are you sure you want to delete this procedure record?")) {
+    if (confirm(i18n.t("common.confirm_delete"))) {
       try {
         await AttendanceProcedureService.delete(id);
         fetchAttendanceProcedures();
@@ -113,26 +114,34 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
         options: column.options,
       })),
     {
-      header: "Actions",
+      header: i18n.t("common.actions"),
       align: "right",
       accessor: (item) => (
         <div className="action-buttons">
           <button 
             className="view-button" 
-            aria-label="View Details"
+            aria-label={i18n.t("common.view_details")}
             onClick={() => handleViewAttendanceProcedureDetails(item)}
           >
             <MdVisibility size={16} />
           </button>
           
           {canEdit && (
-            <button className="edit-button" onClick={() => handleEditAttendanceProcedure(item)}>
+            <button 
+              className="edit-button" 
+              aria-label={i18n.t("common.edit")}
+              onClick={() => handleEditAttendanceProcedure(item)}
+            >
               <MdEdit size={16} />
             </button>
           )}
 
           {canDelete && (
-            <button className="delete-button" onClick={() => handleDeleteAttendanceProcedure(item.id)}>
+            <button 
+              className="delete-button" 
+              aria-label={i18n.t("common.delete")}
+              onClick={() => handleDeleteAttendanceProcedure(item.id)}
+            >
               <MdDelete size={16} />
             </button>
           )}
@@ -171,9 +180,11 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
   return (
     <div className="attendance-procedures-module">
       <div className="module-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-        <h3 className="details-section-title">Executed Procedures</h3>
+        <h3 className="details-section-title">{i18n.t("sidebar.procedures")}</h3>
         {canCreate && (
-          <button className="button-primary" onClick={handleNewAttendanceProcedure}>Add Procedure</button>
+          <button className="button-primary" onClick={handleNewAttendanceProcedure}>
+            {i18n.t("common.new")}
+          </button>
         )}
       </div>
       
@@ -190,7 +201,7 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
         isOpen={isFormModalOpen}
         onClose={() => setIsFormModalOpen(false)}
         onSubmit={handleFormSubmit}
-        title={selectedAttendanceProcedure ? "Edit Procedure Record" : "Add Procedure Record"}
+        title={selectedAttendanceProcedure ? i18n.t("pages.attendance_procedure.edit_title") : i18n.t("pages.attendance_procedure.new_title")}
         columns={formColumns}
         initialData={initialFormData}
       />
@@ -198,7 +209,7 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
       <DetailsModal
         isOpen={isDetailsModalOpen}
         onClose={() => setIsDetailsModalOpen(false)}
-        title="Procedure Execution Details"
+        title={i18n.t("pages.attendance_procedure.details_title")}
         data={selectedAttendanceProcedure}
         columns={ATTENDANCE_PROCEDURE_COLUMNS}
       />
