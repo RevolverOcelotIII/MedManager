@@ -24,7 +24,7 @@ export function Input({ width, ...props }: InputProps) {
 
 export function Select({ width, options, ...props }: SelectProps) {
   return (
-    <div className="form-input-container">
+    <div className={`form-input-container ${props.disabled ? 'disabled' : ''}`}>
       <select className="form-select" {...props}>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -32,7 +32,7 @@ export function Select({ width, options, ...props }: SelectProps) {
           </option>
         ))}
       </select>
-      <FaChevronDown className="select-icon" size={16} />
+      {!props.disabled && <FaChevronDown className="select-icon" size={16} />}
     </div>
   );
 }

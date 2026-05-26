@@ -27,6 +27,8 @@ export interface SearchInputProps {
   options: { label: string; value: string | number }[];
   placeholder?: string;
   required?: boolean;
+  disabled?: boolean;
+  readOnly?: boolean;
   width?: "50" | "100";
   isMulti?: boolean;
 }

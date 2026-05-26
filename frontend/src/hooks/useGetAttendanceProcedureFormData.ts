@@ -6,9 +6,10 @@ import { Procedure } from "@/src/types/procedure";
 import { Employee } from "@/src/types/employee";
 import { Medication } from "@/src/types/medication";
 
-export function useGetAttendanceProcedureFormData() {
+export function useGetAttendanceProcedureFormData(procedureId?: number) {
   const [procedures, setProcedures] = useState<Procedure[]>([]);
-  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [allEmployees, setAllEmployees] = useState<Employee[]>([]);
+  const [qualifiedExecutors, setQualifiedExecutors] = useState<Employee[]>([]);
   const [medications, setMedications] = useState<Medication[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -16,16 +17,16 @@ export function useGetAttendanceProcedureFormData() {
     async function fetchData() {
       setIsLoading(true);
       try {
-        const [procData, empData, medData] = await Promise.all([
+        const [procData, allEmpData, medData] = await Promise.all([
           ProcedureService.getAll(),
           EmployeeService.getAll(),
           MedicationService.getAll()
         ]);
         setProcedures(procData);
-        setEmployees(empData);
+        setAllEmployees(allEmpData);
         setMedications(medData);
       } catch (error) {
-        console.error("Failed to fetch attendance procedure form data:", error);
+        console.error("Failed to fetch general attendance procedure form data:", error);
       } finally {
         setIsLoading(false);
       }
@@ -33,6 +34,25 @@ export function useGetAttendanceProcedureFormData() {
 
     fetchData();
   }, []);
+
+  // Separate effect to fetch qualified executors when procedureId changes
+  useEffect(() => {
+    async function fetchExecutors() {
+      if (!procedureId) {
+        setQualifiedExecutors([]);
+        return;
+      }
+      
+      try {
+        const executors = await EmployeeService.getAll(procedureId);
+        setQualifiedExecutors(executors);
+      } catch (error) {
+        console.error("Failed to fetch qualified executors:", error);
+      }
+    }
+
+    fetchExecutors();
+  }, [procedureId]);
 
   const procedureOptions = useMemo(() => 
     procedures.map(p => ({
@@ -42,12 +62,20 @@ export function useGetAttendanceProcedureFormData() {
     [procedures]
   );
 
-  const employeeOptions = useMemo(() => 
-    employees.map(e => ({
+  const allEmployeeOptions = useMemo(() => 
+    allEmployees.map(e => ({
       label: e.full_name,
       value: e.id
     })), 
-    [employees]
+    [allEmployees]
+  );
+
+  const qualifiedExecutorOptions = useMemo(() => 
+    qualifiedExecutors.map(e => ({
+      label: e.full_name,
+      value: e.id
+    })), 
+    [qualifiedExecutors]
   );
 
   const medicationOptions = useMemo(() => 
@@ -60,7 +88,8 @@ export function useGetAttendanceProcedureFormData() {
 
   return {
     procedureOptions,
-    employeeOptions,
+    allEmployeeOptions,
+    qualifiedExecutorOptions,
     medicationOptions,
     isLoading
   };

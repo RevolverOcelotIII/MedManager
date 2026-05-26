@@ -28,8 +28,14 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedAttendanceProcedure, setSelectedAttendanceProcedure] = useState<AttendanceProcedure | null>(null);
+  const [activeFormProcedureId, setActiveFormProcedureId] = useState<number | undefined>(undefined);
 
-  const { procedureOptions, employeeOptions, medicationOptions } = useGetAttendanceProcedureFormData();
+  const { 
+    procedureOptions, 
+    allEmployeeOptions, 
+    qualifiedExecutorOptions, 
+    medicationOptions 
+  } = useGetAttendanceProcedureFormData(activeFormProcedureId);
 
   const fetchAttendanceProcedures = useCallback(async () => {
     setIsDataLoading(true);
@@ -49,6 +55,7 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
 
   const handleEditAttendanceProcedure = (attendanceProcedure: AttendanceProcedure) => {
     setSelectedAttendanceProcedure(attendanceProcedure);
+    setActiveFormProcedureId(attendanceProcedure.procedure_id);
     setIsFormModalOpen(true);
   };
 
@@ -59,7 +66,16 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
 
   const handleNewAttendanceProcedure = () => {
     setSelectedAttendanceProcedure(null);
+    setActiveFormProcedureId(undefined);
     setIsFormModalOpen(true);
+  };
+
+  const handleFormChange = (data: any) => {
+    // Ensure we parse the procedure_id if it's a string from a generic input
+    const procId = data.procedure_id ? Number(data.procedure_id) : undefined;
+    if (procId !== activeFormProcedureId) {
+      setActiveFormProcedureId(procId);
+    }
   };
 
   const handleFormSubmit = async (formData: any) => {
@@ -68,13 +84,30 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
         ? JSON.parse(formData.medications) 
         : formData.medications;
 
+      let start_time = null;
+      if (formData.start_date && formData.start_hour) {
+        start_time = `${formData.start_date}T${formData.start_hour}:00`;
+      }
+
+      let end_time = null;
+      if (formData.end_date && formData.end_hour) {
+        end_time = `${formData.end_date}T${formData.end_hour}:00`;
+      }
+
       const payload = {
         ...formData,
         attendance_id: attendanceId,
-        medication_ids: medicationIds
+        medication_ids: medicationIds,
+        start_time,
+        end_time
       };
       
+      // Remove virtual fields
       delete payload.medications;
+      delete payload.start_date;
+      delete payload.start_hour;
+      delete payload.end_date;
+      delete payload.end_hour;
 
       if (selectedAttendanceProcedure) {
         await AttendanceProcedureService.update(selectedAttendanceProcedure.id, payload);
@@ -154,9 +187,17 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
     .filter(column => column.form)
     .map(column => {
       let options = column.options;
+      let disabled = column.disabled;
+
       if (column.name === "procedure_id") options = procedureOptions;
-      if (column.name === "ordered_by_id" || column.name === "executed_by_id") options = employeeOptions;
+      if (column.name === "ordered_by_id") options = allEmployeeOptions;
+      if (column.name === "executed_by_id") options = qualifiedExecutorOptions;
       if (column.name === "medications") options = medicationOptions;
+
+      // Business Rule: executed_by_id is disabled until a procedure is selected
+      if (column.name === "executed_by_id" && !activeFormProcedureId) {
+        disabled = true;
+      }
 
       return {
         name: column.name,
@@ -165,17 +206,49 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
         width: column.width,
         required: column.required,
         placeholder: column.placeholder,
+        disabled: disabled,
+        readOnly: column.readOnly,
         options: options,
       } as FormModalColumn;
     });
 
   const initialFormData = useMemo(() => {
-    if (!selectedAttendanceProcedure) return {};
+    const today = new Date().toISOString().split('T')[0];
+    
+    if (!selectedAttendanceProcedure) {
+      return {
+        ordered_by_id: user?.employee_id,
+        start_date: today,
+        end_date: today,
+      };
+    }
+
+    // Split existing times into date and hour for the form
+    let start_date = today;
+    let start_hour = "";
+    if (selectedAttendanceProcedure.start_time) {
+      const dt = new Date(selectedAttendanceProcedure.start_time);
+      start_date = dt.toISOString().split('T')[0];
+      start_hour = dt.toTimeString().split(' ')[0].substring(0, 5);
+    }
+
+    let end_date = today;
+    let end_hour = "";
+    if (selectedAttendanceProcedure.end_time) {
+      const dt = new Date(selectedAttendanceProcedure.end_time);
+      end_date = dt.toISOString().split('T')[0];
+      end_hour = dt.toTimeString().split(' ')[0].substring(0, 5);
+    }
+
     return {
       ...selectedAttendanceProcedure,
-      medications: selectedAttendanceProcedure.medications?.map(m => m.id) || []
+      medications: selectedAttendanceProcedure.medications?.map(m => m.id) || [],
+      start_date,
+      start_hour,
+      end_date,
+      end_hour
     };
-  }, [selectedAttendanceProcedure]);
+  }, [selectedAttendanceProcedure, user, isFormModalOpen]);
 
   return (
     <div className="attendance-procedures-module">
@@ -201,6 +274,7 @@ export function AttendanceProceduresModule({ attendanceId }: AttendanceProcedure
         isOpen={isFormModalOpen}
         onClose={() => setIsFormModalOpen(false)}
         onSubmit={handleFormSubmit}
+        onChange={handleFormChange}
         title={selectedAttendanceProcedure ? i18n.t("pages.attendance_procedure.edit_title") : i18n.t("pages.attendance_procedure.new_title")}
         columns={formColumns}
         initialData={initialFormData}

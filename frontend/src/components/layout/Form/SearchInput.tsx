@@ -13,6 +13,8 @@ export function SearchInput({
   placeholder, 
   name, 
   required,
+  disabled,
+  readOnly,
   width = "100",
   isMulti = false
 }: SearchInputProps) {
@@ -53,6 +55,7 @@ export function SearchInput({
   }, []);
 
   const handleSelectOption = (optionValue: string | number) => {
+    if (disabled || readOnly) return;
     if (isMulti) {
       const newValue = [...selectedValues, optionValue];
       onChange?.({ target: { name, value: newValue } });
@@ -65,28 +68,31 @@ export function SearchInput({
   };
 
   const handleRemoveOption = (optionValue: string | number) => {
+    if (disabled || readOnly) return;
     const newValue = selectedValues.filter(v => v !== optionValue);
     onChange?.({ target: { name, value: newValue } });
   };
 
   return (
-    <div className={`search-input-container width-${width}`} ref={containerRef}>
+    <div className={`search-input-container width-${width} ${disabled ? 'disabled' : ''} ${readOnly ? 'readonly' : ''}`} ref={containerRef}>
       <div className={`form-input-container ${isMulti ? 'search-multi-container' : ''}`}>
         {isMulti && (
           <div className="search-multi-tags">
             {selectedOptions.map(option => (
               <span key={option.value} className="search-tag">
                 {option.label}
-                <button 
-                  type="button" 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleRemoveOption(option.value);
-                  }}
-                  className="search-tag-remove"
-                >
-                  <MdClose size={14} />
-                </button>
+                {!disabled && !readOnly && (
+                  <button 
+                    type="button" 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveOption(option.value);
+                    }}
+                    className="search-tag-remove"
+                  >
+                    <MdClose size={14} />
+                  </button>
+                )}
               </span>
             ))}
           </div>
@@ -101,7 +107,13 @@ export function SearchInput({
             setSearchTerm(event.target.value);
             setIsDropdownOpen(true);
           }}
-          onFocus={() => setIsDropdownOpen(true)}
+          onFocus={() => {
+            if (!disabled && !readOnly) {
+              setIsDropdownOpen(true);
+            }
+          }}
+          disabled={disabled}
+          readOnly={readOnly}
           autoComplete="off"
         />
         
@@ -111,10 +123,10 @@ export function SearchInput({
           value={isMulti ? JSON.stringify(selectedValues) : (value as string | number || "")} 
           required={required} 
         />
-        <FaSearch className="select-icon" size={14} />
+        {!disabled && !readOnly && <FaSearch className="select-icon" size={14} />}
       </div>
       
-      {isDropdownOpen && (
+      {!disabled && !readOnly && isDropdownOpen && (
         <ul className="search-results-dropdown">
           {filteredOptions.map((option) => (
             <li 

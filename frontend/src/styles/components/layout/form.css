@@ -19,6 +19,15 @@
   .form-input-container {
     position: relative;
     width: 100%;
+    
+    &.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      .form-select, .form-input {
+        background-color: var(--color-zinc-100);
+        cursor: not-allowed;
+      }
+    }
   }
 
   .form-input, .form-select, .form-textarea {
@@ -41,6 +50,13 @@
     &:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+      background-color: var(--color-zinc-100);
+    }
+    
+    &[readonly] {
+      background-color: var(--color-zinc-50);
+      border-color: var(--color-border);
+      cursor: default;
     }
   }
 
@@ -78,6 +94,28 @@
 .search-input-container {
   position: relative;
   width: 100%;
+
+  &.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    .form-input-container {
+      background-color: var(--color-zinc-100);
+      cursor: not-allowed;
+      .form-input {
+        cursor: not-allowed;
+      }
+    }
+  }
+  
+  &.readonly {
+    .form-input-container {
+      background-color: var(--color-zinc-50);
+      cursor: default;
+      .form-input {
+        cursor: default;
+      }
+    }
+  }
 
   .search-multi-container {
     display: flex;

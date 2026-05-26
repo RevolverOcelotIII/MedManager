@@ -12,6 +12,7 @@ export function FormModal<T extends Record<string, any>>({
   isOpen, 
   onClose, 
   onSubmit, 
+  onChange,
   title, 
   columns, 
   initialData 
@@ -24,7 +25,11 @@ export function FormModal<T extends Record<string, any>>({
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const nextData = { ...formData, [name]: value };
+    setFormData(nextData);
+    if (onChange) {
+      onChange(nextData);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -46,7 +51,7 @@ export function FormModal<T extends Record<string, any>>({
         form="form-modal"
         className="button-primary"
       >
-        {initialData ? i18n.t("common.save") : i18n.t("common.new")}
+        {initialData?.id ? i18n.t("common.save") : i18n.t("common.new")}
       </button>
     </>
   );
@@ -73,6 +78,7 @@ export function FormModal<T extends Record<string, any>>({
                   onChange={handleChange}
                   options={column.options || []}
                   required={column.required}
+                  disabled={column.disabled}
                 />
               ) : column.type === "search_input" || column.type === "multi_search_input" ? (
                 <SearchInput
@@ -83,6 +89,8 @@ export function FormModal<T extends Record<string, any>>({
                   placeholder={column.placeholder}
                   required={column.required}
                   isMulti={column.type === "multi_search_input"}
+                  disabled={column.disabled}
+                  readOnly={column.readOnly}
                 />
               ) : column.type === "textarea" ? (
                 <Textarea 
@@ -91,15 +99,19 @@ export function FormModal<T extends Record<string, any>>({
                   onChange={handleChange}
                   placeholder={column.placeholder}
                   required={column.required}
+                  disabled={column.disabled}
+                  readOnly={column.readOnly}
                 />
               ) : (
                 <Input 
                   name={column.name}
-                  type={column.type}
+                  type={column.type as any}
                   value={(formData[column.name] as string) || ""}
                   onChange={handleChange}
                   placeholder={column.placeholder}
                   required={column.required}
+                  disabled={column.disabled}
+                  readOnly={column.readOnly}
                 />
               )}
             </FormField>
