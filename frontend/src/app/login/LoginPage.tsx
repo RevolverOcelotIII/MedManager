@@ -19,7 +19,7 @@ export default function LoginPage() {
       );
 
       Cookies.set("token", response.access_token, {
-        expires: 1,
+        expires: 1 / 48, // 30 minutes
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
       });
