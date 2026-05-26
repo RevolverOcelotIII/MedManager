@@ -4,21 +4,19 @@ from app.core.database import get_db
 from app.core.auth import get_current_user, require_admin
 from app.schemas.employees import EmployeeResponse, EmployeeCreate, EmployeeUpdate, RoleResponse
 from app.services.employees import EmployeeService
+from app.services.roles import RoleService
+from app.models.user import User
 from typing import List
 
 router = APIRouter(prefix="/employees", tags=["Employees"], dependencies=[Depends(get_current_user)])
 
-@router.get("/roles", response_model=List[RoleResponse])
-def list_roles(db_session: Session = Depends(get_db)):
-    return EmployeeService.get_all_roles(db_session)
-
 @router.get("/", response_model=List[EmployeeResponse])
-def list_employees(db_session: Session = Depends(get_db)):
-    return EmployeeService.get_all(db_session)
+def list_employees(current_user: User = Depends(get_current_user), db_session: Session = Depends(get_db)):
+    return EmployeeService.get_all(db_session, current_user)
 
 @router.get("/{employee_id}", response_model=EmployeeResponse)
-def get_employee(employee_id: int, db_session: Session = Depends(get_db)):
-    return EmployeeService.get_by_id(db_session, employee_id)
+def get_employee(employee_id: int, current_user: User = Depends(get_current_user), db_session: Session = Depends(get_db)):
+    return EmployeeService.get_by_id(db_session, employee_id, current_user)
 
 @router.post("/", response_model=EmployeeResponse, status_code=status.HTTP_201_CREATED, dependencies=[Depends(require_admin)])
 def create_employee(employee_data: EmployeeCreate, db_session: Session = Depends(get_db)):

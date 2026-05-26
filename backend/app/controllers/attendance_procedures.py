@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status, Response, HTTPException
 from sqlalchemy.orm import Session
 from app.core.database import get_db
-from app.core.auth import get_current_user, require_log_scope
+from app.core.auth import get_current_user, require_admin
 from app.schemas.attendance_procedures import AttendanceProcedureResponse, AttendanceProcedureCreate, AttendanceProcedureUpdate
 from app.services.attendance_procedures import AttendanceProcedureService
 from app.models.user import User

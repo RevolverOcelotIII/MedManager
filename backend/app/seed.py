@@ -13,6 +13,7 @@ def seed_data():
         {'name': 'admin', 'access_level': AccessLevel.admin},
         {'name': 'doctor', 'access_level': AccessLevel.doctor},
         {'name': 'nurse', 'access_level': AccessLevel.nurse},
+        {'name': 'pharmaceutical', 'access_level': AccessLevel.pharmaceutical},
         {'name': 'attendant', 'access_level': AccessLevel.attendant},
     ]
     for config in roles_config:

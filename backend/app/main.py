@@ -5,7 +5,7 @@ load_dotenv()
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.controllers import users, patients, medications, procedures, medical_records, employees, auth, attendances, prescriptions, attendance_procedures
+from app.controllers import users, patients, medications, procedures, medical_records, employees, auth, attendances, prescriptions, attendance_procedures, roles
 
 app = FastAPI(title="MedManager API")
 
@@ -34,6 +34,7 @@ app.include_router(employees.router)
 app.include_router(attendances.router)
 app.include_router(prescriptions.router)
 app.include_router(attendance_procedures.router)
+app.include_router(roles.router)
 
 @app.get("/")
 def read_root():
