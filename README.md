@@ -37,7 +37,7 @@ This dynamic mapping creates a precise "need-to-know" and "authorized-to-act" en
 
 ---
 
-> **Note**: To see the PoC in full action, you must create at least **three different users** with different roles (e.g., one Attendant, one Nurse, and one Doctor).
+> **Note**: To see the prototype in full action, you must create at least **three different users** with different roles (e.g., one Attendant, one Nurse, and one Doctor).
 
 ---
 
@@ -93,11 +93,22 @@ Log out and log in as the **ER Physician**.
 docker-compose up --build
 ```
 
-### 3. Database Migrations
-Migrations run automatically on container startup. To manually manage:
+### 3. Database Migrations & Initial Setup
+Migrations run automatically on container startup. To manually manage migrations or seed the database with the initial Admin account:
+
 ```bash
+# Run migrations
 docker-compose exec api alembic upgrade head
+
+# Seed initial data (Admin account, base roles, and sample employees)
+docker-compose exec api python -m app.seed
 ```
+
+**Initial Admin Credentials:**
+- **Email**: `admin@medmanager.com`
+- **Password**: `admin123`
+
+*Note: You should use this account to perform the initial "Hospital Brain" setup described in the tutorial. The default admin can be removed or deactivated once you have created your own administrative accounts.*
 
 ### 4. Running Tests
 The project maintains a heavy focus on behavioral verification.
