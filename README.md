@@ -1,6 +1,6 @@
 # MedManager ERP - Hospital Operations Suite
 
-**MedManager** is a prototype and Proof of Concept (PoC) for a high-performance, customizable hospital ERP (Enterprise Resource Planning) platform. It demonstrates a robust approach to streamlining hospital operations, clinical workflows, and resource management through a fully dynamic, model-driven architecture.
+**MedManager** is a prototype and Proof of Concept for a high-performance, customizable hospital ERP (Enterprise Resource Planning) platform. It demonstrates a robust approach to streamlining hospital operations, clinical workflows, and resource management through a fully dynamic, model-driven architecture.
 
 ---
 
@@ -8,14 +8,14 @@
 Unlike traditional rigid ERPs, MedManager is built on a **fully dynamic entity engine**. The behavior of the clinical flow is not hardcoded but is defined by the relationship between two primary administrative entities:
 
 1.  **Dynamic Roles**: Administrators create job titles (e.g., "Cardiac Surgeon", "Triage Nurse") and map them to one of the **5 Base Access Levels**. This determines the broad data scope the user can access (Medical, Logistics, Pharmaceutical, or Admin).
-2.  **Dynamic Procedures**: Every clinical action (e.g., "Blood Test", "MRI Scan", "Pre-Op Triage") is an entry in the catalog. 
+2.  **Dynamic Procedures**: Every clinical action (e.g., "Blood Test", "MRI Scan", "Pre-Op Triage") is an entry in the catalog that can be created and personalized at any time by an Administrator. 
 
 ### The Permission Matrix (RBAC)
-The core innovation of the PoC is the **Role-Procedure Junction**. For every Procedure created, Administrators explicitly define:
+The core innovation of the prototype is the **Role-Procedure Junction**. For every Procedure created, Administrators explicitly define:
 -   **Dispatch Roles**: Which specific Roles are authorized to *order* this action.
 -   **Execute Roles**: Which specific Roles are qualified to *perform* this action and record clinical notes.
 
-This dynamic mapping creates a precise "need-to-know" and "authorized-to-act" environment. A Doctor role might be able to dispatch 50 different procedures but only execute 5, while a Nurse role might execute the Triage that the Attendant dispatched.
+This dynamic mapping creates a precise "need-to-know" and "authorized-to-act" environment. A Doctor role might be able to execute 50 different procedures but only dispatch 5, while a Nurse role might execute the Triage that the Attendant dispatched.
 
 ---
 
