@@ -10,13 +10,13 @@ import { PROCEDURE_COLUMNS } from "@/src/models/procedure";
 import { ProcedureFormModal } from "@/src/app/procedures/ProcedureFormModal";
 import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
 import { ProcedureService } from "@/src/services/procedures";
-import { useAuth } from "@/src/hooks/useAuth";
+import { useAuthStore } from "@/src/store/useAuthStore";
 import { AccessLevel } from "@/src/types/role";
 import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/app/patients.css";
 
 export default function ProceduresPage() {
-  const { user, isLoading: isAuthLoading } = useAuth();
+  const { user, isLoading: isAuthLoading } = useAuthStore();
   const router = useRouter();
 
   const [searchTerm, setSearchTerm] = useState("");

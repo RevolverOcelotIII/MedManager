@@ -6,7 +6,7 @@ import { FaStethoscope, FaPills } from "react-icons/fa";
 import { BsFillFileEarmarkMedicalFill } from "react-icons/bs";
 import { FaUserDoctor } from "react-icons/fa6";
 import { SidebarItem } from "@/src/components/Sidebar/SidebarItem";
-import { useAuth } from "@/src/hooks/useAuth";
+import { useAuthStore } from "@/src/store/useAuthStore";
 import { AccessLevel } from "@/src/types/role";
 import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/components/Sidebar/sidebar-nav.css";
@@ -31,7 +31,7 @@ interface SidebarNavProps {
 
 export function SidebarNav({ isCollapsed }: SidebarNavProps) {
   const currentPathname = usePathname();
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const isAdmin = user?.employee?.role?.access_level === AccessLevel.admin;
 
   return (

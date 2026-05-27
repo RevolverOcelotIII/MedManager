@@ -4,6 +4,7 @@ import RolesPage from '@/src/app/roles/RolesPage';
 import { ApiService } from '@/src/services/api';
 import { i18n } from '@/src/lib/i18n';
 import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/src/store/useAuthStore';
 
 describe('RolesPage', () => {
   const MOCK_ADMIN = {
@@ -47,6 +48,7 @@ describe('RolesPage', () => {
 
   describe('when accessed by an admin', () => {
     beforeEach(async () => {
+      useAuthStore.setState({ user: MOCK_ADMIN as any, isLoading: false });
       (ApiService.get as jest.Mock).mockImplementation((url) => {
         if (url === '/auth/me') return Promise.resolve(MOCK_ADMIN);
         if (url === '/roles/') return Promise.resolve(MOCK_ROLES);
@@ -121,6 +123,7 @@ describe('RolesPage', () => {
 
   describe('when accessed by a non-admin', () => {
     beforeEach(async () => {
+      useAuthStore.setState({ user: MOCK_DOCTOR as any, isLoading: false });
       (ApiService.get as jest.Mock).mockImplementation((url) => {
         if (url === '/auth/me') return Promise.resolve(MOCK_DOCTOR);
         return Promise.resolve([]);

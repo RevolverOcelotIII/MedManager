@@ -9,13 +9,13 @@ import { MEDICATION_COLUMNS } from "@/src/models/medication";
 import { MedicationFormModal } from "@/src/app/medications/MedicationFormModal";
 import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
 import { MedicationService } from "@/src/services/medications";
-import { useAuth } from "@/src/hooks/useAuth";
+import { useAuthStore } from "@/src/store/useAuthStore";
 import { AccessLevel } from "@/src/types/role";
 import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/app/patients.css";
 
 export default function MedicationsPage() {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const accessLevel = user?.employee?.role?.access_level;
 
   const [searchTerm, setSearchTerm] = useState("");

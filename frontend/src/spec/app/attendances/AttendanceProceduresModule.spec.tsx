@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { AttendanceProceduresModule } from '@/src/app/attendances/AttendanceProceduresModule';
 import { ApiService } from '@/src/services/api';
 import { i18n } from '@/src/lib/i18n';
+import { useAuthStore } from '@/src/store/useAuthStore';
 
 describe('AttendanceProceduresModule', () => {
   const ATTENDANCE_ID = 1;
@@ -40,6 +41,7 @@ describe('AttendanceProceduresModule', () => {
 
   beforeEach(async () => {
     jest.clearAllMocks();
+    useAuthStore.setState({ user: MOCK_USER as any, isLoading: false });
     (ApiService.get as jest.Mock).mockImplementation((url) => {
       if (url === '/auth/me') return Promise.resolve(MOCK_USER);
       if (url.includes(`/attendance-procedures/attendance/${ATTENDANCE_ID}`)) return Promise.resolve(MOCK_ATTENDANCE_PROCEDURES);

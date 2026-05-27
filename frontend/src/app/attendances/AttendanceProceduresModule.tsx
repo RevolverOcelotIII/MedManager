@@ -9,7 +9,7 @@ import { AttendanceProcedure } from "@/src/types/attendance_procedure";
 import { ATTENDANCE_PROCEDURE_COLUMNS } from "@/src/models/attendance_procedure";
 import { AttendanceProcedureService } from "@/src/services/attendance_procedures";
 import { useGetAttendanceProcedureFormData } from "@/src/hooks/useGetAttendanceProcedureFormData";
-import { useAuth } from "@/src/hooks/useAuth";
+import { useAuthStore } from "@/src/store/useAuthStore";
 import { AccessLevel } from "@/src/types/role";
 import { GridColumn } from "@/src/types";
 import { FormModalColumn } from "@/src/types/components/layout/Form/FormModal";
@@ -20,7 +20,7 @@ interface AttendanceProceduresModuleProps {
 }
 
 export function AttendanceProceduresModule({ attendanceId }: AttendanceProceduresModuleProps) {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const accessLevel = user?.employee?.role?.access_level;
 
   const [attendanceProcedures, setAttendanceProcedures] = useState<AttendanceProcedure[]>([]);

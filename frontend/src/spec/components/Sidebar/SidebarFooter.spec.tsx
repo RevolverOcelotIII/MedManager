@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { SidebarFooter } from '@/src/components/Sidebar/SidebarFooter';
-import { ApiService } from '@/src/services/api';
+import { useAuthStore } from '@/src/store/useAuthStore';
 import Cookies from 'js-cookie';
 
 describe('SidebarFooter', () => {
@@ -23,7 +23,7 @@ describe('SidebarFooter', () => {
 
   describe('when it is loading', () => {
     beforeEach(() => {
-      (ApiService.get as jest.Mock).mockReturnValue(new Promise(() => {}));
+      useAuthStore.setState({ user: null, isLoading: true });
       render(<SidebarFooter isCollapsed={false} />);
     });
 
@@ -36,15 +36,9 @@ describe('SidebarFooter', () => {
     let container: HTMLElement;
 
     beforeEach(async () => {
-      Cookies.remove('token');
-      (ApiService.get as jest.Mock).mockResolvedValue(null);
-      
+      useAuthStore.setState({ user: null, isLoading: false });
       const rendered = render(<SidebarFooter isCollapsed={false} />);
       container = rendered.container;
-      
-      await waitFor(() => {
-        expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-      });
     });
 
     it('should render nothing', () => {
@@ -54,8 +48,7 @@ describe('SidebarFooter', () => {
 
   describe('when a user is logged in', () => {
     beforeEach(() => {
-      Cookies.set('token', 'mock-token');
-      (ApiService.get as jest.Mock).mockResolvedValue(MOCK_USER);
+      useAuthStore.setState({ user: MOCK_USER, isLoading: false });
     });
 
     describe('when the sidebar is expanded', () => {

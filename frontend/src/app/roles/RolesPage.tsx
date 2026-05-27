@@ -9,13 +9,13 @@ import { Role } from "@/src/types/role";
 import { ROLE_COLUMNS } from "@/src/models/role";
 import { RoleFormModal } from "@/src/app/roles/RoleFormModal";
 import { RoleService } from "@/src/services/roles";
-import { useAuth } from "@/src/hooks/useAuth";
+import { useAuthStore } from "@/src/store/useAuthStore";
 import { AccessLevel } from "@/src/types/role";
 import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/app/patients.css";
 
 export default function RolesPage() {
-  const { user, isLoading: isAuthLoading } = useAuth();
+  const { user, isLoading: isAuthLoading } = useAuthStore();
   const router = useRouter();
 
   const [searchTerm, setSearchTerm] = useState("");

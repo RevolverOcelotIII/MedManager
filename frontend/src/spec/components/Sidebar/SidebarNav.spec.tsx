@@ -1,8 +1,8 @@
 import { render, screen, act } from '@testing-library/react';
 import { SidebarNav } from '@/src/components/Sidebar/SidebarNav';
-import { ApiService } from '@/src/services/api';
 import { usePathname } from 'next/navigation';
 import { i18n } from '@/src/lib/i18n';
+import { useAuthStore } from '@/src/store/useAuthStore';
 
 describe('SidebarNav', () => {
   const MOCK_ADMIN_USER = {
@@ -39,7 +39,7 @@ describe('SidebarNav', () => {
 
   describe('when the user is an admin', () => {
     beforeEach(async () => {
-      (ApiService.get as jest.Mock).mockResolvedValue(MOCK_ADMIN_USER);
+      useAuthStore.setState({ user: MOCK_ADMIN_USER, isLoading: false });
       await act(async () => {
         render(<SidebarNav isCollapsed={false} />);
       });
@@ -65,7 +65,7 @@ describe('SidebarNav', () => {
 
   describe('when the user is a doctor', () => {
     beforeEach(async () => {
-      (ApiService.get as jest.Mock).mockResolvedValue(MOCK_DOCTOR_USER);
+      useAuthStore.setState({ user: MOCK_DOCTOR_USER, isLoading: false });
       await act(async () => {
         render(<SidebarNav isCollapsed={false} />);
       });
@@ -86,7 +86,7 @@ describe('SidebarNav', () => {
 
   describe('when the sidebar is collapsed', () => {
     beforeEach(async () => {
-      (ApiService.get as jest.Mock).mockResolvedValue(MOCK_ADMIN_USER);
+      useAuthStore.setState({ user: MOCK_ADMIN_USER, isLoading: false });
       await act(async () => {
         render(<SidebarNav isCollapsed={true} />);
       });

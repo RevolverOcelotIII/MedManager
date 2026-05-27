@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import "@/src/styles/globals.css";
 import { Sidebar } from "@/src/components/Sidebar/Sidebar";
 import { i18n } from "@/src/lib/i18n";
+import { AuthGuard } from "@/src/components/layout/AuthGuard";
 
 export default function RootLayout({
   children,
@@ -23,14 +24,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body style={{ display: 'flex', minHeight: '100vh' }}>
-        {!isLoginPage && <Sidebar />}
-        <main style={{ 
-          flex: 1, 
-          marginLeft: isLoginPage ? 0 : 'var(--current-sidebar-width)',
-          transition: 'margin-left 300ms ease-in-out'
-        }}>
-          {children}
-        </main>
+        <AuthGuard>
+          {!isLoginPage && <Sidebar />}
+          <main style={{ 
+            flex: 1, 
+            marginLeft: isLoginPage ? 0 : 'var(--current-sidebar-width)',
+            transition: 'margin-left 300ms ease-in-out'
+          }}>
+            {children}
+          </main>
+        </AuthGuard>
       </body>
     </html>
   );
