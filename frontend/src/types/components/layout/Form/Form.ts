@@ -5,6 +5,7 @@ export interface FormFieldProps {
   children: ReactNode;
   width?: "50" | "100";
   error?: string;
+  htmlFor?: string;
 }
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -22,6 +23,7 @@ export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElemen
 
 export interface SearchInputProps {
   name: string;
+  id?: string;
   value?: string | number | (string | number)[];
   onChange?: (e: { target: { name: string; value: string | number | (string | number)[] } }) => void;
   options: { label: string; value: string | number }[];

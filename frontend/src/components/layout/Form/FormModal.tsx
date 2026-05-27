@@ -70,9 +70,11 @@ export function FormModal<T extends Record<string, any>>({
               key={column.name} 
               label={column.label} 
               width={column.width as "50" | "100"}
+              htmlFor={`form-field-${column.name}`}
             >
               {column.type === "select" ? (
                 <Select 
+                  id={`form-field-${column.name}`}
                   name={column.name}
                   value={(formData[column.name] as string) || ""}
                   onChange={handleChange}
@@ -82,6 +84,7 @@ export function FormModal<T extends Record<string, any>>({
                 />
               ) : column.type === "search_input" || column.type === "multi_search_input" ? (
                 <SearchInput
+                  id={`form-field-${column.name}`}
                   name={column.name}
                   value={formData[column.name] || (column.type === "multi_search_input" ? [] : "")}
                   onChange={handleChange}
@@ -94,6 +97,7 @@ export function FormModal<T extends Record<string, any>>({
                 />
               ) : column.type === "textarea" ? (
                 <Textarea 
+                  id={`form-field-${column.name}`}
                   name={column.name}
                   value={(formData[column.name] as string) || ""}
                   onChange={handleChange}
@@ -104,6 +108,7 @@ export function FormModal<T extends Record<string, any>>({
                 />
               ) : (
                 <Input 
+                  id={`form-field-${column.name}`}
                   name={column.name}
                   type={column.type as any}
                   value={(formData[column.name] as string) || ""}

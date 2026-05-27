@@ -41,14 +41,10 @@ describe('UserFormModal', () => {
     describe('when filling the form correctly and submitting', () => {
       beforeEach(async () => {
         const user = userEvent.setup();
-        const emailInput = screen.getByPlaceholderText(i18n.t('models.user.email'));
         
-        const passwordInput = document.getElementsByName('password')[0];
-        const confirmPasswordInput = document.getElementsByName('confirm_password')[0];
-        
-        await user.type(emailInput, 'test@test.com');
-        await user.type(passwordInput, 'password123');
-        await user.type(confirmPasswordInput, 'password123');
+        await user.type(screen.getByLabelText(i18n.t('models.user.email')), 'test@test.com');
+        await user.type(screen.getByLabelText(i18n.t('models.user.password')), 'password123');
+        await user.type(screen.getByLabelText(i18n.t('models.user.confirm_password')), 'password123');
         
         const form = document.getElementById('form-modal');
         if (form) fireEvent.submit(form);
@@ -67,11 +63,8 @@ describe('UserFormModal', () => {
         window.alert = jest.fn();
         const user = userEvent.setup();
         
-        const passwordInput = document.getElementsByName('password')[0];
-        const confirmPasswordInput = document.getElementsByName('confirm_password')[0];
-        
-        await user.type(passwordInput, 'pass1');
-        await user.type(confirmPasswordInput, 'pass2');
+        await user.type(screen.getByLabelText(i18n.t('models.user.password')), 'pass1');
+        await user.type(screen.getByLabelText(i18n.t('models.user.confirm_password')), 'pass2');
         
         const form = document.getElementById('form-modal');
         if (form) fireEvent.submit(form);
@@ -116,8 +109,7 @@ describe('UserFormModal', () => {
     });
 
     it('should show the keep current password placeholder', () => {
-      const passwordInputs = screen.getAllByPlaceholderText(i18n.t('models.user.keep_current'));
-      expect(passwordInputs.length).toBeGreaterThan(0);
+      expect(screen.getAllByPlaceholderText(i18n.t('models.user.keep_current')).length).toBeGreaterThan(0);
     });
   });
 });

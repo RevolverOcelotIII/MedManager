@@ -12,6 +12,7 @@ export function SearchInput({
   onChange, 
   placeholder, 
   name, 
+  id,
   required,
   disabled,
   readOnly,
@@ -99,6 +100,7 @@ export function SearchInput({
         )}
         
         <input
+          id={id}
           type="text"
           className={`form-input ${isMulti ? 'search-multi-input' : ''}`}
           placeholder={selectedOptions.length === 0 ? placeholder : ""}

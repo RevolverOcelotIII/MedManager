@@ -4,10 +4,10 @@ import { FormFieldProps, InputProps, SelectProps, TextareaProps } from "@/src/ty
 import { FaChevronDown } from "react-icons/fa";
 import "@/src/styles/components/layout/form.css";
 
-export function FormField({ label, children, width = "100", error }: FormFieldProps) {
+export function FormField({ label, children, width = "100", error, htmlFor }: FormFieldProps) {
   return (
     <div className={`form-field width-${width}`}>
-      <label className="form-label">{label}</label>
+      <label className="form-label" htmlFor={htmlFor}>{label}</label>
       <div className="form-input-container">
         {children}
       </div>
