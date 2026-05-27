@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import PatientsPage from '@/src/app/patients/PatientsPage';
 import { ApiService } from '@/src/services/api';
 import { i18n } from '@/src/lib/i18n';
+import { useAuthStore } from '@/src/store/useAuthStore';
 
 describe('PatientsPage', () => {
   const MOCK_ATTENDANT = {
@@ -34,6 +35,7 @@ describe('PatientsPage', () => {
 
   describe('when accessed by an attendant', () => {
     beforeEach(async () => {
+      useAuthStore.setState({ user: MOCK_ATTENDANT as any, isLoading: false });
       (ApiService.get as jest.Mock).mockImplementation((url) => {
         if (url === '/auth/me') return Promise.resolve(MOCK_ATTENDANT);
         if (url === '/patients/') return Promise.resolve(MOCK_PATIENTS);

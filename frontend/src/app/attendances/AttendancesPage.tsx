@@ -10,13 +10,13 @@ import { AttendanceFormModal } from "@/src/app/attendances/AttendanceFormModal";
 import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
 import { AttendanceProceduresModule } from "@/src/app/attendances/AttendanceProceduresModule";
 import { AttendanceService } from "@/src/services/attendances";
-import { useAuth } from "@/src/hooks/useAuth";
+import { useAuthStore } from "@/src/store/useAuthStore";
 import { AccessLevel } from "@/src/types/role";
 import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/app/patients.css";
 
 export default function AttendancesPage() {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const accessLevel = user?.employee?.role?.access_level;
 
   const [searchTerm, setSearchTerm] = useState("");

@@ -1,7 +1,7 @@
 "use client";
 
 import { MdLogout } from "react-icons/md";
-import { useAuth } from "@/src/hooks/useAuth";
+import { useAuthStore } from "@/src/store/useAuthStore";
 import { LanguageSwitcher } from "@/src/components/layout/LanguageSwitcher";
 import "@/src/styles/components/Sidebar/sidebar-footer.css";
 
@@ -10,7 +10,7 @@ interface SidebarFooterProps {
 }
 
 export function SidebarFooter({ isCollapsed }: SidebarFooterProps) {
-  const { user, logout, isLoading } = useAuth();
+  const { user, logout, isLoading } = useAuthStore();
 
   if (isLoading) {
     return (

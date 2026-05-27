@@ -1,21 +1,24 @@
 import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Sidebar } from '@/src/components/Sidebar/Sidebar';
-import { ApiService } from '@/src/services/api';
+import { useAuthStore } from '@/src/store/useAuthStore';
 
 describe('Sidebar', () => {
   const COLLAPSE_LABEL = 'Collapse Sidebar';
   const EXPAND_LABEL = 'Expand Sidebar';
 
   beforeEach(async () => {
-    (ApiService.get as jest.Mock).mockResolvedValue({
-      id: 1,
-      email: 'user@medmanager.com',
-      employee: {
+    useAuthStore.setState({
+      user: {
         id: 1,
-        full_name: 'Regular User',
-        role: { access_level: 'attendant' }
-      }
+        email: 'user@medmanager.com',
+        employee: {
+          id: 1,
+          full_name: 'Regular User',
+          role: { access_level: 'attendant' }
+        }
+      } as any,
+      isLoading: false
     });
 
     document.documentElement.style.removeProperty('--current-sidebar-width');

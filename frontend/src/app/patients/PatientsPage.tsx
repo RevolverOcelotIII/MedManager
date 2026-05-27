@@ -9,13 +9,13 @@ import { PATIENT_COLUMNS } from "@/src/models/patient";
 import { PatientFormModal } from "@/src/app/patients/PatientFormModal";
 import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
 import { PatientService } from "@/src/services/patients";
-import { useAuth } from "@/src/hooks/useAuth";
+import { useAuthStore } from "@/src/store/useAuthStore";
 import { AccessLevel } from "@/src/types/role";
 import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/app/patients.css";
 
 export default function PatientsPage() {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const accessLevel = user?.employee?.role?.access_level;
 
   const [searchTerm, setSearchTerm] = useState("");

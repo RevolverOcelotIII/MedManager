@@ -5,11 +5,13 @@ import { LoginSidebar } from "@/src/app/login/LoginSidebar";
 import { LoginForm } from "@/src/app/login/LoginForm";
 import { LoginFormData } from "@/src/types/app/login/LoginPage";
 import { ApiService } from "@/src/services/api";
+import { useAuthStore } from "@/src/store/useAuthStore";
 import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/app/login.css";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { fetchUser } = useAuthStore();
 
   const handleLogin = async (data: LoginFormData) => {
     try {
@@ -25,6 +27,7 @@ export default function LoginPage() {
         sameSite: "strict",
       });
 
+      await fetchUser();
       router.push("/patients");
     } catch (error) {
       console.error("Login failed:", error);

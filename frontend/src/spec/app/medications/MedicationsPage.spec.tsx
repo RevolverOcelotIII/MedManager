@@ -4,6 +4,7 @@ import MedicationsPage from '@/src/app/medications/MedicationsPage';
 import { ApiService } from '@/src/services/api';
 import { i18n } from '@/src/lib/i18n';
 import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/src/store/useAuthStore';
 
 describe('MedicationsPage', () => {
   const MOCK_PHARMA = {
@@ -47,6 +48,7 @@ describe('MedicationsPage', () => {
 
   describe('when accessed by a pharmacist', () => {
     beforeEach(async () => {
+      useAuthStore.setState({ user: MOCK_PHARMA as any, isLoading: false });
       (ApiService.get as jest.Mock).mockImplementation((url) => {
         if (url === '/auth/me') return Promise.resolve(MOCK_PHARMA);
         if (url === '/medications/') return Promise.resolve(MOCK_MEDICATIONS);
@@ -121,6 +123,7 @@ describe('MedicationsPage', () => {
 
   describe('when accessed by a doctor (view-only)', () => {
     beforeEach(async () => {
+      useAuthStore.setState({ user: MOCK_DOCTOR as any, isLoading: false });
       (ApiService.get as jest.Mock).mockImplementation((url) => {
         if (url === '/auth/me') return Promise.resolve(MOCK_DOCTOR);
         if (url === '/medications/') return Promise.resolve(MOCK_MEDICATIONS);

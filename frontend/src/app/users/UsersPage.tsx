@@ -10,13 +10,13 @@ import { USER_COLUMNS } from "@/src/models/user";
 import { UserFormModal } from "@/src/app/users/UserFormModal";
 import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
 import { UserService } from "@/src/services/users";
-import { useAuth } from "@/src/hooks/useAuth";
+import { useAuthStore } from "@/src/store/useAuthStore";
 import { AccessLevel } from "@/src/types/role";
 import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/app/patients.css";
 
 export default function UsersPage() {
-  const { user, isLoading: isAuthLoading } = useAuth();
+  const { user, isLoading: isAuthLoading } = useAuthStore();
   const router = useRouter();
 
   const [searchTerm, setSearchTerm] = useState("");

@@ -10,13 +10,13 @@ import { EMPLOYEE_COLUMNS } from "@/src/models/employee";
 import { EmployeeFormModal } from "@/src/app/employees/EmployeeFormModal";
 import { DetailsModal } from "@/src/components/layout/Modal/DetailsModal";
 import { EmployeeService } from "@/src/services/employees";
-import { useAuth } from "@/src/hooks/useAuth";
+import { useAuthStore } from "@/src/store/useAuthStore";
 import { AccessLevel } from "@/src/types/role";
 import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/app/patients.css";
 
 export default function EmployeesPage() {
-  const { user, isLoading: isAuthLoading } = useAuth();
+  const { user, isLoading: isAuthLoading } = useAuthStore();
   const router = useRouter();
   
   const [searchTerm, setSearchTerm] = useState("");
