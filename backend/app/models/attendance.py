@@ -26,5 +26,4 @@ class Attendance(Base, TimestampMixin):
     finished_at = Column(DateTime, nullable=True)
 
     patient = relationship("Patient", back_populates="attendances")
-    prescriptions = relationship("Prescription", back_populates="attendance")
     procedures = relationship("AttendanceProcedure", back_populates="attendance")

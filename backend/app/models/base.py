@@ -4,8 +4,6 @@ from app.models import (
     Patient,
     Employee,
     Attendance,
-    MedicalRecord,
-    Prescription,
     Medication,
     Procedure,
     AttendanceProcedure,
