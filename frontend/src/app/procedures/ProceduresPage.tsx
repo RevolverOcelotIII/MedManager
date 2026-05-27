@@ -41,7 +41,7 @@ export default function ProceduresPage() {
   useEffect(() => {
     if (!isAuthLoading) {
       if (user?.employee?.role?.access_level !== AccessLevel.admin) {
-        router.push("/patients");
+        router.push("/attendances");
       } else {
         fetchProcedures();
       }

@@ -54,8 +54,8 @@ describe('LoginPage', () => {
         expect(Cookies.get('token')).toBe('valid-token');
       });
 
-      it('should redirect to patients page', () => {
-        expect(mockRouter.push).toHaveBeenCalledWith('/patients');
+      it('should redirect to attendances page', () => {
+        expect(mockRouter.push).toHaveBeenCalledWith('/attendances');
       });
     });
 

@@ -12,9 +12,8 @@ import { i18n } from "@/src/lib/i18n";
 import "@/src/styles/components/Sidebar/sidebar-nav.css";
 
 const workspaceItems = [
-  { href: "/dashboard", label: i18n.t("sidebar.dashboard"), icon: MdDashboard },
-  { href: "/patients", label: i18n.t("sidebar.patients"), icon: MdPeople },
   { href: "/attendances", label: i18n.t("sidebar.attendances"), icon: BsFillFileEarmarkMedicalFill },
+  { href: "/patients", label: i18n.t("sidebar.patients"), icon: MdPeople },
   { href: "/medications", label: i18n.t("sidebar.medicines"), icon: FaPills },
 ];
 

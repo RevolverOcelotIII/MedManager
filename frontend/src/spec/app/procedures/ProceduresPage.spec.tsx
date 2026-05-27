@@ -149,9 +149,9 @@ describe('ProceduresPage', () => {
       });
     });
 
-    it('should redirect to patients page', async () => {
+    it('should redirect to attendances page', async () => {
       await waitFor(() => {
-        expect(mockRouter.push).toHaveBeenCalledWith('/patients');
+        expect(mockRouter.push).toHaveBeenCalledWith('/attendances');
       });
     });
   });

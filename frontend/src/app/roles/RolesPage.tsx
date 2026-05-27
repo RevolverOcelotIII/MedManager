@@ -39,7 +39,7 @@ export default function RolesPage() {
   useEffect(() => {
     if (!isAuthLoading) {
       if (user?.employee?.role?.access_level !== AccessLevel.admin) {
-        router.push("/patients");
+        router.push("/attendances");
       } else {
         fetchRoles();
       }

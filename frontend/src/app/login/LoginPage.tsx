@@ -28,7 +28,7 @@ export default function LoginPage() {
       });
 
       await fetchUser();
-      router.push("/patients");
+      router.push("/attendances");
     } catch (error) {
       console.error("Login failed:", error);
       alert(i18n.t("login.login_failed"));

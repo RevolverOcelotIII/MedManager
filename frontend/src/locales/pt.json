@@ -153,7 +153,7 @@
     "home": {
       "title": "Bem-vindo ao MedManager",
       "subtitle": "Seu sistema abrangente de gestão hospitalar.",
-      "go_to_patients": "Ir para Pacientes"
+      "go_to_attendances": "Ir para Atendimentos"
     },
     "patients": {
       "title": "Pacientes",

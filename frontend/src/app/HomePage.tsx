@@ -8,8 +8,8 @@ export default function Home() {
       <main className="home-main">
         <h1>{i18n.t("pages.home.title")}</h1>
         <p>{i18n.t("pages.home.subtitle")}</p>
-        <Link href="/patients" className="start-button">
-          {i18n.t("pages.home.go_to_patients")}
+        <Link href="/attendances" className="start-button">
+          {i18n.t("pages.home.go_to_attendances")}
         </Link>
       </main>
     </div>
