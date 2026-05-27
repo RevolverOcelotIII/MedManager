@@ -1,24 +1,33 @@
 from sqlalchemy.orm import Session
 from app.models.employee import Employee, Role, AccessLevel
 from app.models.user import User
+from app.models.catalog import procedure_execute_roles, procedure_dispatch_roles
 from app.schemas.employees import EmployeeCreate, EmployeeUpdate, EmployeeResponse, RestrictedEmployeeResponse
 from app.services.utils import get_object_or_404, validate_unique
+from fastapi import HTTPException
 from typing import Optional, List, Any
 
 class EmployeeService:
     # --- Controller Entry Points ---
 
     @staticmethod
-    def get_all(db_session: Session, current_user: User, can_execute_procedure_id: Optional[int] = None) -> List[Any]:
+    def get_all(
+        db_session: Session, 
+        current_user: User, 
+        can_execute_procedure_id: Optional[int] = None,
+        can_dispatch_procedure_id: Optional[int] = None
+    ) -> List[Any]:
         is_admin = current_user.employee.role.access_level == AccessLevel.admin
         query = db_session.query(Employee).join(Role)
         
         if can_execute_procedure_id:
             query = EmployeeService.filter_by_professional_execution_qualifications(query, can_execute_procedure_id)
         
+        if can_dispatch_procedure_id:
+            query = EmployeeService.filter_by_professional_dispatch_qualifications(query, can_dispatch_procedure_id)
+        
         # Apply visibility rules with context awareness
-        # If can_execute_procedure_id is present, we allow MED users to see other qualified MED users.
-        is_clinical_context = can_execute_procedure_id is not None
+        is_clinical_context = (can_execute_procedure_id is not None) or (can_dispatch_procedure_id is not None)
         query = EmployeeService.apply_role_based_visibility_restrictions(query, current_user, is_clinical_context)
 
         results = query.all()
@@ -33,7 +42,6 @@ class EmployeeService:
         
         employee = query.first()
         if not employee:
-             from fastapi import HTTPException
              raise HTTPException(status_code=403, detail="Employee not found or access denied.")
 
         return EmployeeService.apply_production_grade_serialization(employee, is_admin)
@@ -78,9 +86,13 @@ class EmployeeService:
 
     @staticmethod
     def filter_by_professional_execution_qualifications(query, procedure_id: int):
-        from app.models.catalog import procedure_execute_roles
         return query.join(procedure_execute_roles, Role.id == procedure_execute_roles.c.role_id)\
                     .filter(procedure_execute_roles.c.procedure_id == procedure_id)
+
+    @staticmethod
+    def filter_by_professional_dispatch_qualifications(query, procedure_id: int):
+        return query.join(procedure_dispatch_roles, Role.id == procedure_dispatch_roles.c.role_id)\
+                    .filter(procedure_dispatch_roles.c.procedure_id == procedure_id)
 
     @staticmethod
     def apply_role_based_visibility_restrictions(query, current_user: User, is_clinical_context: bool = False):
@@ -90,20 +102,15 @@ class EmployeeService:
             return query
         
         if user_access == AccessLevel.attendant:
-            # Attendants can only see medical staff
-            return query.filter(Role.access_level.in_([AccessLevel.doctor, AccessLevel.nurse]))
+            return query
             
         if user_access in [AccessLevel.doctor, AccessLevel.nurse]:
-            # Business Rule: If in clinical context (e.g. procedure assignment), see all qualified med colleagues.
-            # Otherwise, see only self.
-            if is_clinical_context:
-                 return query.filter(Role.access_level.in_([AccessLevel.doctor, AccessLevel.nurse]))
-            return query.filter(Employee.id == current_user.employee_id)
+            return query.filter(Role.access_level.in_([AccessLevel.doctor, AccessLevel.nurse]))
 
         if user_access == AccessLevel.pharmaceutical:
-             return query.filter(Employee.id == current_user.employee_id)
+             return query.filter(Role.access_level.in_([AccessLevel.doctor, AccessLevel.nurse, AccessLevel.pharmaceutical]))
             
-        return query.filter(False)
+        return query.filter(Employee.id == current_user.employee_id)
 
     # --- Validations ---
 
