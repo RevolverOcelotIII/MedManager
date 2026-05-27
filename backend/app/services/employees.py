@@ -4,8 +4,12 @@ from app.models.user import User
 from app.models.catalog import procedure_execute_roles, procedure_dispatch_roles
 from app.schemas.employees import EmployeeCreate, EmployeeUpdate, EmployeeResponse, RestrictedEmployeeResponse
 from app.services.utils import get_object_or_404, validate_unique
+from app.core.redis import get_cache, set_cache, invalidate_cache
 from fastapi import HTTPException
 from typing import Optional, List, Any
+from datetime import datetime
+
+CACHE_PREFIX = "cache:employees"
 
 class EmployeeService:
     # --- Controller Entry Points ---
@@ -17,7 +21,17 @@ class EmployeeService:
         can_execute_procedure_id: Optional[int] = None,
         can_dispatch_procedure_id: Optional[int] = None
     ) -> List[Any]:
-        is_admin = current_user.employee.role.access_level == AccessLevel.admin
+        # Caching only base list for grids (no procedure filters)
+        is_base_list = (can_execute_procedure_id is None) and (can_dispatch_procedure_id is None)
+        access_level = current_user.employee.role.access_level
+        cache_key = f"{CACHE_PREFIX}:access:{access_level.value}"
+        
+        if is_base_list:
+            cached = get_cache(cache_key)
+            if cached:
+                return cached
+
+        is_admin = access_level == AccessLevel.admin
         query = db_session.query(Employee).join(Role)
         
         if can_execute_procedure_id:
@@ -31,7 +45,16 @@ class EmployeeService:
         query = EmployeeService.apply_role_based_visibility_restrictions(query, current_user, is_clinical_context)
 
         results = query.all()
-        return [EmployeeService.apply_production_grade_serialization(e, is_admin) for e in results]
+        serialized_results = [EmployeeService.apply_production_grade_serialization(e, is_admin) for e in results]
+        
+        # Convert Pydantic models to dicts for caching
+        if is_base_list:
+            # Note: apply_production_grade_serialization returns EmployeeResponse or RestrictedEmployeeResponse
+            # We convert to dict mode="json"
+            results_to_cache = [r.model_dump(mode="json") for r in serialized_results]
+            set_cache(cache_key, results_to_cache)
+            
+        return serialized_results
 
     @staticmethod
     def get_by_id(db_session: Session, employee_id: int, current_user: User) -> Any:
@@ -55,6 +78,8 @@ class EmployeeService:
         db_session.add(new_employee)
         db_session.commit()
         db_session.refresh(new_employee)
+        
+        invalidate_cache(f"{CACHE_PREFIX}:*")
         return new_employee
 
     @staticmethod
@@ -74,6 +99,8 @@ class EmployeeService:
             
         db_session.commit()
         db_session.refresh(employee)
+        
+        invalidate_cache(f"{CACHE_PREFIX}:*")
         return employee
 
     @staticmethod
@@ -81,6 +108,8 @@ class EmployeeService:
         employee = get_object_or_404(db_session, Employee, employee_id)
         db_session.delete(employee)
         db_session.commit()
+        
+        invalidate_cache(f"{CACHE_PREFIX}:*")
 
     # --- Business Logic & Query Filters ---
 

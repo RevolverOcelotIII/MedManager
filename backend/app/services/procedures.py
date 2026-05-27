@@ -2,18 +2,34 @@ from sqlalchemy.orm import Session
 from app.models.catalog import Procedure
 from app.models.employee import Role, AccessLevel
 from app.models.user import User
-from app.schemas.procedures import ProcedureCreate, ProcedureUpdate
+from app.schemas.procedures import ProcedureCreate, ProcedureUpdate, ProcedureResponse
 from app.services.utils import get_object_or_404, validate_unique
+from app.core.redis import get_cache, set_cache, invalidate_cache
 from typing import Optional, List
+
+CACHE_PREFIX = "cache:procedures"
 
 class ProcedureService:
     # --- Controller Entry Points ---
 
     @staticmethod
     def get_all(db_session: Session, current_user: User):
+        is_admin = current_user.employee.role.access_level == AccessLevel.admin
+        cache_key = f"{CACHE_PREFIX}:all" if is_admin else f"{CACHE_PREFIX}:role:{current_user.employee.role_id}"
+        
+        cached = get_cache(cache_key)
+        if cached:
+            return cached
+            
         query = db_session.query(Procedure)
         query = ProcedureService.apply_role_based_dispatch_visibility(query, current_user)
-        return query.all()
+        procedures = query.all()
+        
+        # Serialize
+        proc_dicts = [ProcedureResponse.model_validate(p).model_dump(mode="json") for p in procedures]
+        set_cache(cache_key, proc_dicts)
+        
+        return procedures
 
     @staticmethod
     def get_by_id(db_session: Session, procedure_id: int):
@@ -33,6 +49,8 @@ class ProcedureService:
         db_session.add(new_procedure)
         db_session.commit()
         db_session.refresh(new_procedure)
+        
+        invalidate_cache(f"{CACHE_PREFIX}:*")
         return new_procedure
 
     @staticmethod
@@ -53,6 +71,8 @@ class ProcedureService:
             
         db_session.commit()
         db_session.refresh(procedure)
+        
+        invalidate_cache(f"{CACHE_PREFIX}:*")
         return procedure
 
     @staticmethod
@@ -60,15 +80,13 @@ class ProcedureService:
         procedure = ProcedureService.get_by_id(db_session, procedure_id)
         db_session.delete(procedure)
         db_session.commit()
+        
+        invalidate_cache(f"{CACHE_PREFIX}:*")
 
     # --- Business Logic & Associations ---
 
     @staticmethod
     def apply_role_based_dispatch_visibility(query, current_user: User):
-        """
-        Encapsulated Business Rule: Only return procedures that the user's role is authorized to dispatch.
-        Administrators are exempt from this restriction.
-        """
         if current_user.employee.role.access_level == AccessLevel.admin:
             return query
             

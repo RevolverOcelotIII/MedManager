@@ -6,8 +6,14 @@ load_dotenv()
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.controllers import users, patients, medications, procedures, medical_records, employees, auth, attendances, prescriptions, attendance_procedures, roles
+from app.core.redis import RedisClient
 
 app = FastAPI(title="MedManager API")
+
+@app.on_event("startup")
+def startup_event():
+    # Ping Redis to verify connection
+    RedisClient.get_client()
 
 front_url = os.getenv("FRONT_URL", "http://localhost:3000").rstrip("/")
 origins = [

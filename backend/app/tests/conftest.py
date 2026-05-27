@@ -14,6 +14,13 @@ from app.models.patient import Patient, Sex
 from app.models.attendance import Attendance
 from app.models.catalog import Procedure, Medication
 
+@pytest.fixture(autouse=True)
+def mock_redis(monkeypatch):
+    """Mock redis methods to prevent external calls during tests."""
+    monkeypatch.setattr("app.core.redis.get_cache", lambda k: None)
+    monkeypatch.setattr("app.core.redis.set_cache", lambda k, v, t=3600: None)
+    monkeypatch.setattr("app.core.redis.invalidate_cache", lambda p: None)
+
 # Use Postgres test_db for tests
 DEFAULT_TEST_DB_URL = "postgresql://admin:password_cool@db:5432/test_db"
 SQLALCHEMY_DATABASE_URL = os.getenv("TEST_DATABASE_URL", DEFAULT_TEST_DB_URL)

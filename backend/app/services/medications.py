@@ -1,27 +1,33 @@
 from sqlalchemy.orm import Session
 from app.models.catalog import Medication
-from app.schemas.medications import MedicationCreate, MedicationUpdate
+from app.schemas.medications import MedicationCreate, MedicationUpdate, MedicationResponse
 from app.services.utils import get_object_or_404, validate_unique
+from app.core.redis import get_cache, set_cache, invalidate_cache
 from typing import Optional
+
+CACHE_KEY = "cache:medications:all"
 
 class MedicationService:
     @staticmethod
-    def validate_duplicate(db_session: Session, trade_name: str, active_ingredient: str, dosage: str, exclude_medication_id: Optional[int] = None):
+    def validate_name_unique(db_session: Session, trade_name: str, exclude_med_id: Optional[int] = None):
         validate_unique(
             db_session, 
             Medication, 
-            {
-                "trade_name": trade_name,
-                "active_ingredient": active_ingredient,
-                "dosage": dosage
-            }, 
-            exclude_id=exclude_medication_id, 
-            error_message="Medication with this trade name, active ingredient and dosage already exists"
+            {"trade_name": trade_name}, 
+            exclude_id=exclude_med_id, 
+            error_message="Medication trade name already registered"
         )
 
     @staticmethod
     def get_all(db_session: Session):
-        return db_session.query(Medication).all()
+        cached = get_cache(CACHE_KEY)
+        if cached:
+            return cached
+            
+        meds = db_session.query(Medication).all()
+        med_dicts = [MedicationResponse.model_validate(m).model_dump(mode="json") for m in meds]
+        set_cache(CACHE_KEY, med_dicts)
+        return meds
 
     @staticmethod
     def get_by_id(db_session: Session, medication_id: int):
@@ -29,17 +35,14 @@ class MedicationService:
 
     @staticmethod
     def create(db_session: Session, medication_data: MedicationCreate):
-        MedicationService.validate_duplicate(
-            db_session, 
-            medication_data.trade_name, 
-            medication_data.active_ingredient, 
-            medication_data.dosage
-        )
+        MedicationService.validate_name_unique(db_session, medication_data.trade_name)
         
         new_medication = Medication(**medication_data.model_dump())
         db_session.add(new_medication)
         db_session.commit()
         db_session.refresh(new_medication)
+        
+        invalidate_cache(CACHE_KEY)
         return new_medication
 
     @staticmethod
@@ -48,25 +51,16 @@ class MedicationService:
         
         update_data = medication_data.model_dump(exclude_unset=True)
         
-        duplicate_check_fields = ["trade_name", "active_ingredient", "dosage"]
-        if any(field_name in update_data for field_name in duplicate_check_fields):
-            new_trade_name = update_data.get("trade_name", medication.trade_name)
-            new_active_ingredient = update_data.get("active_ingredient", medication.active_ingredient)
-            new_dosage = update_data.get("dosage", medication.dosage)
-            
-            MedicationService.validate_duplicate(
-                db_session, 
-                new_trade_name, 
-                new_active_ingredient, 
-                new_dosage, 
-                exclude_medication_id=medication_id
-            )
+        if "trade_name" in update_data:
+            MedicationService.validate_name_unique(db_session, update_data["trade_name"], exclude_med_id=medication_id)
             
         for field_name, field_value in update_data.items():
             setattr(medication, field_name, field_value)
             
         db_session.commit()
         db_session.refresh(medication)
+        
+        invalidate_cache(CACHE_KEY)
         return medication
 
     @staticmethod
@@ -74,3 +68,5 @@ class MedicationService:
         medication = MedicationService.get_by_id(db_session, medication_id)
         db_session.delete(medication)
         db_session.commit()
+        
+        invalidate_cache(CACHE_KEY)

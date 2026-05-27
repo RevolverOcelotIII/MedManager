@@ -1,8 +1,11 @@
 from sqlalchemy.orm import Session
 from app.models.employee import Role
-from app.schemas.roles import RoleCreate, RoleUpdate
+from app.schemas.roles import RoleCreate, RoleUpdate, RoleResponse
 from app.services.utils import get_object_or_404, validate_unique
+from app.core.redis import get_cache, set_cache, invalidate_cache
 from typing import Optional
+
+CACHE_KEY = "cache:roles:all"
 
 class RoleService:
     @staticmethod
@@ -17,7 +20,15 @@ class RoleService:
 
     @staticmethod
     def get_all(db_session: Session):
-        return db_session.query(Role).all()
+        cached = get_cache(CACHE_KEY)
+        if cached:
+            return cached
+            
+        roles = db_session.query(Role).all()
+        # Serialize to dicts for caching
+        role_dicts = [RoleResponse.model_validate(r).model_dump(mode="json") for r in roles]
+        set_cache(CACHE_KEY, role_dicts)
+        return roles
 
     @staticmethod
     def get_by_id(db_session: Session, role_id: int):
@@ -31,6 +42,8 @@ class RoleService:
         db_session.add(new_role)
         db_session.commit()
         db_session.refresh(new_role)
+        
+        invalidate_cache(CACHE_KEY)
         return new_role
 
     @staticmethod
@@ -47,6 +60,8 @@ class RoleService:
             
         db_session.commit()
         db_session.refresh(role)
+        
+        invalidate_cache(CACHE_KEY)
         return role
 
     @staticmethod
@@ -54,3 +69,5 @@ class RoleService:
         role = RoleService.get_by_id(db_session, role_id)
         db_session.delete(role)
         db_session.commit()
+        
+        invalidate_cache(CACHE_KEY)
