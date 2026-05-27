@@ -1,6 +1,21 @@
 # MedManager ERP - Hospital Operations Suite
 
-**MedManager** is a high-performance, customizable ERP (Enterprise Resource Planning) platform designed to streamline hospital operations, clinical workflows, and resource management. It focuses on granular security, data integrity, and a flexible, model-driven architecture.
+**MedManager** is a prototype and Proof of Concept (PoC) for a high-performance, customizable hospital ERP (Enterprise Resource Planning) platform. It demonstrates a robust approach to streamlining hospital operations, clinical workflows, and resource management through a fully dynamic, model-driven architecture.
+
+---
+
+## 🏗 System Overview: Dynamic Logic & Configuration
+Unlike traditional rigid ERPs, MedManager is built on a **fully dynamic entity engine**. The behavior of the clinical flow is not hardcoded but is defined by the relationship between two primary administrative entities:
+
+1.  **Dynamic Roles**: Administrators create job titles (e.g., "Cardiac Surgeon", "Triage Nurse") and map them to one of the **5 Base Access Levels**. This determines the broad data scope the user can access (Medical, Logistics, Pharmaceutical, or Admin).
+2.  **Dynamic Procedures**: Every clinical action (e.g., "Blood Test", "MRI Scan", "Pre-Op Triage") is an entry in the catalog. 
+
+### The Permission Matrix (RBAC)
+The core innovation of the PoC is the **Role-Procedure Junction**. For every Procedure created, Administrators explicitly define:
+-   **Dispatch Roles**: Which specific Roles are authorized to *order* this action.
+-   **Execute Roles**: Which specific Roles are qualified to *perform* this action and record clinical notes.
+
+This dynamic mapping creates a precise "need-to-know" and "authorized-to-act" environment. A Doctor role might be able to dispatch 50 different procedures but only execute 5, while a Nurse role might execute the Triage that the Attendant dispatched.
 
 ---
 
@@ -22,48 +37,33 @@
 
 ---
 
-## 🏗 Architectural Design
-The project follows a model-driven approach where UI components (Grids, Forms, Detail Modals) are generated based on shared configuration objects, ensuring visual consistency and rapid development.
+## 🚀 Step-by-Step Clinical Tutorial
 
-- **Frontend Models**: Define column visibility, validation rules, and specialized rendering (badges, dates, search inputs).
-- **Backend Services**: Encapsulate complex logic, such as role-based visibility filters and automated cache invalidation patterns.
+### 1. The Administrative Engine (Setup)
+Before any patient arrives, the system's "brain" must be configured.
+-   **Step 1: Roles**: Create specialized roles. Assigning a role to a user dictates which Attendances they "receive" (visible in their medical queue).
+-   **Step 2: Procedures**: Define clinical actions. 
+    -   *Example*: Create a "General Consultation". Add "Physician" to Dispatch Roles and Execute Roles.
+    -   *Example*: Create "Triage". Add "Attendant" to Dispatch and "Nurse" to Execute.
 
----
+> ![Screenshot: Admin Role and Procedure Configuration](docs/screenshots/admin-setup.png)
 
-## 🔒 Security & Access Guide (RBAC)
-MedManager implements a sophisticated Role-Based Access Control system centered around **5 Access Levels** and **4 Permission Scopes**:
+### 2. Patient Intake & Initial Dispatch
+-   **Step 3: Registration**: An **Attendant** registers a patient and initiates an **Attendance**.
+-   **Step 4: The First Order**: The Attendant dispatches the "Triage" procedure. Because of the dynamic config, only "Triage" (and other Attendant-dispatchable items) will appear in their menu.
 
-### Access Levels
-1.  **Admin**: Full system control.
-2.  **Doctor**: Clinical leadership and specialized execution.
-3.  **Nurse**: Clinical execution and triage.
-4.  **Attendant**: Operational logistics and patient intake.
-5.  **Pharmaceutical**: Specialized medication and stock control.
+> ![Screenshot: Patient Intake and Procedure Dispatching](docs/screenshots/intake-dispatch.png)
 
-### Permission Scopes
-- **Admin Scope**: System configuration, User/Employee/Role management.
-- **Log (Logistics) Scope**: Patient registration and Attendance initiation.
-- **Med (Medical) Scope**: Clinical updates, procedure execution, and medical notes.
-- **Pharma Scope**: Medication catalog and inventory management.
+### 3. The Clinical Execution Loop
+-   **Step 5: Receiving the Task**: A **Nurse** logs in. Their dashboard automatically filters for Attendances where they have executable procedures pending.
+-   **Step 6: Execution**: The Nurse opens the Triage record, sets it to `In Progress`, and fills in vital signs.
+-   **Step 7: Chaining the Workflow**: Upon finishing Triage, the Nurse (if authorized by their Role) can **dispatch the next step**—for example, a "Specialized Consultation"—effectively passing the "clinical baton" to a Doctor.
 
-### Specialized Procedure Logic
-Procedures are defined with a strict split between:
-- **Dispatch Roles**: Who is authorized to *order* the procedure (e.g., Doctors).
-- **Execute Roles**: Who is qualified to *perform* the procedure (e.g., Nurses for Triage).
+> ![Screenshot: Clinical Execution and Workflow Chaining](docs/screenshots/clinical-loop.png)
 
----
-
-## 🚀 Basic Workflow Tutorial
-
-1.  **Administrative Setup**:
-    *   Create **Roles** (e.g., "ER Physician" with `doctor` level).
-    *   Register **Employees** and link them to **Users** for system access.
-    *   Create and Configure **Procedures**, assigning appropriate Dispatch and Execute roles.
-2.  **Patient Journey**:
-    *   **Intake**: Attendants register a **Patient** and start an **Attendance** (assigning an urgency level via the Manchester Protocol).
-    *   **Ordering**: Authorized staff add **Procedures** to the attendance record.
-    *   **Execution**: Qualified staff update the procedure status to `In Progress`, record clinical observations, and mark as `Done` upon completion.
-    *   **Medication**: During execution, staff can log specific **Medications** used, which automatically clears the relevant performance caches.
+### 4. Advanced Clinical Review
+-   **Step 8: Review & Execute**: The **Doctor** receives the attendance. They can read the Nurse's Triage notes (Read-Only) and execute their own Consultation.
+-   **Step 9: Resource Management**: During any execution, professionals log **Medications** used. This interacts with the **Pharma Scope**, allowing Pharmacists to track real-time consumption triggered by clinical actions.
 
 ---
 
