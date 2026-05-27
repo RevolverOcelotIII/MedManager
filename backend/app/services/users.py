@@ -8,30 +8,8 @@ from typing import Optional
 
 class UserService:
     @staticmethod
-    def validate_email_unique(db_session: Session, email: str, exclude_user_id: Optional[int] = None):
-        validate_unique(
-            db_session, 
-            User, 
-            {"email": email}, 
-            exclude_id=exclude_user_id, 
-            error_message="Email already registered"
-        )
-
-    @staticmethod
-    def validate_employee_linkable(db_session: Session, employee_id: int, exclude_user_id: Optional[int] = None):
-        get_object_or_404(db_session, Employee, employee_id, error_message="Employee not found")
-        
-        validate_unique(
-            db_session,
-            User,
-            {"employee_id": employee_id},
-            exclude_id=exclude_user_id,
-            error_message="Employee is already linked to a user"
-        )
-
-    @staticmethod
     def get_all(db_session: Session):
-        return db_session.query(User).all()
+        return db_session.query(User).order_by(User.updated_at.desc()).all()
 
     @staticmethod
     def get_by_id(db_session: Session, user_id: int):
@@ -39,14 +17,16 @@ class UserService:
 
     @staticmethod
     def create(db_session: Session, user_data: UserCreate):
-        UserService.validate_email_unique(db_session, user_data.email)
-        UserService.validate_employee_linkable(db_session, user_data.employee_id)
+        validate_unique(db_session, User, {"email": user_data.email}, error_message="Email already registered")
+        validate_unique(db_session, User, {"employee_id": user_data.employee_id}, error_message="Employee already has a user account")
         
-        user_dict = user_data.model_dump()
-        raw_password = user_dict.pop("password")
-        hashed_password = hash_password(raw_password)
+        get_object_or_404(db_session, Employee, user_data.employee_id, error_message="Employee not found")
         
-        new_user = User(**user_dict, hashed_password=hashed_password)
+        new_user = User(
+            email=user_data.email,
+            hashed_password=hash_password(user_data.password),
+            employee_id=user_data.employee_id
+        )
         db_session.add(new_user)
         db_session.commit()
         db_session.refresh(new_user)
@@ -59,14 +39,10 @@ class UserService:
         update_data = user_data.model_dump(exclude_unset=True)
         
         if "email" in update_data:
-            UserService.validate_email_unique(db_session, update_data["email"], exclude_user_id=user_id)
-        
-        if "employee_id" in update_data:
-            UserService.validate_employee_linkable(db_session, update_data["employee_id"], exclude_user_id=user_id)
+            validate_unique(db_session, User, {"email": update_data["email"]}, exclude_id=user_id, error_message="Email already registered")
             
         if "password" in update_data:
-            raw_password = update_data.pop("password")
-            update_data["hashed_password"] = hash_password(raw_password)
+            user.hashed_password = hash_password(update_data.pop("password"))
             
         for field_name, field_value in update_data.items():
             setattr(user, field_name, field_value)

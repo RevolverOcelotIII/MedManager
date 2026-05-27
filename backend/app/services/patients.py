@@ -26,7 +26,7 @@ class PatientService:
                          .filter(AttendanceProcedure.executed_by_id == med_employee_id)\
                          .distinct()
             
-        patients = query.all()
+        patients = query.order_by(Patient.updated_at.desc()).all()
         patient_dicts = [PatientResponse.model_validate(p).model_dump(mode="json") for p in patients]
         set_cache(cache_key, patient_dicts)
         return patients

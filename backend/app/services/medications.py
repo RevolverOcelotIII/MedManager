@@ -24,7 +24,7 @@ class MedicationService:
         if cached:
             return cached
             
-        meds = db_session.query(Medication).all()
+        meds = db_session.query(Medication).order_by(Medication.updated_at.desc()).all()
         med_dicts = [MedicationResponse.model_validate(m).model_dump(mode="json") for m in meds]
         set_cache(CACHE_KEY, med_dicts)
         return meds

@@ -24,7 +24,7 @@ class RoleService:
         if cached:
             return cached
             
-        roles = db_session.query(Role).all()
+        roles = db_session.query(Role).order_by(Role.updated_at.desc()).all()
         # Serialize to dicts for caching
         role_dicts = [RoleResponse.model_validate(r).model_dump(mode="json") for r in roles]
         set_cache(CACHE_KEY, role_dicts)

@@ -23,7 +23,7 @@ class ProcedureService:
             
         query = db_session.query(Procedure)
         query = ProcedureService.apply_role_based_dispatch_visibility(query, current_user)
-        procedures = query.all()
+        procedures = query.order_by(Procedure.updated_at.desc()).all()
         
         # Serialize
         proc_dicts = [ProcedureResponse.model_validate(p).model_dump(mode="json") for p in procedures]

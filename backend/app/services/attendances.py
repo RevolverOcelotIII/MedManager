@@ -14,7 +14,7 @@ class AttendanceService:
         if cached:
             return cached
             
-        attendances = db_session.query(Attendance).all()
+        attendances = db_session.query(Attendance).order_by(Attendance.updated_at.desc()).all()
         att_dicts = [AttendanceResponse.model_validate(a).model_dump(mode="json") for a in attendances]
         set_cache(CACHE_KEY, att_dicts)
         return attendances

@@ -44,13 +44,11 @@ class EmployeeService:
         is_clinical_context = (can_execute_procedure_id is not None) or (can_dispatch_procedure_id is not None)
         query = EmployeeService.apply_role_based_visibility_restrictions(query, current_user, is_clinical_context)
 
-        results = query.all()
+        results = query.order_by(Employee.updated_at.desc()).all()
         serialized_results = [EmployeeService.apply_production_grade_serialization(e, is_admin) for e in results]
         
         # Convert Pydantic models to dicts for caching
         if is_base_list:
-            # Note: apply_production_grade_serialization returns EmployeeResponse or RestrictedEmployeeResponse
-            # We convert to dict mode="json"
             results_to_cache = [r.model_dump(mode="json") for r in serialized_results]
             set_cache(cache_key, results_to_cache)
             
