@@ -37,34 +37,48 @@ This dynamic mapping creates a precise "need-to-know" and "authorized-to-act" en
 
 ---
 
-## 🚀 Step-by-Step Clinical Tutorial
+> **Note**: To see the PoC in full action, you must create at least **three different users** with different roles (e.g., one Attendant, one Nurse, and one Doctor).
 
-### 1. The Administrative Engine (Setup)
-Before any patient arrives, the system's "brain" must be configured.
--   **Step 1: Roles**: Create specialized roles. Assigning a role to a user dictates which Attendances they "receive" (visible in their medical queue).
--   **Step 2: Procedures**: Define clinical actions. 
-    -   *Example*: Create a "General Consultation". Add "Physician" to Dispatch Roles and Execute Roles.
-    -   *Example*: Create "Triage". Add "Attendant" to Dispatch and "Nurse" to Execute.
+---
 
-> ![Screenshot: Admin Role and Procedure Configuration](docs/screenshots/admin-setup.png)
+## 🚀 Full System Walkthrough (Tutorial)
 
-### 2. Patient Intake & Initial Dispatch
--   **Step 3: Registration**: An **Attendant** registers a patient and initiates an **Attendance**.
--   **Step 4: The First Order**: The Attendant dispatches the "Triage" procedure. Because of the dynamic config, only "Triage" (and other Attendant-dispatchable items) will appear in their menu.
+### 1. Building the Hospital "Brain" (Admin Setup)
+First, log in with an **Admin** account to configure the rules of the hospital.
 
-> ![Screenshot: Patient Intake and Procedure Dispatching](docs/screenshots/intake-dispatch.png)
+*   **Create Roles**: Navigate to **Administration > Roles** in the sidebar. Click the **"New"** button. Create a "Receptionist" (Level: Attendant), a "General Nurse" (Level: Nurse), and an "ER Physician" (Level: Doctor).
+*   **Register Staff**: Go to **Administration > Employees**. Click **"New"** to register your professionals and assign them to the roles created above.
+*   **Link Accounts**: Go to **Administration > Users**. Click **"New"** to create login credentials (email/password) and link them to the employee records.
+*   **Define Procedures**: Go to **Administration > Procedures**. Click **"New"**.
+    *   *Triage*: Add "Receptionist" to **Dispatch Roles** and "General Nurse" to **Execute Roles**.
+    *   *Consultation*: Add "General Nurse" to **Dispatch Roles** and "ER Physician" to **Execute Roles**.
 
-### 3. The Clinical Execution Loop
--   **Step 5: Receiving the Task**: A **Nurse** logs in. Their dashboard automatically filters for Attendances where they have executable procedures pending.
--   **Step 6: Execution**: The Nurse opens the Triage record, sets it to `In Progress`, and fills in vital signs.
--   **Step 7: Chaining the Workflow**: Upon finishing Triage, the Nurse (if authorized by their Role) can **dispatch the next step**—for example, a "Specialized Consultation"—effectively passing the "clinical baton" to a Doctor.
+> ![Screenshot: Admin Dashboard - Creating Roles and Procedures](docs/screenshots/admin-setup.png)
 
-> ![Screenshot: Clinical Execution and Workflow Chaining](docs/screenshots/clinical-loop.png)
+### 2. Patient Intake (Attendant Flow)
+Log out and log in as the **Receptionist**.
 
-### 4. Advanced Clinical Review
--   **Step 8: Review & Execute**: The **Doctor** receives the attendance. They can read the Nurse's Triage notes (Read-Only) and execute their own Consultation.
--   **Step 9: Resource Management**: During any execution, professionals log **Medications** used. This interacts with the **Pharma Scope**, allowing Pharmacists to track real-time consumption triggered by clinical actions.
+*   **Register Patient**: Navigate to **Workspace > Patients**. Click **"New"** and fill out the patient's personal data (CPF, Birth Date, etc.).
+*   **Start Attendance**: Go to **Workspace > Attendances**. Click **"New"**. Search for the patient you just created and select a **Gravity Level** (e.g., "Orange - Very Urgent").
+*   **Dispatch Triage**: In the Attendances list, click the **"View Details"** (eye icon). Inside the modal, find the **"Procedures"** section and click **"New"**. Select "Triage".The system automatically sets you as the "Ordered By" professional, and filters the "Executed by" list with the available employees that haves a role matching the procedure **"Execute Role"**, making only the previously registered **Nurse** to appear as the only option.
 
+> ![Screenshot: Attendant View - Starting an Attendance and Dispatching Triage](docs/screenshots/intake-dispatch.png)
+
+### 3. Clinical Execution (Nurse Flow)
+Log out and log in as the **General Nurse**.
+
+*   **Task Queue**: Go to **Workspace > Attendances**. The list is filtered to show patients waiting for procedures you are qualified to execute.
+*   **Perform Triage**: Click **"View Details"** on the patient. In the Procedures list, find the "Triage" entry and click **"Edit"** (pencil icon).
+*   **Clinical Notes**: Change the status to **"In Progress"**. Fill the **Description** with vitals (BP, Heart Rate, Symptoms). Once done, change the status to **"Done"**.
+*   **Chain Workflow**: Before closing the base Attendance modal, use the **"New"** button in the Procedures section to dispatch a **"Consultation"**. Because you are a Nurse, you have the authority to "hand off" the patient to a Doctor.
+
+> ![Screenshot: Nurse View - Recording Vitals and Chaining to Consultation](docs/screenshots/clinical-loop.png)
+
+### 4. Specialized Care (Doctor Flow)
+Log out and log in as the **ER Physician**.
+
+*   **Medical Review**: Open the patient's attendance. You can read the Nurse's Triage notes for context.
+*   **Finalize**: Edit the "Consultation" procedure. Add the diagnosis and treatment plan. If medications are administered, select them from the **Medications** searchable input.
 ---
 
 ## 🐳 Setup Guide
