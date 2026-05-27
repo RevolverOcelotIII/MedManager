@@ -15,7 +15,8 @@ from app.models.attendance import Attendance
 from app.models.catalog import Procedure, Medication
 
 # Use Postgres test_db for tests
-SQLALCHEMY_DATABASE_URL = "postgresql://admin:password_cool@db:5432/test_db"
+DEFAULT_TEST_DB_URL = "postgresql://admin:password_cool@db:5432/test_db"
+SQLALCHEMY_DATABASE_URL = os.getenv("TEST_DATABASE_URL", DEFAULT_TEST_DB_URL)
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
