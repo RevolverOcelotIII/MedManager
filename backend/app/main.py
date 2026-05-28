@@ -1,0 +1,45 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from app.controllers import users, patients, medications, procedures, employees, auth, attendances, attendance_procedures, roles
+from app.core.redis import RedisClient
+
+app = FastAPI(title="MedManager API")
+
+@app.on_event("startup")
+def startup_event():
+    # Ping Redis to verify connection
+    RedisClient.get_client()
+
+front_url = os.getenv("FRONT_URL", "http://localhost:3000").rstrip("/")
+origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    front_url
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=list(set(origins)),
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(auth.router)
+app.include_router(users.router)
+app.include_router(patients.router)
+app.include_router(medications.router)
+app.include_router(procedures.router)
+app.include_router(employees.router)
+app.include_router(attendances.router)
+app.include_router(attendance_procedures.router)
+app.include_router(roles.router)
+
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to MedManager API"}

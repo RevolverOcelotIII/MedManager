@@ -1,0 +1,222 @@
+{
+  "common": {
+    "actions": "Ações",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "close": "Fechar",
+    "view_details": "Ver Detalhes",
+    "search": "Buscar...",
+    "new": "Novo",
+    "no_data": "Nenhum dado encontrado",
+    "loading": "Carregando...",
+    "confirm_delete": "Tem certeza que deseja excluir este registro?",
+    "error_saving": "Erro ao salvar os dados. Tente novamente.",
+    "error_deleting": "Erro ao excluir o registro.",
+    "yes": "Sim",
+    "no": "Não",
+    "created_at": "Criado em"
+  },
+  "enums": {
+    "sex": {
+      "male": "Masculino",
+      "female": "Feminino",
+      "other": "Outro"
+    },
+    "access_level": {
+      "admin": "Admin",
+      "doctor": "Médico(a)",
+      "nurse": "Enfermeiro(a)",
+      "attendant": "Atendente",
+      "pharmaceutical": "Farmacêutico(a)"
+    },
+    "employment_type": {
+      "full-time": "Tempo Integral",
+      "part-time": "Meio Período",
+      "contractor": "Contratado",
+      "temporary": "Temporário"
+    },
+    "gravity": {
+      "red": "Emergência",
+      "orange": "Muito Urgente",
+      "yellow": "Urgente",
+      "green": "Pouco Urgente",
+      "blue": "Não Urgente"
+    },
+    "procedure_category": {
+      "screening": "Triagem",
+      "exam": "Exame",
+      "surgery": "Cirurgia",
+      "consultation": "Consulta",
+      "nursing": "Enfermagem",
+      "therapy": "Terapia",
+      "request": "Solicitação",
+      "attendance": "Atendimento",
+      "other": "Outro"
+    },
+    "procedure_status": {
+      "pending": "Pendente",
+      "in_progress": "Em Andamento",
+      "done": "Concluído",
+      "canceled": "Cancelado"
+    }
+  },
+  "sidebar": {
+    "workspace": "Workspace",
+    "administration": "Administração",
+    "dashboard": "Dashboard",
+    "patients": "Pacientes",
+    "attendances": "Atendimentos",
+    "medicines": "Medicamentos",
+    "employees": "Funcionários",
+    "roles": "Cargos",
+    "procedures": "Procedimentos",
+    "users": "Usuários"
+  },
+  "models": {
+    "patient": {
+      "full_name": "Nome Completo",
+      "social_name": "Nome Social",
+      "cpf": "CPF",
+      "rg": "RG",
+      "birth_date": "Data de Nasc.",
+      "sex": "Sexo",
+      "marital_status": "Estado Civil",
+      "nationality": "Nacionalidade",
+      "mother_name": "Nome da Mãe",
+      "phone": "Telefone",
+      "allergies": "Alergias",
+      "blood_type": "Tipo Sanguíneo"
+    },
+    "employee": {
+      "full_name": "Nome Completo",
+      "social_name": "Nome Social",
+      "cpf": "CPF",
+      "rg": "RG",
+      "birth_date": "Data de Nasc.",
+      "sex": "Sexo",
+      "marital_status": "Estado Civil",
+      "nationality": "Nacionalidade",
+      "phone": "Telefone",
+      "role": "Cargo",
+      "active": "Ativo",
+      "hire_date": "Data de Adm.",
+      "termination_date": "Data de Demissão",
+      "salary": "Salário",
+      "employment_type": "Tipo de Contrato"
+    },
+    "medication": {
+      "trade_name": "Nome Comercial",
+      "active_ingredient": "Princípio Ativo",
+      "dosage": "Dosagem",
+      "current_stock": "Estoque Atual",
+      "unit": "Unidade"
+    },
+    "procedure": {
+      "name": "Nome",
+      "code": "Código",
+      "category": "Categoria",
+      "dispatch_roles": "Cargos Solicitantes",
+      "execute_roles": "Cargos Executantes",
+      "description": "Descrição"
+    },
+    "role": {
+      "name": "Nome do Cargo",
+      "access_level": "Categoria de Acesso"
+    },
+    "attendance": {
+      "patient": "Paciente",
+      "gravity": "Urgência",
+      "status": "Status",
+      "entry_time": "Hora de Entrada"
+    },
+    "attendance_procedure": {
+      "procedure": "Procedimento",
+      "ordered_by": "Solicitado por",
+      "executed_by": "Executado por",
+      "status": "Status",
+      "start_time": "Início",
+      "end_time": "Fim",
+      "medications": "Medicamentos"
+    },
+    "user": {
+      "email": "E-mail",
+      "employee": "Funcionário",
+      "password": "Senha",
+      "confirm_password": "Confirme a Senha",
+      "keep_current": "Deixe em branco para manter a atual",
+      "passwords_mismatch": "As senhas não coincidem!"
+    }
+  },
+  "pages": {
+    "home": {
+      "title": "Bem-vindo ao MedManager",
+      "subtitle": "Seu sistema abrangente de gestão hospitalar.",
+      "go_to_attendances": "Ir para Atendimentos"
+    },
+    "patients": {
+      "title": "Pacientes",
+      "description": "Pessoas atualmente cadastradas no hospital.",
+      "details_title": "Detalhes do Paciente",
+      "new_title": "Novo Paciente",
+      "edit_title": "Editar Paciente"
+    },
+    "medications": {
+      "title": "Medicamentos",
+      "description": "Gerencie o catálogo de medicamentos e estoque.",
+      "details_title": "Detalhes do Medicamento",
+      "new_title": "Novo Medicamento",
+      "edit_title": "Editar Medicamento"
+    },
+    "attendances": {
+      "title": "Atendimentos",
+      "description": "Visitas de pacientes e fluxo clínico.",
+      "details_title": "Detalhes do Atendimento",
+      "new_title": "Novo Atendimento",
+      "edit_title": "Editar Atendimento"
+    },
+    "employees": {
+      "title": "Funcionários",
+      "description": "Profissionais de saúde e equipe administrativa.",
+      "details_title": "Detalhes do Funcionário",
+      "new_title": "Novo Funcionário",
+      "edit_title": "Editar Funcionário"
+    },
+    "roles": {
+      "title": "Cargos Hospitalares",
+      "description": "Defina títulos de cargos e suas categorias de acesso correspondentes.",
+      "new_title": "Novo Cargo",
+      "edit_title": "Editar Cargo"
+    },
+    "procedures": {
+      "title": "Procedimentos",
+      "description": "Procedimentos médicos, exames e ações clínicas.",
+      "details_title": "Detalhes do Procedimento",
+      "new_title": "Novo Procedimento",
+      "edit_title": "Editar Procedimento"
+    },
+    "users": {
+      "title": "Contas de Usuário",
+      "description": "Gerencie o acesso e credenciais do sistema hospitalar.",
+      "details_title": "Detalhes da Conta de Usuário",
+      "new_title": "Nova Conta de Usuário",
+      "edit_title": "Editar Conta de Usuário"
+    },
+    "attendance_procedure": {
+      "details_title": "Detalhes da Execução do Procedimento",
+      "new_title": "Adicionar Registro de Procedimento",
+      "edit_title": "Editar Registro de Procedimento"
+    },
+    "login": {
+      "welcome": "Bem-vindo de volta",
+      "subtitle": "Entre com suas credenciais hospitalares.",
+      "email": "E-mail",
+      "email_placeholder": "Digite seu e-mail",
+      "password": "Senha",
+      "password_placeholder": "Digite sua senha",
+      "sign_in": "Entrar",
+      "login_failed": "Falha no login. Verifique suas credenciais."
+    }
+  }
+}

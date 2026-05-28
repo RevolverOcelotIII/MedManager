@@ -1,0 +1,61 @@
+import { Medication } from "@/src/types/medication";
+import { ColumnDefinition } from "./patient";
+import { i18n } from "@/src/lib/i18n";
+
+export const MEDICATION_COLUMNS: ColumnDefinition<Medication>[] = [
+  {
+    name: "trade_name",
+    label: i18n.t("models.medication.trade_name"),
+    type: "text",
+    width: "50",
+    required: true,
+    placeholder: i18n.t("models.medication.trade_name"),
+    grid: true,
+    form: true,
+    details: true,
+  },
+  {
+    name: "active_ingredient",
+    label: i18n.t("models.medication.active_ingredient"),
+    type: "text",
+    width: "50",
+    required: true,
+    placeholder: i18n.t("models.medication.active_ingredient"),
+    grid: true,
+    form: true,
+    details: true,
+  },
+  {
+    name: "dosage",
+    label: i18n.t("models.medication.dosage"),
+    type: "text",
+    width: "50",
+    required: true,
+    placeholder: i18n.t("models.medication.dosage"),
+    grid: true,
+    form: true,
+    details: true,
+  },
+  {
+    name: "unit",
+    label: i18n.t("models.medication.unit"),
+    type: "text",
+    width: "50",
+    required: true,
+    placeholder: i18n.t("models.medication.unit"),
+    grid: true,
+    form: true,
+    details: true,
+  },
+  {
+    name: "current_stock",
+    label: i18n.t("models.medication.current_stock"),
+    type: "text",
+    width: "25",
+    required: true,
+    placeholder: "0",
+    grid: true,
+    form: true,
+    details: true,
+  },
+];
